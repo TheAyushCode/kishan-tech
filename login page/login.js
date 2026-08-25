@@ -14,7 +14,6 @@ const toggleBtn  = document.getElementById('togglePw');
 const submitBtn  = document.getElementById('submitBtn');
 const statusBox  = document.getElementById('statusBox');
 
-// ---------- Password Hide / Show Toggle ----------
 if (toggleBtn) {
   toggleBtn.addEventListener('click', () => {
     const isPw = pwInput.type === 'password';
@@ -24,7 +23,6 @@ if (toggleBtn) {
   });
 }
 
-// ---------- Input Validation Helpers ----------
 function validLogin(v) {
   const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   const isPhone = /^[0-9]{10}$/.test(v.replace(/\s|-/g, ''));
@@ -41,7 +39,6 @@ function setError(shell, errEl, msg) {
   }
 }
 
-// Clear error state on input change
 if (emailInput) {
   emailInput.addEventListener('input', () => {
     if (emailShell.classList.contains('error') && validLogin(emailInput.value)) {
@@ -58,13 +55,11 @@ if (pwInput) {
   });
 }
 
-// ---------- Form Submission & API Fetch ----------
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     let ok = true;
 
-    // Validate Email / Phone
     if (!validLogin(emailInput.value)) {
       setError(emailShell, emailErr, 'Enter a valid email address.');
       ok = false;
@@ -72,7 +67,6 @@ if (form) {
       setError(emailShell, emailErr, '');
     }
 
-    // Validate Password Length
     if (pwInput.value.length < 6) {
       setError(pwShell, pwErr, 'Password must be at least 6 characters.');
       ok = false;
@@ -82,12 +76,10 @@ if (form) {
 
     if (!ok) return;
 
-    // UI Loading State
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
     submitBtn.querySelector('.btn-label').textContent = 'Signing in…';
 
-    // Fetch API call to Render Live Backend
     fetch('https://kishan-tech.onrender.com/api/login', {
       method: 'POST',
       headers: { 
@@ -100,19 +92,16 @@ if (form) {
     })
     .then(res => res.json())
     .then(data => {
-      // Reset Button State
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
       submitBtn.querySelector('.btn-label').textContent = 'Sign In';
 
       if (data.success) {
-        // Show Success Message
         statusBox.classList.add('show');
         statusBox.style.borderColor = 'rgba(111,191,115,.35)';
         statusBox.style.color = '#B7E0BA';
         statusBox.textContent = 'Signed in successfully! Taking you to Home…';
 
-        // Save session in LocalStorage
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userProfile', JSON.stringify({ 
           name: data.user.name, 
@@ -120,17 +109,14 @@ if (form) {
           avatar: '' 
         }));
 
-        // Redirect to main index.html
         setTimeout(() => {
           window.location.href = '../index.html';
         }, 1000);
       } else {
-        // Display Server Invalid Credentials Message
         setError(pwShell, pwErr, data.message || 'Invalid Email or Password.');
       }
     })
-    .catch(err => {
-      // Handle Server Offline / Network Error
+    .catch(() => {
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
       submitBtn.querySelector('.btn-label').textContent = 'Sign In';

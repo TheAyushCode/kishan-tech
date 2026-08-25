@@ -30,28 +30,27 @@ const SEASON_META = {
   },
 };
 
-/* Map info text for each season zone */
-const MAP_INFO = {
-  all: {
-    title: "All of India",
-    text: "India grows crops in all three agricultural seasons. The north is famous for winter (rabi) wheat, the east and centre for monsoon (kharif) rice, and the hot south for summer fruits and vegetables.",
-    crops: "🌾 Rice · 🌾 Wheat · 🌽 Maize · 🧶 Cotton · 🥭 Mango · 🌶️ Spices · 🍉 Watermelon",
-  },
-  summer: {
-    title: "☀️ Summer Crops — South & Peninsular India",
-    text: "Summer (Zaid) crops love the heat and long sunny days. They are grown widely across the southern peninsula and the drier western regions where temperatures soar from February to June.",
-    crops: "🥭 Mango · 🍉 Watermelon · 🥒 Cucumber · 🌶️ Okra · 🍈 Muskmelon · 🎃 Pumpkin",
-  },
-  winter: {
-    title: "❄️ Winter Crops — North & North-West India",
-    text: "Winter (Rabi) crops are sown in the cool months of October to March. The fertile northern plains — Punjab, Haryana, Uttar Pradesh and Rajasthan — are the heartland of rabi farming in India.",
-    crops: "🌾 Wheat · 🌼 Mustard · 🫘 Chickpea · 🥔 Potato · 🧄 Garlic · 🌿 Coriander",
-  },
-  rain: {
-    title: "🌧️ Rain Crops — East, Central & NE India",
-    text: "Kharif crops are sown with the southwest monsoon from June to October. The rain-fed eastern, central and northeastern regions — West Bengal, Bihar, Madhya Pradesh and the northeast — lead monsoon cultivation.",
-    crops: "🌾 Rice · 🌽 Maize · 🧶 Cotton · 🫘 Soybean · 🥜 Groundnut · 🌾 Pearl Millet",
-  },
+/* State Coordinates on India Map Stage */
+const STATE_COORDINATES = {
+  "punjab": { top: "24%", left: "30%", name: "Punjab" },
+  "haryana": { top: "28%", left: "33%", name: "Haryana" },
+  "uttar pradesh": { top: "35%", left: "48%", name: "Uttar Pradesh" },
+  "up": { top: "35%", left: "48%", name: "Uttar Pradesh" },
+  "bihar": { top: "38%", left: "64%", name: "Bihar" },
+  "west bengal": { top: "46%", left: "70%", name: "West Bengal" },
+  "bengal": { top: "46%", left: "70%", name: "West Bengal" },
+  "rajasthan": { top: "34%", left: "24%", name: "Rajasthan" },
+  "gujarat": { top: "46%", left: "20%", name: "Gujarat" },
+  "madhya pradesh": { top: "46%", left: "42%", name: "Madhya Pradesh" },
+  "mp": { top: "46%", left: "42%", name: "Madhya Pradesh" },
+  "maharashtra": { top: "58%", left: "33%", name: "Maharashtra" },
+  "karnataka": { top: "74%", left: "33%", name: "Karnataka" },
+  "andhra pradesh": { top: "68%", left: "45%", name: "Andhra Pradesh" },
+  "andhra": { top: "68%", left: "45%", name: "Andhra Pradesh" },
+  "tamil nadu": { top: "82%", left: "42%", name: "Tamil Nadu" },
+  "kerala": { top: "84%", left: "35%", name: "Kerala" },
+  "odisha": { top: "52%", left: "62%", name: "Odisha" },
+  "assam": { top: "36%", left: "84%", name: "Assam" }
 };
 
 /* Harvest festivals of India */
@@ -82,7 +81,7 @@ const el = (tag, cls, html) => {
   return n;
 };
 
-/* ---------- Custom Crops Persistence (Merge LocalStorage Crops) ---------- */
+/* ---------- Custom Crops Persistence ---------- */
 function mergeCustomCrops() {
   const custom = localStorage.getItem('customCrops');
   if (!custom) return;
@@ -105,7 +104,6 @@ const NAV_TAB_OF_VIEW = {
   "recommend-view": "recommend",
   "favorites-view": "favorites",
   "admin-view": "admin",
-  "helpline-view": "helpline",
   "calculator-view": "calculator",
   "season-view": "season",
   "agri-view": "agri",
@@ -181,10 +179,14 @@ function goAdmin() {
     alert("❌ Incorrect Password!");
   }
 }
-function goHelpline() { navigate("helpline-view"); currentSeason = null; currentCrop = null; }
 function goCalculator() { navigate("calculator-view"); currentSeason = null; currentCrop = null; }
 function goSeasons() { navigate("season-view"); currentSeason = null; currentCrop = null; }
-function goIndiaMap() { navigate("india-map-view"); currentSeason = null; currentCrop = null; }
+function goIndiaMap() { 
+  initInteractiveMap();
+  navigate("india-map-view"); 
+  currentSeason = null; 
+  currentCrop = null; 
+}
 function goAgri() { navigate("agri-view"); currentSeason = null; currentCrop = null; }
 function goCrops(season) {
   currentSeason = season;
@@ -212,7 +214,6 @@ function updateCrumb() {
       "recommend-view": "Smart Finder",
       "favorites-view": "Favorites",
       "admin-view": "Admin Dashboard",
-      "helpline-view": "Kisan Helpline",
       "calculator-view": "Fertilizer Calculator",
       "season-view": "Seasons",
       "india-map-view": "India Crop Map",
@@ -385,27 +386,93 @@ function initAdminPanel() {
   };
 }
 
-/* ---------- India Map Filtering ---------- */
-function filterMap(season) {
-  document.querySelectorAll(".map-filter").forEach(b => b.classList.remove("active"));
-  const btn = document.querySelector(`.map-filter[data-season="${season}"]`);
-  if (btn) btn.classList.add("active");
+/* ---------- INTERACTIVE INDIA MAP & CROP ASSIGNMENT ---------- */
+function initInteractiveMap() {
+  const cropBar = document.getElementById("map-crop-bar");
+  if (!cropBar || !CROPS) return;
 
-  const zones = document.querySelectorAll(".map-zone");
-  zones.forEach(z => {
-    if (season === "all" || z.dataset.season === season) {
-      z.classList.add("show");
-    } else {
-      z.classList.remove("show");
-      z.classList.add("dim");
+  cropBar.innerHTML = "";
+
+  const allCrops = [];
+  Object.keys(CROPS).forEach(season => {
+    CROPS[season].forEach(crop => {
+      if (!allCrops.some(c => c.name === crop.name)) {
+        allCrops.push({ ...crop, seasonKey: season });
+      }
+    });
+  });
+
+  allCrops.forEach((crop, idx) => {
+    const btn = document.createElement("button");
+    btn.className = `map-crop-btn ${idx === 0 ? "active" : ""}`;
+    btn.innerHTML = `
+      <img src="${crop.img}" alt="${escapeHtml(crop.name)}" onerror="this.style.display='none'">
+      <span>${escapeHtml(crop.name)}</span>
+    `;
+    btn.onclick = () => {
+      document.querySelectorAll(".map-crop-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      highlightCropOnMap(crop);
+    };
+    cropBar.appendChild(btn);
+  });
+
+  if (allCrops.length > 0) {
+    highlightCropOnMap(allCrops[0]);
+  }
+}
+
+function highlightCropOnMap(crop) {
+  const container = document.getElementById("state-pins-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  const regionText = (crop.region || "").toLowerCase();
+
+  let matchedStates = [];
+
+  Object.keys(STATE_COORDINATES).forEach(stateKey => {
+    if (regionText.includes(stateKey)) {
+      const stateData = STATE_COORDINATES[stateKey];
+      if (!matchedStates.some(s => s.name === stateData.name)) {
+        matchedStates.push(stateData);
+      }
     }
   });
-  zones.forEach(z => { if (z.classList.contains("show")) z.classList.remove("dim"); });
 
-  const info = MAP_INFO[season] || MAP_INFO.all;
-  if ($("#map-info-title")) $("#map-info-title").textContent = info.title;
-  if ($("#map-info-text")) $("#map-info-text").textContent = info.text;
-  if ($("#map-info-crops")) $("#map-info-crops").innerHTML = `<strong>Key crops:</strong> ${info.crops}`;
+  if (matchedStates.length === 0) {
+    matchedStates = [
+      STATE_COORDINATES["punjab"],
+      STATE_COORDINATES["uttar pradesh"],
+      STATE_COORDINATES["madhya pradesh"]
+    ];
+  }
+
+  matchedStates.forEach(state => {
+    const pin = document.createElement("div");
+    pin.className = "state-pin";
+    pin.style.top = state.top;
+    pin.style.left = state.left;
+    pin.innerHTML = `
+      <span class="state-pin-marker">📍</span>
+      <span class="state-pin-label">${state.name}</span>
+    `;
+    container.appendChild(pin);
+  });
+
+  if (document.getElementById("map-info-title")) {
+    document.getElementById("map-info-title").innerHTML = `🌱 ${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || "")})`;
+  }
+  if (document.getElementById("map-info-text")) {
+    document.getElementById("map-info-text").textContent = crop.desc || "Information available.";
+  }
+  if (document.getElementById("map-info-crops")) {
+    document.getElementById("map-info-crops").innerHTML = `
+      <div style="margin-bottom: 6px;"><strong>📍 Major Growing States:</strong> ${escapeHtml(crop.region || "Across India")}</div>
+      <div style="margin-bottom: 6px;"><strong>🌧️ Rainfall Needed:</strong> ${escapeHtml(crop.rain || "50-100 cm")}</div>
+      <div><strong>🪴 Ideal Soil:</strong> ${escapeHtml(crop.soil || "Loamy Soil")}</div>
+    `;
+  }
 }
 
 /* ---------- Render: Festivals ---------- */
@@ -780,7 +847,6 @@ function initFertilizerCalculator() {
 
     if (isNaN(landValue) || landValue <= 0) return;
 
-    // Convert land area into Acres
     let acres = landValue;
     if (unit === 'bigha') {
       acres = landValue / 4.8;
@@ -853,7 +919,7 @@ function escapeHtml(s) {
 /* ---------- Main Init ---------- */
 function init() {
   if (typeof CROP_DATA === "undefined") {
-    console.error("CROP_DATA not found - ensure assets/data.js is loaded before app.js");
+    console.error("CROP_DATA not found - ensure javascript/data.js is loaded before app.js");
     if (document.querySelector(".loader p")) {
       document.querySelector(".loader p").textContent = "Could not load crop data. Please refresh.";
     }
@@ -893,7 +959,6 @@ function init() {
       else if (nav === "recommend") goRecommend();
       else if (nav === "favorites") goFavorites();
       else if (nav === "admin") goAdmin();
-      else if (nav === "helpline") goHelpline();
       else if (nav === "calculator") goCalculator();
       else if (nav === "season") goSeasons();
       else if (nav === "agri") goAgri();
@@ -910,18 +975,11 @@ function init() {
   if ($("#fav-back-welcome")) $("#fav-back-welcome").onclick = () => goWelcome();
   if ($("#fav-go-seasons")) $("#fav-go-seasons").onclick = () => goSeasons();
   if ($("#admin-back-welcome")) $("#admin-back-welcome").onclick = () => goWelcome();
-  if ($("#helpline-back-welcome")) $("#helpline-back-welcome").onclick = () => goWelcome();
   if ($("#calc-back-welcome")) $("#calc-back-welcome").onclick = () => goWelcome();
 
   // India map page
   if ($("#map-back-welcome")) $("#map-back-welcome").onclick = () => goWelcome();
   if ($("#map-go-seasons")) $("#map-go-seasons").onclick = () => goSeasons();
-  document.querySelectorAll(".map-filter").forEach(b => {
-    b.onclick = () => filterMap(b.dataset.season);
-  });
-  document.querySelectorAll(".map-zone").forEach(z => {
-    z.onclick = () => filterMap(z.dataset.season);
-  });
 
   // Agri page
   if ($("#agri-back-welcome")) $("#agri-back-welcome").onclick = () => goWelcome();
@@ -931,13 +989,13 @@ function init() {
   if ($("#stat-crops")) $("#stat-crops").textContent = Object.values(CROPS).reduce((a, b) => a + b.length, 0);
   if ($("#stat-seasons")) $("#stat-seasons").textContent = Object.keys(CROPS).length;
 
-  filterMap("all");
   initMusic();
   initCropRecommender();
   initWeatherWidget();
   initMandiPrices();
   initAdminPanel();
   initFertilizerCalculator();
+  initInteractiveMap();
 
   history.replaceState({ view: "welcome-view" }, "", location.pathname + location.search);
 
