@@ -1,5 +1,5 @@
 /* ==========================================================
-   register.js — Account Creation Logic
+   register.js — Account Creation Logic (Email & Phone Support)
    ========================================================== */
 
 const form       = document.getElementById('registerForm');
@@ -28,6 +28,38 @@ function setError(shell, errEl, msg) {
   }
 }
 
+// Check if input is a valid Email OR a valid 10-digit Indian Mobile number
+function validateIdentifier(val) {
+  const cleanVal = val.trim().replace(/\s|-/g, '');
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanVal);
+  const isPhone = /^[6-9]\d{9}$/.test(cleanVal);
+  return { valid: isEmail || isPhone, cleanVal };
+}
+
+if (nameInput) {
+  nameInput.addEventListener('input', () => {
+    if (nameShell.classList.contains('error') && nameInput.value.trim().length > 0) {
+      setError(nameShell, nameErr, '');
+    }
+  });
+}
+
+if (emailInput) {
+  emailInput.addEventListener('input', () => {
+    if (emailShell.classList.contains('error') && validateIdentifier(emailInput.value).valid) {
+      setError(emailShell, emailErr, '');
+    }
+  });
+}
+
+if (pwInput) {
+  pwInput.addEventListener('input', () => {
+    if (pwShell.classList.contains('error') && pwInput.value.length >= 6) {
+      setError(pwShell, pwErr, '');
+    }
+  });
+}
+
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -40,9 +72,9 @@ if (form) {
       setError(nameShell, nameErr, '');
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailInput.value)) {
-      setError(emailShell, emailErr, 'Enter a valid email address.');
+    const { valid: idValid, cleanVal } = validateIdentifier(emailInput.value);
+    if (!idValid) {
+      setError(emailShell, emailErr, 'Enter a valid Email or 10-digit Mobile Number.');
       valid = false;
     } else {
       setError(emailShell, emailErr, '');
@@ -62,15 +94,15 @@ if (form) {
     submitBtn.querySelector('.btn-label').textContent = 'Creating Account...';
 
     // Fetch API call to Live Render Backend Server
-   fetch('https://kishan-tech.onrender.com/api/register', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    name: nameInput.value.trim(),
-    email: emailInput.value.trim(),
-    password: pwInput.value
-  })
-})
+    fetch('https://kishan-tech.onrender.com/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: nameInput.value.trim(),
+        email: cleanVal,
+        password: pwInput.value
+      })
+    })
     .then(res => res.json())
     .then(data => {
       submitBtn.classList.remove('loading');
