@@ -53,6 +53,7 @@
       <!-- Middle: Nav Links -->
       <nav class="top-nav" id="top-nav">
         <button class="nav-link active" data-nav="welcome">Home</button>
+        <button class="nav-link" data-nav="kisan-help">🤝 Kisan Help &amp; Schemes</button>
         <button class="nav-link" data-nav="recommend">🌱 Smart Finder</button>
         <button class="nav-link" data-nav="favorites">❤️ Favorites</button>
         <button class="nav-link" data-nav="admin">⚙️ Admin</button>
@@ -99,9 +100,8 @@
           <p class="welcome-sub">
             Kishan · Tech is a friendly guide to the crops grown across India in every season.
             Here you can explore Summer, Winter and Rain (monsoon) crops, see where they grow
-            on an India map, learn how agriculture shapes our festivals, and discover rich
-            details — images, descriptions, rainfall needs and growing regions — for 150 crops.
-            Scroll down to choose where you would like to begin.
+            on an India map, access government schemes, subsidies, helpline contacts, and discover
+            rich details for 150 crops. Scroll down to choose where you would like to begin.
           </p>
           <button class="welcome-cta" id="welcome-cta">
             Start Exploring ↓
@@ -188,6 +188,12 @@
           <p>Tap any option below to dive into the world of Indian agriculture.</p>
         </div>
         <div class="welcome-options">
+          <button class="welcome-option" id="opt-help">
+            <span class="opt-emoji">🤝</span>
+            <span class="opt-title">Kisan Help &amp; Schemes</span>
+            <span class="opt-desc">Get Bihar, National &amp; District helplines, subsidies and monetary benefits.</span>
+            <span class="opt-go">Open Help Center →</span>
+          </button>
           <button class="welcome-option" id="opt-recommend">
             <span class="opt-emoji">🌱</span>
             <span class="opt-title">Smart Crop Finder</span>
@@ -213,6 +219,159 @@
             <span class="opt-go">Open Map →</span>
           </button>
         </div>
+      </div>
+    </section>
+
+    <!-- KISAN HELP & SCHEMES VIEW -->
+    <section class="view" id="kisan-help-view">
+      <div class="section-head">
+        <div class="eyebrow">Government Benefits &amp; Assistance</div>
+        <h2>🌾 Kisan Help Center / किसान सहायता केंद्र</h2>
+        <p>किसान हेल्पलाइन नंबर्स, सरकारी सब्सिडी योजनाएं, आर्थिक लाभ व कृषि सुविधाएं एक ही जगह।</p>
+      </div>
+
+      <div class="help-container">
+        <!-- 1. HELPLINE CALL SECTION -->
+        <div class="help-block-title">
+          <span>📞</span>
+          <h3>Kisan Helpline Numbers / किसान सहायता फोन नंबर</h3>
+        </div>
+
+        <div class="helpline-cards-grid">
+          <!-- India Level -->
+          <div class="helpline-card india-card">
+            <div class="hl-badge">🇮🇳 All India (राष्ट्रीय)</div>
+            <h4>Kisan Call Center (KCC)</h4>
+            <p>कृषि मंत्रालय, भारत सरकार (22 भाषाओं में सुबह 6:00 AM से रात 10:00 PM तक)</p>
+            <div class="hl-number">
+              <a href="tel:18001801551">📞 1800-180-1551</a>
+            </div>
+            <div class="hl-sub">Short Code (BSNL/Landline): <strong>1551</strong></div>
+          </div>
+
+          <!-- Bihar State Level -->
+          <div class="helpline-card bihar-card">
+            <div class="hl-badge">🏛️ Bihar State (बिहार राज्य)</div>
+            <h4>Bihar Agriculture Helpline</h4>
+            <p>कृषि विभाग, बिहार सरकार (डीजल अनुदान, बीज वितरण व सरकारी सलाह हेतु)</p>
+            <div class="hl-number">
+              <a href="tel:18003456455">📞 1800-345-6455</a>
+            </div>
+            <div class="hl-sub">Landline Support: <strong>0641-2451035 / 0612-2215211</strong></div>
+          </div>
+
+          <!-- District / KVK Level -->
+          <div class="helpline-card district-card">
+            <div class="hl-badge">📍 District / KVK (जिला कृषि केंद्र)</div>
+            <h4>Krishi Vigyan Kendra (KVK)</h4>
+            <p>अपने जिले के कृषि वैज्ञानिकों और जिला कृषि पदाधिकारी (DAO) से सीधी बात करें</p>
+            <div class="district-search-bar">
+              <select id="districtKvkSelect">
+                <option value="">-- अपना जिला चुनें (Select District) --</option>
+                <option value="patna">Patna (पटना)</option>
+                <option value="gaya">Gaya (गया)</option>
+                <option value="muzaffarpur">Muzaffarpur (मुजफ्फरपुर)</option>
+                <option value="bhagalpur">Bhagalpur (भागलपुर)</option>
+                <option value="rohtas">Rohtas (रोहतास)</option>
+                <option value="samastipur">Samastipur (समस्तीपुर)</option>
+                <option value="darbhanga">Darbhanga (दरभंगा)</option>
+                <option value="purnia">Purnia (पूर्णिया)</option>
+                <option value="nalanda">Nalanda (नालंदा)</option>
+                <option value="vaishali">Vaishali (वैशाली)</option>
+                <option value="bhojpur">Bhojpur (भोजपुर)</option>
+                <option value="saran">Saran / Chhapra (सारण)</option>
+              </select>
+            </div>
+            <div id="districtResultBox" class="district-res-box">
+              चयनित जिले का संपर्क विवरण यहाँ प्रदर्शित होगा।
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. DIRECT MONETARY SCHEMES / PAISA LAABH -->
+        <div class="help-block-title" style="margin-top: 40px;">
+          <span>💰</span>
+          <h3>Kisan Financial Benefits / आर्थिक लाभ व अनुदान (पैसा सहायता)</h3>
+        </div>
+
+        <div class="schemes-grid">
+          <div class="scheme-item">
+            <div class="sc-icon">💵</div>
+            <h4>PM-Kisan Samman Nidhi</h4>
+            <div class="sc-amount">₹6,000 / वर्ष (₹2,000 की 3 किश्तें)</div>
+            <p>सभी योग्य भूमिधारक किसानों के बैंक खातों में सीधे डीबीटी (DBT) के माध्यम से ट्रांसफर की जाने वाली राशि।</p>
+            <a href="https://pmkisan.gov.in" target="_blank" rel="noopener noreferrer" class="sc-link">pmkisan.gov.in पर जांचें →</a>
+          </div>
+
+          <div class="scheme-item">
+            <div class="sc-icon">🛡️</div>
+            <h4>PM Fasal Bima Yojana (PMFBY)</h4>
+            <div class="sc-amount">न्यूनतम प्रीमियम (1.5% से 2%)</div>
+            <p>बाढ़, सूखा, बेमौसम बारिश या ओलावृष्टि से फसलों के नुकसान पर शत-प्रतिशत क्लेम मुआवजा सीधे बैंक खाते में।</p>
+            <a href="https://pmfby.gov.in" target="_blank" rel="noopener noreferrer" class="sc-link">pmfby.gov.in देखें →</a>
+          </div>
+
+          <div class="scheme-item">
+            <div class="sc-icon">⛽</div>
+            <h4>Bihar Diesel Anudan Yojana</h4>
+            <div class="sc-amount">₹75 / लीटर (₹750 प्रति एकड़ सिंचाई)</div>
+            <p>सूखे की स्थिति में डीजल पंपसेट से खरीफ व रबी फसलों की सिंचाई के लिए बिहार सरकार द्वारा सीधी सब्सिडी।</p>
+            <a href="https://dbtagriculture.bihar.gov.in" target="_blank" rel="noopener noreferrer" class="sc-link">dbtagriculture.bihar.gov.in →</a>
+          </div>
+
+          <div class="scheme-item">
+            <div class="sc-icon">💳</div>
+            <h4>Kisan Credit Card (KCC) Loan</h4>
+            <div class="sc-amount">₹3,00,000 तक मात्र 4% ब्याज दर पर</div>
+            <p>समय पर अदायगी करने पर केवल 4% वार्षिक ब्याज पर बैंक से खेती, बीज व खाद हेतु आसान सस्ता लोन।</p>
+            <a href="https://www.myscheme.gov.in/schemes/kcc" target="_blank" rel="noopener noreferrer" class="sc-link">KCC विवरण देखें →</a>
+          </div>
+        </div>
+
+        <!-- 3. FACILITIES & SUBSIDIES / SUVIDHAYEIN -->
+        <div class="help-block-title" style="margin-top: 40px;">
+          <span>🚜</span>
+          <h3>Agricultural Facilities &amp; Subsidies / प्रमुख कृषि सुविधाएं</h3>
+        </div>
+
+        <div class="facilities-grid">
+          <div class="facility-card">
+            <div class="f-head">
+              <span class="f-emoji">⚙️</span>
+              <h4>कृषि यंत्र अनुदान (Farm Machinery Subsidy)</h4>
+            </div>
+            <p>ट्रैक्टर, रोटावेटर, रीपर, थ्रेशर, सीड ड्रिल और कंबाइन हार्वेस्टर पर 40% से 80% तक का अनुदान (OFMAS बिहार पोर्टल)।</p>
+          </div>
+
+          <div class="facility-card">
+            <div class="f-head">
+              <span class="f-emoji">🧪</span>
+              <h4>मृदा स्वास्थ्य कार्ड (Soil Health Card)</h4>
+            </div>
+            <p>नजदीकी कृषि कार्यालय या KVK में जाकर अपने खेत की मिट्टी की 12 आवश्यक पोषक तत्वों की निःशुल्क जांच करवाएं।</p>
+          </div>
+
+          <div class="facility-card">
+            <div class="f-head">
+              <span class="f-emoji">☀️</span>
+              <h4>PM कुसुम योजना (Solar Water Pump)</h4>
+            </div>
+            <p>खेत में सोलर सिंचाई पंप लगवाने के लिए 60% तक सरकारी सब्सिडी, जिससे बिजली और डीजल के खर्च से पूर्ण मुक्ति मिले।</p>
+          </div>
+
+          <div class="facility-card">
+            <div class="f-head">
+              <span class="f-emoji">🌱</span>
+              <h4>बिहार राज्य बीज वितरण (BRBN Seed Subsidy)</h4>
+            </div>
+            <p>गेहूं, धान, मक्का और दलहन के प्रमाणित बीजों पर 50% से 80% तक की छूट और बीजों की होम डिलीवरी सुविधा।</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-bottom-nav">
+        <button class="btn" id="help-back-welcome">← Back to Home</button>
+        <button class="btn btn-primary" id="help-go-seasons">Browse Crops →</button>
       </div>
     </section>
 
@@ -607,6 +766,33 @@
                 <div class="value" id="detail-season-full">—</div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- CROP EQUIPMENT & STEP-BY-STEP PLANTATION GUIDE -->
+        <div class="detail-card guide-card" style="margin-top: 25px;">
+          <!-- 1. Equipment Needed -->
+          <div style="margin-bottom: 28px;">
+            <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+              🚜 जरूरी उपकरण एवं कृषि यंत्र (Required Tools & Equipment)
+            </h3>
+            <p style="color: #5d716a; font-size: 0.9rem; margin-bottom: 14px;">
+              इस फसल की बुवाई, रोपाई और देखभाल के लिए आवश्यक प्रमुख औजार:
+            </p>
+            <div id="detail-equipments" class="equip-tags-container"></div>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid #eef3f0; margin: 20px 0;" />
+
+          <!-- 2. Step by Step Guide -->
+          <div>
+            <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+              🌱 फसल उगाने व रोपने की चरणबद्ध विधि (Step-by-Step Cultivation Guide)
+            </h3>
+            <p style="color: #5d716a; font-size: 0.9rem; margin-bottom: 16px;">
+              खेत की जुताई से लेकर फसल की कटाई तक की संपूर्ण प्रक्रिया:
+            </p>
+            <div id="detail-steps" class="steps-timeline"></div>
           </div>
         </div>
 

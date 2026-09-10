@@ -1,6 +1,6 @@
 /* ============================================================
    KISHAN - TECH — Application Logic
-   Views: welcome -> recommend -> favorites -> admin -> helpline -> calculator -> india-map -> agri -> season-select -> crops-list -> crop-detail
+   Views: welcome -> kisan-help -> recommend -> favorites -> admin -> calculator -> india-map -> agri -> season-select -> crops-list -> crop-detail
    ============================================================ */
 
 const SEASON_META = {
@@ -53,6 +53,22 @@ const STATE_COORDINATES = {
   "assam": { top: "36%", left: "84%", name: "Assam" }
 };
 
+/* Bihar District KVK / Agriculture Officer Contacts */
+const DISTRICT_KVK_DATA = {
+  "patna": { name: "Patna (पटना)", office: "KVK Barh & DAO Patna", phone: "06132-243250 / 9431821001", email: "kvkpatna@icar.gov.in" },
+  "gaya": { name: "Gaya (गया)", office: "KVK Manpur, Gaya", phone: "0631-2228390 / 9431479500", email: "kvkgaya@gmail.com" },
+  "muzaffarpur": { name: "Muzaffarpur (मुजफ्फरपुर)", office: "KVK Saraiya, Muzaffarpur", phone: "0621-2814321 / 9431821004", email: "kvkmuzaffarpur@rediffmail.com" },
+  "bhagalpur": { name: "Bhagalpur (भागलपुर)", office: "BAU Sabour & KVK Sabour", phone: "0641-2451035 / 9431821010", email: "kvksabour@gmail.com" },
+  "rohtas": { name: "Rohtas (रोहतास)", office: "KVK Bikramganj, Rohtas", phone: "06185-222120 / 9431479522", email: "rohtaskvk@gmail.com" },
+  "samastipur": { name: "Samastipur (समस्तीपुर)", office: "RPCAU Pusa & KVK Birauli", phone: "06274-240226 / 9431821015", email: "kvksamastipur@rpcau.ac.in" },
+  "darbhanga": { name: "Darbhanga (दरभंगा)", office: "KVK Jale, Darbhanga", phone: "06272-284333 / 9431821008", email: "kvkdarbhanga@gmail.com" },
+  "purnia": { name: "Purnia (पूर्णिया)", office: "KVK Jalalgarh, Purnia", phone: "06543-228120 / 9431821018", email: "kvkpurnea@yahoo.co.in" },
+  "nalanda": { name: "Nalanda (नालंदा)", office: "KVK Harnaut, Nalanda", phone: "06112-258010 / 9431479511", email: "kvknalanda@gmail.com" },
+  "vaishali": { name: "Vaishali (वैशाली)", office: "KVK Hariharpur, Vaishali", phone: "06224-273100 / 9431821020", email: "kvkvaishali@gmail.com" },
+  "bhojpur": { name: "Bhojpur (भोजपुर)", office: "KVK Ara, Bhojpur", phone: "06182-248101 / 9431479505", email: "kvkbhojpur@gmail.com" },
+  "saran": { name: "Saran / Chhapra (सारण)", office: "KVK Manjhi, Saran", phone: "06152-232145 / 9431821006", email: "kvksaran@gmail.com" }
+};
+
 /* Harvest festivals of India */
 const FESTIVALS = [
   { icon: "🪁", name: "Makar Sankranti / Pongal / Lohri / Magh Bihu", month: "January", season: "winter", desc: "Celebrated across India under many names, this marks the end of winter and the start of the harvest season. Pongal in Tamil Nadu thanks the Sun God for a bountiful rice harvest, Lohri in Punjab celebrates the rabi crop, and Magh Bihu in Assam honours the winter harvest with community feasts." },
@@ -67,7 +83,7 @@ const FESTIVALS = [
   { icon: "🌟", name: "Gudi Padwa / Ugadi", month: "March–April", season: "summer", desc: "The New Year festival of Maharashtra (Gudi Padwa) and Karnataka, Andhra Pradesh and Telangana (Ugadi). It marks the end of the harvest season and the start of spring. A 'Gudi' flag of victory is hoisted, and neem-based dishes are eaten." },
 ];
 
-let CROPS = null;        // {summer:[], winter:[], rain:[]}
+let CROPS = null;
 let currentSeason = null;
 let currentCrop = null;
 let currentView = "welcome";
@@ -101,6 +117,7 @@ function mergeCustomCrops() {
 const VIEW_HISTORY = [];
 const NAV_TAB_OF_VIEW = {
   "welcome-view": "welcome",
+  "kisan-help-view": "kisan-help",
   "recommend-view": "recommend",
   "favorites-view": "favorites",
   "admin-view": "admin",
@@ -166,6 +183,7 @@ window.addEventListener("popstate", (e) => {
 });
 
 function goWelcome() { navigate("welcome-view"); currentSeason = null; currentCrop = null; }
+function goKisanHelp() { navigate("kisan-help-view"); currentSeason = null; currentCrop = null; }
 function goRecommend() { navigate("recommend-view"); currentSeason = null; currentCrop = null; }
 function goFavorites() { renderFavorites(); navigate("favorites-view"); currentSeason = null; currentCrop = null; }
 function goAdmin() {
@@ -211,6 +229,7 @@ function updateCrumb() {
     trail = SEASON_META[currentSeason].label + " Crops";
   } else {
     const labels = {
+      "kisan-help-view": "Kisan Help & Schemes",
       "recommend-view": "Smart Finder",
       "favorites-view": "Favorites",
       "admin-view": "Admin Dashboard",
@@ -224,6 +243,29 @@ function updateCrumb() {
     trail = labels[currentView] || "Home";
   }
   c.textContent = trail;
+}
+
+/* ---------- KISAN HELP DISTRICT DROPDOWN LOGIC ---------- */
+function initKisanHelpSection() {
+  const select = document.getElementById("districtKvkSelect");
+  const resultBox = document.getElementById("districtResultBox");
+
+  if (!select || !resultBox) return;
+
+  select.addEventListener("change", (e) => {
+    const distKey = e.target.value;
+    if (!distKey || !DISTRICT_KVK_DATA[distKey]) {
+      resultBox.innerHTML = "चयनित जिले का संपर्क विवरण यहाँ प्रदर्शित होगा।";
+      return;
+    }
+
+    const d = DISTRICT_KVK_DATA[distKey];
+    resultBox.innerHTML = `
+      <div style="font-weight: 700; color: #173a30; font-size: 0.95rem; margin-bottom: 4px;">🏢 ${escapeHtml(d.office)}</div>
+      <div style="margin-bottom: 3px;"><strong>📞 Phone / Helpline:</strong> <a href="tel:${d.phone.split('/')[0].trim()}" style="color: #2e8b57; font-weight: 700; text-decoration: underline;">${escapeHtml(d.phone)}</a></div>
+      <div><strong>✉️ Email:</strong> <a href="mailto:${escapeHtml(d.email)}" style="color: #1d6fa5;">${escapeHtml(d.email)}</a></div>
+    `;
+  });
 }
 
 /* ---------- FAVORITES LOGIC ---------- */
@@ -616,6 +658,62 @@ function renderCropDetail(season, crop) {
   if ($("#detail-season-full")) $("#detail-season-full").innerHTML = `${m.icon} ${m.label} Season<br><span style="font-weight:400;opacity:.8;font-size:.92rem">${m.tagline} (${m.month})</span>`;
   if ($("#detail-back-bottom")) $("#detail-back-bottom").onclick = () => goCrops(season);
 
+  // Equipments Rendering
+  const defaultEquipments = [
+    "🚜 Tractor / Cultivator (खेत जुताई)",
+    "🌱 Seed Drill / Planter (बुवाई मशीन)",
+    "💧 Water Pump / Drip Irrigation (सिंचाई यंत्र)",
+    "🎒 Knapsack Sprayer (छिड़काव मशीन)",
+    "🌾 Sickle / Harvester (फसल कटाई औजार)"
+  ];
+  const equipList = (crop.equipments && crop.equipments.length > 0) ? crop.equipments : defaultEquipments;
+  const equipContainer = $("#detail-equipments");
+  if (equipContainer) {
+    equipContainer.innerHTML = equipList.map(item => `<span class="equip-pill">${escapeHtml(item)}</span>`).join('');
+  }
+
+  // Step-by-Step Cultivation Guide Rendering
+  const defaultSteps = [
+    {
+      title: "Step 1: खेत की तैयारी (Field Preparation)",
+      desc: "मिट्टी पलटने वाले हल या रोटावेटर से 2-3 बार गहरी जुताई करें। प्रति एकड़ 4-5 टन सड़ी गोबर की खाद (FYM) मिलाकर खेत को भुरभुरा और समतल बना लें।"
+    },
+    {
+      title: "Step 2: बीज चयन एवं उपचार (Seed Selection & Treatment)",
+      desc: "बीज भंडार से प्रमाणित बीजों का चयन करें। फफूंदजनित रोगों से सुरक्षा के लिए थीरम, बाविस्टिन या ट्राइकोडर्मा से बीजोपचार जरूर करें।"
+    },
+    {
+      title: "Step 3: बुवाई एवं रोपाई (Sowing & Transplantation)",
+      desc: "कतार से कतार और पौधे से पौधे की निश्चित दूरी बनाए रखते हुए बीजों को 2-4 सेमी गहराई में बोएं या नर्सरी पौधे लगाएं।"
+    },
+    {
+      title: "Step 4: सिंचाई एवं उर्वरक प्रबंधन (Irrigation & Nutrients)",
+      desc: "बुवाई के तुरंत बाद पहली हल्की सिंचाई दें। आवश्यकतानुसार यूरिया, डीएपी (DAP) और पोटाश को सही अनुपात में निर्धारित समय पर दें।"
+    },
+    {
+      title: "Step 5: निराई-गुड़ाई एवं खरपतवार नियंत्रण (Weeding & Crop Care)",
+      desc: "शुरुआती 20-30 दिनों के भीतर खरपतवार निकालें। किसी भी कीट या रोग के लक्षण दिखने पर अनुशंसित कीटनाशक का छिड़काव करें।"
+    },
+    {
+      title: "Step 6: कटाई एवं सुरक्षित भंडारण (Harvesting & Storage)",
+      desc: "फसल पूरी तरह पकने के बाद उचित धूप वाले दिन कटाई करें। दानों को अच्छी तरह सुखाकर सुरक्षित नमी स्तर पर भंडारित करें।"
+    }
+  ];
+
+  const stepsList = (crop.steps && crop.steps.length > 0) ? crop.steps : defaultSteps;
+  const stepsContainer = $("#detail-steps");
+  if (stepsContainer) {
+    stepsContainer.innerHTML = stepsList.map((step, idx) => `
+      <div class="step-card">
+        <div class="step-badge">${idx + 1}</div>
+        <div class="step-info">
+          <h4>${escapeHtml(step.title)}</h4>
+          <p>${escapeHtml(step.desc)}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
   initCropReviewSystem(crop.name);
 }
 
@@ -946,6 +1044,7 @@ function init() {
   }
 
   // Welcome Part-2 Options
+  if ($("#opt-help")) $("#opt-help").onclick = () => goKisanHelp();
   if ($("#opt-recommend")) $("#opt-recommend").onclick = () => goRecommend();
   if ($("#opt-season")) $("#opt-season").onclick = () => goSeasons();
   if ($("#opt-agri")) $("#opt-agri").onclick = () => goAgri();
@@ -956,6 +1055,7 @@ function init() {
     b.onclick = () => {
       const nav = b.dataset.nav;
       if (nav === "welcome") goWelcome();
+      else if (nav === "kisan-help") goKisanHelp();
       else if (nav === "recommend") goRecommend();
       else if (nav === "favorites") goFavorites();
       else if (nav === "admin") goAdmin();
@@ -970,6 +1070,8 @@ function init() {
   if ($("#home-btn")) $("#home-btn").onclick = () => goWelcome();
 
   // Bottom Nav Back Buttons
+  if ($("#help-back-welcome")) $("#help-back-welcome").onclick = () => goWelcome();
+  if ($("#help-go-seasons")) $("#help-go-seasons").onclick = () => goSeasons();
   if ($("#rec-back-welcome")) $("#rec-back-welcome").onclick = () => goWelcome();
   if ($("#rec-go-seasons")) $("#rec-go-seasons").onclick = () => goSeasons();
   if ($("#fav-back-welcome")) $("#fav-back-welcome").onclick = () => goWelcome();
@@ -990,6 +1092,7 @@ function init() {
   if ($("#stat-seasons")) $("#stat-seasons").textContent = Object.keys(CROPS).length;
 
   initMusic();
+  initKisanHelpSection();
   initCropRecommender();
   initWeatherWidget();
   initMandiPrices();

@@ -166,12 +166,10 @@ a { color: inherit; text-decoration: none; }
   display: none !important;
 }
 
-/* Hide only Google top banner frame, not the popup */
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
 }
 
-/* Translation Popup Window Layer */
 .goog-te-menu-frame {
   z-index: 99999999 !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
@@ -337,10 +335,9 @@ a { color: inherit; text-decoration: none; }
 
 .welcome-options {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px; max-width: 1080px; width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px; max-width: 1100px; width: 100%;
 }
-@media (max-width: 860px) { .welcome-options { grid-template-columns: 1fr; } }
 
 .welcome-option {
   display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -377,6 +374,216 @@ a { color: inherit; text-decoration: none; }
   transition: gap var(--transition);
 }
 .welcome-option:hover .opt-go { gap: 13px; }
+
+/* ============================================================
+   KISAN HELP & SCHEMES VIEW
+   ============================================================ */
+#kisan-help-view {
+  background: #f4f8f6;
+  padding-bottom: 60px;
+}
+
+.help-container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 0 24px;
+}
+
+.help-block-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.help-block-title span {
+  font-size: 1.8rem;
+}
+.help-block-title h3 {
+  font-family: var(--font-head);
+  font-size: 1.45rem;
+  color: #173a30;
+  font-weight: 800;
+}
+
+/* Helpline Cards Grid */
+.helpline-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 20px;
+}
+
+.helpline-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid #e1ebe5;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.helpline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.helpline-card .hl-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.helpline-card.india-card .hl-badge { background: #eaf4ee; color: #1e6c43; }
+.helpline-card.bihar-card .hl-badge { background: #fff8eb; color: #a46d1b; }
+.helpline-card.district-card .hl-badge { background: #eef3ff; color: #2e55a4; }
+
+.helpline-card h4 {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  color: #173a30;
+  margin-bottom: 8px;
+}
+.helpline-card p {
+  font-size: 0.9rem;
+  color: #5d716a;
+  line-height: 1.5;
+  flex: 1;
+  margin-bottom: 16px;
+}
+.helpline-card .hl-number a {
+  display: inline-block;
+  background: linear-gradient(135deg, #1b4d3e, #2e8b57);
+  color: #ffd36b;
+  font-size: 1.2rem;
+  font-weight: 800;
+  padding: 12px 18px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(46,139,87,0.3);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.helpline-card .hl-number a:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
+}
+.helpline-card .hl-sub {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: #7b8e87;
+}
+
+.district-search-bar select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #c9dcd2;
+  outline: none;
+  font-size: 0.92rem;
+  background: #fdfdfd;
+  color: #173a30;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.district-res-box {
+  background: #f6faf8;
+  border: 1px solid #dbeae2;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.88rem;
+  color: #274b40;
+  line-height: 1.45;
+  min-height: 60px;
+}
+
+/* Schemes Grid */
+.schemes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.scheme-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  border-top: 4px solid #2e8b57;
+  display: flex;
+  flex-direction: column;
+}
+.scheme-item .sc-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+.scheme-item h4 {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  color: #173a30;
+  margin-bottom: 6px;
+}
+.scheme-item .sc-amount {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #b35900;
+  background: #fff6ed;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.scheme-item p {
+  font-size: 0.88rem;
+  color: #556c64;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex: 1;
+}
+.scheme-item .sc-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2e8b57;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.scheme-item .sc-link:hover {
+  text-decoration: underline;
+}
+
+/* Facilities Grid */
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+.facility-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  border: 1px solid #e1eae5;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+}
+.facility-card .f-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.facility-card .f-emoji {
+  font-size: 1.5rem;
+}
+.facility-card h4 {
+  font-family: var(--font-head);
+  font-size: 1.02rem;
+  color: #173a30;
+}
+.facility-card p {
+  font-size: 0.88rem;
+  color: #4a635a;
+  line-height: 1.5;
+}
 
 /* ============================================================
    SEASON SELECT VIEW
@@ -623,6 +830,79 @@ a { color: inherit; text-decoration: none; }
 .fact .fact-body .label { font-size: .76rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8aa098; }
 .fact .fact-body .value { font-size: 1.05rem; font-weight: 600; color: #173a30; margin-top: 3px; line-height: 1.4; }
 
+/* ---------- Equipment & Step-by-step Cultivation Guide Styles ---------- */
+.equip-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.equip-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0f7f4;
+  border: 1px solid #c8e4d6;
+  color: #144d36;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.equip-pill:hover {
+  background: #e1f0e8;
+  transform: translateY(-2px);
+}
+
+.steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step-card {
+  display: flex;
+  gap: 16px;
+  background: #fdfefe;
+  border: 1.5px solid #e8f0ec;
+  border-radius: 14px;
+  padding: 16px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.step-card:hover {
+  border-color: #2e8b57;
+  transform: translateX(4px);
+}
+
+.step-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7bd66f, #2e8b57);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.step-info h4 {
+  color: #173a30;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.step-info p {
+  color: #445d55;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .bottom-nav {
   max-width: 1000px; margin: 26px auto 0; padding: 0 24px;
   display: flex; justify-content: center;
@@ -743,7 +1023,6 @@ a { color: inherit; text-decoration: none; }
 }
 .india-map-img { width: 100%; display: block; border-radius: 10px; }
 
-/* Dynamic State Markers on the India Map */
 .state-pin {
   position: absolute;
   transform: translate(-50%, -50%);
