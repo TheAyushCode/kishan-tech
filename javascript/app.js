@@ -53,20 +53,113 @@ const STATE_COORDINATES = {
   "assam": { top: "36%", left: "84%", name: "Assam" }
 };
 
-/* Bihar District KVK / Agriculture Officer Contacts */
-const DISTRICT_KVK_DATA = {
-  "patna": { name: "Patna (पटना)", office: "KVK Barh & DAO Patna", phone: "06132-243250 / 9431821001", email: "kvkpatna@icar.gov.in" },
-  "gaya": { name: "Gaya (गया)", office: "KVK Manpur, Gaya", phone: "0631-2228390 / 9431479500", email: "kvkgaya@gmail.com" },
-  "muzaffarpur": { name: "Muzaffarpur (मुजफ्फरपुर)", office: "KVK Saraiya, Muzaffarpur", phone: "0621-2814321 / 9431821004", email: "kvkmuzaffarpur@rediffmail.com" },
-  "bhagalpur": { name: "Bhagalpur (भागलपुर)", office: "BAU Sabour & KVK Sabour", phone: "0641-2451035 / 9431821010", email: "kvksabour@gmail.com" },
-  "rohtas": { name: "Rohtas (रोहतास)", office: "KVK Bikramganj, Rohtas", phone: "06185-222120 / 9431479522", email: "rohtaskvk@gmail.com" },
-  "samastipur": { name: "Samastipur (समस्तीपुर)", office: "RPCAU Pusa & KVK Birauli", phone: "06274-240226 / 9431821015", email: "kvksamastipur@rpcau.ac.in" },
-  "darbhanga": { name: "Darbhanga (दरभंगा)", office: "KVK Jale, Darbhanga", phone: "06272-284333 / 9431821008", email: "kvkdarbhanga@gmail.com" },
-  "purnia": { name: "Purnia (पूर्णिया)", office: "KVK Jalalgarh, Purnia", phone: "06543-228120 / 9431821018", email: "kvkpurnea@yahoo.co.in" },
-  "nalanda": { name: "Nalanda (नालंदा)", office: "KVK Harnaut, Nalanda", phone: "06112-258010 / 9431479511", email: "kvknalanda@gmail.com" },
-  "vaishali": { name: "Vaishali (वैशाली)", office: "KVK Hariharpur, Vaishali", phone: "06224-273100 / 9431821020", email: "kvkvaishali@gmail.com" },
-  "bhojpur": { name: "Bhojpur (भोजपुर)", office: "KVK Ara, Bhojpur", phone: "06182-248101 / 9431479505", email: "kvkbhojpur@gmail.com" },
-  "saran": { name: "Saran / Chhapra (सारण)", office: "KVK Manjhi, Saran", phone: "06152-232145 / 9431821006", email: "kvksaran@gmail.com" }
+/* Multi-State Kisan Helplines & District KVK Database */
+const STATE_AGRICULTURE_DATA = {
+  bihar: {
+    name: "Bihar (बिहार)",
+    deptHelpline: "1800-345-6455",
+    desc: "कृषि विभाग, बिहार सरकार (डीजल अनुदान, बीज वितरण व सरकारी सलाह हेतु)",
+    districts: {
+      patna: { name: "Patna (पटना)", office: "KVK Barh & DAO Patna", phone: "06132-243250 / 9431821001", email: "kvkpatna@icar.gov.in" },
+      gaya: { name: "Gaya (गया)", office: "KVK Manpur, Gaya", phone: "0631-2228390 / 9431479500", email: "kvkgaya@gmail.com" },
+      muzaffarpur: { name: "Muzaffarpur (मुजफ्फरपुर)", office: "KVK Saraiya, Muzaffarpur", phone: "0621-2814321 / 9431821004", email: "kvkmuzaffarpur@rediffmail.com" },
+      bhagalpur: { name: "Bhagalpur (भागलपुर)", office: "BAU Sabour & KVK Sabour", phone: "0641-2451035 / 9431821010", email: "kvksabour@gmail.com" },
+      rohtas: { name: "Rohtas (रोहतास)", office: "KVK Bikramganj, Rohtas", phone: "06185-222120 / 9431479522", email: "rohtaskvk@gmail.com" },
+      samastipur: { name: "Samastipur (समस्तीपुर)", office: "RPCAU Pusa & KVK Birauli", phone: "06274-240226 / 9431821015", email: "kvksamastipur@rpcau.ac.in" },
+      darbhanga: { name: "Darbhanga (दरभंगा)", office: "KVK Jale, Darbhanga", phone: "06272-284333 / 9431821008", email: "kvkdarbhanga@gmail.com" },
+      purnia: { name: "Purnia (पूर्णिया)", office: "KVK Jalalgarh, Purnia", phone: "06543-228120 / 9431821018", email: "kvkpurnea@yahoo.co.in" },
+      nalanda: { name: "Nalanda (नालंदा)", office: "KVK Harnaut, Nalanda", phone: "06112-258010 / 9431479511", email: "kvknalanda@gmail.com" },
+      vaishali: { name: "Vaishali (वैशाली)", office: "KVK Hariharpur, Vaishali", phone: "06224-273100 / 9431821020", email: "kvkvaishali@gmail.com" },
+      bhojpur: { name: "Bhojpur (भोजपुर)", office: "KVK Ara, Bhojpur", phone: "06182-248101 / 9431479505", email: "kvkbhojpur@gmail.com" },
+      saran: { name: "Saran / Chhapra (सारण)", office: "KVK Manjhi, Saran", phone: "06152-232145 / 9431821006", email: "kvksaran@gmail.com" }
+    }
+  },
+  up: {
+    name: "Uttar Pradesh (उत्तर प्रदेश)",
+    deptHelpline: "1800-180-1551 / 0522-2204555",
+    desc: "कृषि विभाग, उत्तर प्रदेश सरकार (पारदर्शी किसान सेवा पोर्टल एवं अनुदान)",
+    districts: {
+      lucknow: { name: "Lucknow (लखनऊ)", office: "KVK ICAR-IISR Lucknow", phone: "0522-2480726", email: "kvklucknow@gmail.com" },
+      kanpur: { name: "Kanpur (कानपुर)", office: "CSAUAT & KVK Kanpur", phone: "0512-2534156", email: "kvkkanpur@csauk.ac.in" },
+      varanasi: { name: "Varanasi (वाराणसी)", office: "ICAR-IIVR KVK Varanasi", phone: "0542-2635231", email: "kvkvaranasi@iivr.org.in" },
+      prayagraj: { name: "Prayagraj (प्रयागराज)", office: "SHUATS KVK Prayagraj", phone: "0532-2684281", email: "kvkallahabad@rediffmail.com" },
+      meerut: { name: "Meerut (मेरठ)", office: "SVPUAT KVK Hastinapur", phone: "0121-2888514", email: "kvkmeerut@gmail.com" },
+      gorakhpur: { name: "Gorakhpur (गोरखपुर)", office: "KVK Belipar Gorakhpur", phone: "0551-2402241", email: "kvkgorakhpur@gmail.com" },
+      agra: { name: "Agra (आगरा)", office: "KVK Bichpuri, Agra", phone: "0562-2760205", email: "kvkagra@gmail.com" }
+    }
+  },
+  punjab: {
+    name: "Punjab (पंजाब)",
+    deptHelpline: "1800-180-1551 / 0161-2401960",
+    desc: "Department of Agriculture & Farmers Welfare, Punjab (PAU Ludhiana)",
+    districts: {
+      ludhiana: { name: "Ludhiana (ਲੁਧਿਆਣਾ)", office: "PAU Directorate of Extension & KVK", phone: "0161-2401960", email: "kvkludhiana@pau.edu" },
+      amritsar: { name: "Amritsar (ਅੰਮ੍ਰਿਤਸਰ)", office: "KVK Nag Kalan, Amritsar", phone: "0183-2783850", email: "kvkamritsar@pau.edu" },
+      jalandhar: { name: "Jalandhar (ਜਲੰਧਰ)", office: "KVK Nurmahal, Jalandhar", phone: "01826-244243", email: "kvkjalandhar@pau.edu" },
+      patiala: { name: "Patiala (ਪਟਿਆਲਾ)", office: "KVK Rauni, Patiala", phone: "0175-2212055", email: "kvkpatiala@pau.edu" },
+      bathinda: { name: "Bathinda (ਬਠਿੰਡਾ)", office: "KVK Dabwali Road, Bathinda", phone: "0164-2212159", email: "kvkbathinda@pau.edu" }
+    }
+  },
+  haryana: {
+    name: "Haryana (हरियाणा)",
+    deptHelpline: "1800-180-2117 / 0172-2571553",
+    desc: "कृषि तथा किसान कल्याण विभाग, हरियाणा (CCSHAU Hisar एवं मेरी फसल मेरा ब्योरा)",
+    districts: {
+      hisar: { name: "Hisar (हिसार)", office: "CCSHAU Extension Directorate & KVK", phone: "01662-284301", email: "kvkhisar@hau.ac.in" },
+      karnal: { name: "Karnal (करनाल)", office: "NDRI & KVK Uchani, Karnal", phone: "0184-2267590", email: "kvkkarnal@gmail.com" },
+      rohtak: { name: "Rohtak (रोहतक)", office: "KVK Rohtak", phone: "01262-274205", email: "kvkrohtak@gmail.com" },
+      ambala: { name: "Ambala (अम्बाला)", office: "KVK Tepla, Ambala", phone: "0171-2830230", email: "kvkambala@gmail.com" },
+      sirsa: { name: "Sirsa (सिरसा)", office: "KVK Sirsa", phone: "01666-220025", email: "kvksirsa@gmail.com" }
+    }
+  },
+  mp: {
+    name: "Madhya Pradesh (मध्य प्रदेश)",
+    deptHelpline: "0755-2558823 / 1800-180-1551",
+    desc: "किसान कल्याण एवं कृषि विकास विभाग, मध्य प्रदेश शासन",
+    districts: {
+      bhopal: { name: "Bhopal (भोपाल)", office: "CIAE & KVK Nabi Bagh, Bhopal", phone: "0755-2737191", email: "kvkbhopal@icar.gov.in" },
+      indore: { name: "Indore (इंदौर)", office: "KVK Kasturbagram, Indore", phone: "0731-2856230", email: "kvkindore@gmail.com" },
+      jabalpur: { name: "Jabalpur (जबलपुर)", office: "JNKVV KVK Jabalpur", phone: "0761-2681021", email: "kvkjabalpur@jnkvv.org" },
+      gwalior: { name: "Gwalior (ग्वालियर)", office: "RVSKVV KVK Gwalior", phone: "0751-2467650", email: "kvkgwalior@rediffmail.com" },
+      ujjain: { name: "Ujjain (उज्जैन)", office: "KVK Ujjain", phone: "0734-2512140", email: "kvkujjain@gmail.com" }
+    }
+  },
+  rajasthan: {
+    name: "Rajasthan (राजस्थान)",
+    deptHelpline: "1800-180-1551 / 0141-2227365",
+    desc: "कृषि विभाग, राजस्थान सरकार (राज किसान साथी पोर्टल)",
+    districts: {
+      jaipur: { name: "Jaipur (जयपुर)", office: "KVK Chomu, Jaipur", phone: "01423-221235", email: "kvkjaipur@gmail.com" },
+      jodhpur: { name: "Jodhpur (जोधपुर)", office: "CAZRI & KVK Jodhpur", phone: "0291-2786534", email: "kvkjodhpur@cazri.res.in" },
+      kota: { name: "Kota (कोटा)", office: "Agriculture University & KVK Kota", phone: "0744-2321205", email: "kvkkota@aukota.org" },
+      udaipur: { name: "Udaipur (उदयपुर)", office: "MPUAT KVK Badgaon, Udaipur", phone: "0294-2441223", email: "kvkudaipur@mpuat.ac.in" },
+      bikaner: { name: "Bikaner (बीकानेर)", office: "SKRAU & KVK Bikaner", phone: "0151-2250025", email: "kvkbikaner@raubikaner.org" }
+    }
+  },
+  maharashtra: {
+    name: "Maharashtra (महाराष्ट्र)",
+    deptHelpline: "1800-233-4000 / 020-25537550",
+    desc: "कृषी विभाग, महाराष्ट्र शासन (महाडीबीटी शेतकरी योजना)",
+    districts: {
+      pune: { name: "Pune (पुणे)", office: "KVK Baramati, Pune", phone: "02112-255207", email: "kvkbaramati@yahoo.com" },
+      nashik: { name: "Nashik (नाशिक)", office: "YCMOU KVK Yashwantrao Chavan Nashik", phone: "0253-2230717", email: "kvknashik@rediffmail.com" },
+      nagpur: { name: "Nagpur (नागपूर)", office: "CICR & KVK Nagpur", phone: "07103-275536", email: "kvknagpur@gmail.com" },
+      aurangabad: { name: "Chhatrapati Sambhajinagar (औरंगाबाद)", office: "VNMKV KVK Aurangabad", phone: "0240-2376558", email: "kvkaurangabad@rediffmail.com" },
+      solapur: { name: "Solapur (सोलापूर)", office: "KVK Kegaon, Solapur", phone: "0217-2500420", email: "kvksolapur@rediffmail.com" }
+    }
+  },
+  wb: {
+    name: "West Bengal (পশ্চিমবঙ্গ)",
+    deptHelpline: "1800-103-6000 / 033-22145555",
+    desc: "Department of Agriculture, Govt. of West Bengal (Krishak Bandhu Scheme)",
+    districts: {
+      burdwan: { name: "Burdwan (বর্ধমান)", office: "BCKV KVK Burdwan", phone: "0342-2656244", email: "kvkburdwan@gmail.com" },
+      north24pgs: { name: "North 24 Parganas (উত্তর ২৪ পরগনা)", office: "WBUAFS KVK Ashokenagar", phone: "03216-231120", email: "kvknorth24pgs@gmail.com" },
+      south24pgs: { name: "South 24 Parganas (দক্ষিণ ২৪ পরগনা)", office: "KVK Nimpith, South 24 Pgs", phone: "03218-226002", email: "nimpithkvk1979@gmail.com" },
+      murshidabad: { name: "Murshidabad (মুর্শিদাবাদ)", office: "KVK Murshidabad", phone: "03482-251120", email: "kvkmurshidabad@gmail.com" },
+      hooghly: { name: "Hooghly (হুগলি)", office: "BCKV KVK Chinsurah, Hooghly", phone: "033-26861240", email: "kvkhooghly@gmail.com" }
+    }
+  }
 };
 
 /* Harvest festivals of India */
@@ -245,27 +338,72 @@ function updateCrumb() {
   c.textContent = trail;
 }
 
-/* ---------- KISAN HELP DISTRICT DROPDOWN LOGIC ---------- */
+/* ---------- DYNAMIC MULTI-STATE KISAN HELP DROPDOWN LOGIC ---------- */
 function initKisanHelpSection() {
-  const select = document.getElementById("districtKvkSelect");
+  const stateSelect = document.getElementById("stateSelect");
+  const districtSelect = document.getElementById("districtKvkSelect");
   const resultBox = document.getElementById("districtResultBox");
 
-  if (!select || !resultBox) return;
+  const stateCardBadge = document.getElementById("stateCardBadge");
+  const stateCardTitle = document.getElementById("stateCardTitle");
+  const stateCardDesc = document.getElementById("stateCardDesc");
+  const stateCardNumber = document.getElementById("stateCardNumber");
+  const stateCardTelLink = document.getElementById("stateCardTelLink");
 
-  select.addEventListener("change", (e) => {
+  if (!stateSelect || !districtSelect || !resultBox) return;
+
+  function populateDistricts(stateKey) {
+    districtSelect.innerHTML = '<option value="">-- जिला चुनें (Select District) --</option>';
+
+    if (!stateKey || !STATE_AGRICULTURE_DATA[stateKey]) {
+      resultBox.innerHTML = "राज्य व जिले का चयन करने पर संपर्क विवरण यहाँ प्रदर्शित होगा।";
+      return;
+    }
+
+    const stateData = STATE_AGRICULTURE_DATA[stateKey];
+
+    // Dynamically update state card
+    if (stateCardTitle) stateCardTitle.textContent = `${stateData.name} Agriculture Helpline`;
+    if (stateCardBadge) stateCardBadge.textContent = `🏛️ ${stateData.name} State`;
+    if (stateCardDesc) stateCardDesc.textContent = stateData.desc;
+    if (stateCardNumber) stateCardNumber.textContent = stateData.deptHelpline;
+    if (stateCardTelLink) stateCardTelLink.href = `tel:${stateData.deptHelpline.split('/')[0].trim()}`;
+
+    // Populate district select
+    const districts = stateData.districts;
+    Object.keys(districts).forEach((distKey) => {
+      const opt = document.createElement("option");
+      opt.value = distKey;
+      opt.textContent = districts[distKey].name;
+      districtSelect.appendChild(opt);
+    });
+
+    resultBox.innerHTML = `कृपया <strong>${escapeHtml(stateData.name)}</strong> का जिला चुनें।`;
+  }
+
+  stateSelect.addEventListener("change", (e) => {
+    populateDistricts(e.target.value);
+  });
+
+  districtSelect.addEventListener("change", (e) => {
+    const stateKey = stateSelect.value;
     const distKey = e.target.value;
-    if (!distKey || !DISTRICT_KVK_DATA[distKey]) {
+
+    if (!stateKey || !distKey || !STATE_AGRICULTURE_DATA[stateKey]?.districts[distKey]) {
       resultBox.innerHTML = "चयनित जिले का संपर्क विवरण यहाँ प्रदर्शित होगा।";
       return;
     }
 
-    const d = DISTRICT_KVK_DATA[distKey];
+    const d = STATE_AGRICULTURE_DATA[stateKey].districts[distKey];
     resultBox.innerHTML = `
       <div style="font-weight: 700; color: #173a30; font-size: 0.95rem; margin-bottom: 4px;">🏢 ${escapeHtml(d.office)}</div>
       <div style="margin-bottom: 3px;"><strong>📞 Phone / Helpline:</strong> <a href="tel:${d.phone.split('/')[0].trim()}" style="color: #2e8b57; font-weight: 700; text-decoration: underline;">${escapeHtml(d.phone)}</a></div>
       <div><strong>✉️ Email:</strong> <a href="mailto:${escapeHtml(d.email)}" style="color: #1d6fa5;">${escapeHtml(d.email)}</a></div>
     `;
   });
+
+  // Default initialize with Bihar
+  populateDistricts("bihar");
 }
 
 /* ---------- FAVORITES LOGIC ---------- */
@@ -717,12 +855,28 @@ function renderCropDetail(season, crop) {
   initCropReviewSystem(crop.name);
 }
 
-/* ---------- Crop Recommendation System Logic ---------- */
+/* ---------- Crop Recommendation System Logic (Expanded Soil Support) ---------- */
 function initCropRecommender() {
   const form = $("#recommenderForm");
   const resultsContainer = $("#recommendationResults");
 
   if (!form) return;
+
+  const soilKeywords = {
+    alluvial: ["alluvial", "loam", "loamy", "silt", "ganga", "river", "rich"],
+    black: ["black", "regur", "cotton soil", "deep black", "medium black"],
+    red: ["red", "yellow", "red loam", "red soil"],
+    laterite: ["laterite", "lateritic", "acidic", "ghats"],
+    loam: ["loam", "loamy", "fertile loam", "sandy loam", "clay loam"],
+    sandy: ["sandy", "arid", "desert", "light", "drought", "dry"],
+    clay: ["clay", "clayey", "heavy soil", "water-retentive", "puddled"],
+    mountain: ["mountain", "forest", "hill", "hilly", "humus", "stone"],
+    saline: ["saline", "alkaline", "sodic", "salt", "coastal", "usar"],
+    peaty: ["peaty", "marshy", "organic", "boggy", "waterlogged"],
+    tarai: ["terai", "tarai", "swampy", "sub-mountain", "alluvial"],
+    coastal: ["coastal", "beach", "coastal sand", "lateritic", "saline"],
+    gravelly: ["gravelly", "skeletal", "rocky", "stony", "marginal", "poor"]
+  };
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -735,15 +889,18 @@ function initCropRecommender() {
     const list = CROPS[selectedSeason];
     const recommended = list.filter((crop) => {
       if (selectedSoil === "all") return true;
+
       const soilText = (crop.soil || "").toLowerCase();
-      return soilText.includes(selectedSoil.toLowerCase());
+      const keywords = soilKeywords[selectedSoil] || [selectedSoil.toLowerCase()];
+
+      return keywords.some((kw) => soilText.includes(kw));
     });
 
     resultsContainer.innerHTML = "";
 
     if (recommended.length === 0) {
       resultsContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:30px; color:#6b7d76;">
-        😣 Is soil type ke liye is season me koi exact crop match nahi hui. Try selecting "All Soil Types".
+        😣 Is soil type ke liye is season mein exact crop match nahi mili. Kripya "All Soil Types" chunein.
       </div>`;
       return;
     }
@@ -920,46 +1077,96 @@ function initMandiPrices() {
   }
 }
 
-/* ---------- FERTILIZER & SEED CALCULATOR LOGIC ---------- */
+/* ---------- EXPANDED FERTILIZER & SEED CALCULATOR ENGINE ---------- */
 const CROP_REQUIREMENTS_PER_ACRE = {
-  wheat:   { seed: 40, urea: 65, dap: 50, potash: 20 },
-  rice:    { seed: 10, urea: 70, dap: 40, potash: 25 },
-  maize:   { seed: 8,  urea: 80, dap: 50, potash: 30 },
-  cotton:  { seed: 2.5, urea: 90, dap: 45, potash: 30 },
-  mustard: { seed: 2.5, urea: 45, dap: 30, potash: 15 },
-  potato:  { seed: 1200, urea: 100, dap: 80, potash: 60 }
+  wheat:       { seed: 40,   urea: 65,  dap: 50, potash: 20 },
+  rice:        { seed: 12,   urea: 70,  dap: 40, potash: 25 },
+  maize:       { seed: 8,    urea: 85,  dap: 50, potash: 30 },
+  bajra:       { seed: 2,    urea: 40,  dap: 30, potash: 15 },
+  jowar:       { seed: 4,    urea: 45,  dap: 30, potash: 20 },
+  barley:      { seed: 35,   urea: 50,  dap: 35, potash: 20 },
+  ragi:        { seed: 2,    urea: 35,  dap: 25, potash: 15 },
+
+  sugarcane:   { seed: 3000, urea: 150, dap: 60, potash: 50 },
+  cotton:      { seed: 2.5,  urea: 90,  dap: 45, potash: 30 },
+  jute:        { seed: 3,    urea: 50,  dap: 25, potash: 20 },
+  potato:      { seed: 1200, urea: 100, dap: 80, potash: 60 },
+  onion:       { seed: 4,    urea: 60,  dap: 45, potash: 35 },
+
+  mustard:     { seed: 2,    urea: 45,  dap: 30, potash: 15 },
+  soybean:     { seed: 30,   urea: 25,  dap: 50, potash: 25 },
+  groundnut:   { seed: 45,   urea: 20,  dap: 40, potash: 30 },
+  sunflower:   { seed: 3,    urea: 40,  dap: 40, potash: 25 },
+  sesame:      { seed: 2,    urea: 25,  dap: 20, potash: 15 },
+
+  chickpea:    { seed: 35,   urea: 15,  dap: 45, potash: 15 },
+  pigeonpea:   { seed: 8,    urea: 15,  dap: 40, potash: 15 },
+  moong:       { seed: 8,    urea: 10,  dap: 35, potash: 10 },
+  urad:        { seed: 8,    urea: 10,  dap: 35, potash: 10 },
+  lentil:      { seed: 15,   urea: 15,  dap: 40, potash: 15 },
+  pea:         { seed: 35,   urea: 20,  dap: 40, potash: 20 },
+
+  chilli:      { seed: 0.5,  urea: 70,  dap: 50, potash: 40 },
+  tomato:      { seed: 0.2,  urea: 65,  dap: 50, potash: 45 },
+  garlic:      { seed: 200,  urea: 50,  dap: 40, potash: 30 },
+  turmeric:    { seed: 800,  urea: 80,  dap: 50, potash: 60 },
+  ginger:      { seed: 700,  urea: 75,  dap: 45, potash: 50 }
 };
 
+function convertToAcres(val, unit) {
+  switch (unit) {
+    case "acre":       return val;
+    case "hectare":    return val * 2.47105;
+    case "bigha_std":  return val / 1.6;
+    case "bigha_wb":   return val / 3.025;
+    case "katha":      return val / 32;
+    case "biswa":      return val / 32;
+    case "guntha":     return val / 40;
+    case "cent":       return val / 100;
+    case "ground":     return val / 18.15;
+    case "kanal":      return val / 8;
+    case "marla":      return val / 160;
+    case "sq_yard":    return val / 4840;
+    case "sq_meter":   return val / 4046.86;
+    default:           return val;
+  }
+}
+
 function initFertilizerCalculator() {
-  const form = document.getElementById('agriCalcForm');
-  const resultsBox = document.getElementById('calcResults');
+  const form = document.getElementById("agriCalcForm");
+  const resultsBox = document.getElementById("calcResults");
 
   if (!form) return;
 
   form.onsubmit = (e) => {
     e.preventDefault();
 
-    const cropKey = document.getElementById('calcCrop').value;
-    const landValue = parseFloat(document.getElementById('calcLandValue').value);
-    const unit = document.getElementById('calcLandUnit').value;
+    const cropKey = document.getElementById("calcCrop").value;
+    const landValue = parseFloat(document.getElementById("calcLandValue").value);
+    const unit = document.getElementById("calcLandUnit").value;
 
     if (isNaN(landValue) || landValue <= 0) return;
 
-    let acres = landValue;
-    if (unit === 'bigha') {
-      acres = landValue / 4.8;
-    } else if (unit === 'hectare') {
-      acres = landValue * 2.471;
-    }
-
+    const acres = convertToAcres(landValue, unit);
     const req = CROP_REQUIREMENTS_PER_ACRE[cropKey] || { seed: 10, urea: 50, dap: 30, potash: 20 };
 
-    document.getElementById('resSeed').textContent = (req.seed * acres).toFixed(1) + ' kg';
-    document.getElementById('resUrea').textContent = (req.urea * acres).toFixed(1) + ' kg';
-    document.getElementById('resDap').textContent = (req.dap * acres).toFixed(1) + ' kg';
-    document.getElementById('resPotash').textContent = (req.potash * acres).toFixed(1) + ' kg';
+    const seedTotal = (req.seed * acres).toFixed(acres < 0.1 ? 2 : 1);
+    const ureaTotal = (req.urea * acres).toFixed(acres < 0.1 ? 2 : 1);
+    const dapTotal = (req.dap * acres).toFixed(acres < 0.1 ? 2 : 1);
+    const potashTotal = (req.potash * acres).toFixed(acres < 0.1 ? 2 : 1);
 
-    resultsBox.style.display = 'block';
+    document.getElementById("resSeed").textContent = `${seedTotal} kg`;
+    document.getElementById("resUrea").textContent = `${ureaTotal} kg`;
+    document.getElementById("resDap").textContent = `${dapTotal} kg`;
+    document.getElementById("resPotash").textContent = `${potashTotal} kg`;
+
+    const acreText = document.getElementById("calculatedAcreText");
+    if (acreText) {
+      acreText.textContent = `Equiv. Area: ${acres.toFixed(3)} Acre (एकड़)`;
+    }
+
+    resultsBox.style.display = "block";
+    resultsBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
 }
 
@@ -1029,7 +1236,6 @@ function init() {
   renderSeasons();
   renderFestivals();
 
-  // Welcome CTA
   if ($("#welcome-cta")) {
     $("#welcome-cta").onclick = () => {
       const part2 = document.querySelector(".welcome-part-2");
@@ -1043,14 +1249,12 @@ function init() {
     };
   }
 
-  // Welcome Part-2 Options
   if ($("#opt-help")) $("#opt-help").onclick = () => goKisanHelp();
   if ($("#opt-recommend")) $("#opt-recommend").onclick = () => goRecommend();
   if ($("#opt-season")) $("#opt-season").onclick = () => goSeasons();
   if ($("#opt-agri")) $("#opt-agri").onclick = () => goAgri();
   if ($("#opt-map")) $("#opt-map").onclick = () => goIndiaMap();
 
-  // Top Nav Tabs
   document.querySelectorAll(".nav-link").forEach(b => {
     b.onclick = () => {
       const nav = b.dataset.nav;
@@ -1066,10 +1270,8 @@ function init() {
     };
   });
 
-  // Brand logo
   if ($("#home-btn")) $("#home-btn").onclick = () => goWelcome();
 
-  // Bottom Nav Back Buttons
   if ($("#help-back-welcome")) $("#help-back-welcome").onclick = () => goWelcome();
   if ($("#help-go-seasons")) $("#help-go-seasons").onclick = () => goSeasons();
   if ($("#rec-back-welcome")) $("#rec-back-welcome").onclick = () => goWelcome();
@@ -1079,15 +1281,12 @@ function init() {
   if ($("#admin-back-welcome")) $("#admin-back-welcome").onclick = () => goWelcome();
   if ($("#calc-back-welcome")) $("#calc-back-welcome").onclick = () => goWelcome();
 
-  // India map page
   if ($("#map-back-welcome")) $("#map-back-welcome").onclick = () => goWelcome();
   if ($("#map-go-seasons")) $("#map-go-seasons").onclick = () => goSeasons();
 
-  // Agri page
   if ($("#agri-back-welcome")) $("#agri-back-welcome").onclick = () => goWelcome();
   if ($("#agri-go-seasons")) $("#agri-go-seasons").onclick = () => goSeasons();
 
-  // Welcome Stats
   if ($("#stat-crops")) $("#stat-crops").textContent = Object.values(CROPS).reduce((a, b) => a + b.length, 0);
   if ($("#stat-seasons")) $("#stat-seasons").textContent = Object.keys(CROPS).length;
 

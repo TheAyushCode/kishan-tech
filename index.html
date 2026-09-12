@@ -222,7 +222,7 @@
       </div>
     </section>
 
-    <!-- KISAN HELP & SCHEMES VIEW -->
+    <!-- KISAN HELP & SCHEMES VIEW (DYNAMIC STATE & DISTRICT DRIVEN) -->
     <section class="view" id="kisan-help-view">
       <div class="section-head">
         <div class="eyebrow">Government Benefits &amp; Assistance</div>
@@ -249,39 +249,43 @@
             <div class="hl-sub">Short Code (BSNL/Landline): <strong>1551</strong></div>
           </div>
 
-          <!-- Bihar State Level -->
-          <div class="helpline-card bihar-card">
-            <div class="hl-badge">🏛️ Bihar State (बिहार राज्य)</div>
-            <h4>Bihar Agriculture Helpline</h4>
-            <p>कृषि विभाग, बिहार सरकार (डीजल अनुदान, बीज वितरण व सरकारी सलाह हेतु)</p>
+          <!-- Dynamic State Agriculture Helpline -->
+          <div class="helpline-card bihar-card" id="stateHelplineCard">
+            <div class="hl-badge" id="stateCardBadge">🏛️ State Department (राज्य कृषि विभाग)</div>
+            <h4 id="stateCardTitle">State Agriculture Helpline</h4>
+            <p id="stateCardDesc">कृषि विभाग, राज्य सरकार (बीज वितरण, अनुदान व कृषि योजनाओं हेतु)</p>
             <div class="hl-number">
-              <a href="tel:18003456455">📞 1800-345-6455</a>
+              <a href="tel:18003456455" id="stateCardTelLink">📞 <span id="stateCardNumber">1800-345-6455</span></a>
             </div>
-            <div class="hl-sub">Landline Support: <strong>0641-2451035 / 0612-2215211</strong></div>
+            <div class="hl-sub" id="stateCardSub">Toll Free / Office Helpline Support</div>
           </div>
 
-          <!-- District / KVK Level -->
+          <!-- Dynamic State & District / KVK Level -->
           <div class="helpline-card district-card">
-            <div class="hl-badge">📍 District / KVK (जिला कृषि केंद्र)</div>
-            <h4>Krishi Vigyan Kendra (KVK)</h4>
-            <p>अपने जिले के कृषि वैज्ञानिकों और जिला कृषि पदाधिकारी (DAO) से सीधी बात करें</p>
-            <div class="district-search-bar">
-              <select id="districtKvkSelect">
-                <option value="">-- अपना जिला चुनें (Select District) --</option>
-                <option value="patna">Patna (पटना)</option>
-                <option value="gaya">Gaya (गया)</option>
-                <option value="muzaffarpur">Muzaffarpur (मुजफ्फरपुर)</option>
-                <option value="bhagalpur">Bhagalpur (भागलपुर)</option>
-                <option value="rohtas">Rohtas (रोहतास)</option>
-                <option value="samastipur">Samastipur (समस्तीपुर)</option>
-                <option value="darbhanga">Darbhanga (दरभंगा)</option>
-                <option value="purnia">Purnia (पूर्णिया)</option>
-                <option value="nalanda">Nalanda (नालंदा)</option>
-                <option value="vaishali">Vaishali (वैशाली)</option>
-                <option value="bhojpur">Bhojpur (भोजपुर)</option>
-                <option value="saran">Saran / Chhapra (सारण)</option>
+            <div class="hl-badge">📍 State &amp; District / KVK (जिला कृषि केंद्र)</div>
+            <h4>Select State &amp; District</h4>
+            <p>अपने राज्य और जिले का चयन करें ताकि नजदीकी कृषि विज्ञान केंद्र (KVK) से संपर्क किया जा सके:</p>
+            
+            <div class="district-search-bar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+              <!-- 1. State Selector -->
+              <select id="stateSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
+                <option value="">-- राज्य चुनें (State) --</option>
+                <option value="bihar" selected>Bihar (बिहार)</option>
+                <option value="up">Uttar Pradesh (उत्तर प्रदेश)</option>
+                <option value="punjab">Punjab (पंजाब)</option>
+                <option value="haryana">Haryana (हरियाणा)</option>
+                <option value="mp">Madhya Pradesh (मध्य प्रदेश)</option>
+                <option value="rajasthan">Rajasthan (राजस्थान)</option>
+                <option value="maharashtra">Maharashtra (महाराष्ट्र)</option>
+                <option value="wb">West Bengal (पश्चिम बंगाल)</option>
+              </select>
+
+              <!-- 2. District Selector -->
+              <select id="districtKvkSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
+                <option value="">-- जिला चुनें (District) --</option>
               </select>
             </div>
+
             <div id="districtResultBox" class="district-res-box">
               चयनित जिले का संपर्क विवरण यहाँ प्रदर्शित होगा।
             </div>
@@ -313,10 +317,10 @@
 
           <div class="scheme-item">
             <div class="sc-icon">⛽</div>
-            <h4>Bihar Diesel Anudan Yojana</h4>
-            <div class="sc-amount">₹75 / लीटर (₹750 प्रति एकड़ सिंचाई)</div>
-            <p>सूखे की स्थिति में डीजल पंपसेट से खरीफ व रबी फसलों की सिंचाई के लिए बिहार सरकार द्वारा सीधी सब्सिडी।</p>
-            <a href="https://dbtagriculture.bihar.gov.in" target="_blank" rel="noopener noreferrer" class="sc-link">dbtagriculture.bihar.gov.in →</a>
+            <h4>State Diesel &amp; Irrigation Subsidy</h4>
+            <div class="sc-amount">₹75 / लीटर (सिंचाई अनुदान)</div>
+            <p>सूखे की स्थिति में डीजल पंपसेट और सिंचाई साधनों के लिए राज्य सरकारों द्वारा दी जाने वाली सीधी वित्तीय सहायता।</p>
+            <a href="https://dbtagriculture.bihar.gov.in" target="_blank" rel="noopener noreferrer" class="sc-link">DBT Agriculture Portal →</a>
           </div>
 
           <div class="scheme-item">
@@ -340,7 +344,7 @@
               <span class="f-emoji">⚙️</span>
               <h4>कृषि यंत्र अनुदान (Farm Machinery Subsidy)</h4>
             </div>
-            <p>ट्रैक्टर, रोटावेटर, रीपर, थ्रेशर, सीड ड्रिल और कंबाइन हार्वेस्टर पर 40% से 80% तक का अनुदान (OFMAS बिहार पोर्टल)।</p>
+            <p>ट्रैक्टर, रोटावेटर, रीपर, थ्रेशर, सीड ड्रिल और कंबाइन हार्वेस्टर पर 40% से 80% तक का सरकारी अनुदान।</p>
           </div>
 
           <div class="facility-card">
@@ -362,7 +366,7 @@
           <div class="facility-card">
             <div class="f-head">
               <span class="f-emoji">🌱</span>
-              <h4>बिहार राज्य बीज वितरण (BRBN Seed Subsidy)</h4>
+              <h4>प्रमाणित बीज वितरण (Seed Subsidy)</h4>
             </div>
             <p>गेहूं, धान, मक्का और दलहन के प्रमाणित बीजों पर 50% से 80% तक की छूट और बीजों की होम डिलीवरी सुविधा।</p>
           </div>
@@ -375,7 +379,7 @@
       </div>
     </section>
 
-    <!-- RECOMMENDATION VIEW -->
+    <!-- RECOMMENDATION VIEW (ALL INDIAN SOIL TYPES) -->
     <section class="view" id="recommend-view">
       <div class="section-head">
         <div class="eyebrow">Smart Agriculture</div>
@@ -397,11 +401,20 @@
           <div>
             <label style="font-weight: 700; font-size: 0.9rem; color: #173a30;">Soil Type / मिट्टी का प्रकार:</label>
             <select id="recSoil" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e2ebe6; margin-top: 6px; font-size: 0.95rem; outline: none; background: #f6faf8;">
-              <option value="all">🌐 All Soil Types (सभी मिट्टी)</option>
+              <option value="all">🌐 All Soil Types (सभी प्रकार की मिट्टी)</option>
+              <option value="alluvial">🌾 Alluvial Soil (जलोढ़ मिट्टी)</option>
+              <option value="black">⬛ Black Cotton Soil / Regur (काली मिट्टी)</option>
+              <option value="red">🧱 Red &amp; Yellow Soil (लाल और पीली मिट्टी)</option>
+              <option value="laterite">🍂 Laterite Soil (लैटेराइट मिट्टी)</option>
               <option value="loam">🪴 Loamy Soil (दोमट मिट्टी)</option>
-              <option value="sandy">🏖️ Sandy Soil (बलुई मिट्टी)</option>
+              <option value="sandy">🏖️ Sandy / Arid Soil (बलुई / रेतीली मिट्टी)</option>
               <option value="clay">🧱 Clay Soil (चिकनी मिट्टी)</option>
-              <option value="black">⬛ Black Cotton Soil (काली मिट्टी)</option>
+              <option value="mountain">🏔️ Mountain &amp; Forest Soil (पर्वतीय / वन मिट्टी)</option>
+              <option value="saline">🧂 Saline &amp; Alkaline Soil (लवणीय / क्षारीय मिट्टी)</option>
+              <option value="peaty">🌿 Peaty &amp; Marshy Soil (दलदली / जैविक मिट्टी)</option>
+              <option value="tarai">💧 Sub-Mountain &amp; Tarai Soil (तराई मिट्टी)</option>
+              <option value="coastal">🌊 Coastal Sandy Soil (तटीय बालू)</option>
+              <option value="gravelly">🪨 Skeletal / Gravelly Soil (कंकरीली / पथरीली मिट्टी)</option>
             </select>
           </div>
 
@@ -480,7 +493,21 @@
 
           <div>
             <label style="font-weight: 600; font-size: 0.88rem; color: #173a30;">Soil Type</label>
-            <input type="text" id="adminCropSoil" placeholder="e.g. Well-drained loamy soil" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px;">
+            <select id="adminCropSoil" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; background: #fff;">
+              <option value="Alluvial soil">Alluvial Soil (जलोढ़ मिट्टी)</option>
+              <option value="Black cotton soil">Black Cotton Soil (काली मिट्टी)</option>
+              <option value="Red and yellow soil">Red &amp; Yellow Soil (लाल मिट्टी)</option>
+              <option value="Laterite soil">Laterite Soil (लैटेराइट मिट्टी)</option>
+              <option value="Loamy soil">Loamy Soil (दोमट मिट्टी)</option>
+              <option value="Sandy loam">Sandy / Arid Soil (बलुई मिट्टी)</option>
+              <option value="Clay loam">Clay Soil (चिकनी मिट्टी)</option>
+              <option value="Mountain soil">Mountain Soil (पर्वतीय मिट्टी)</option>
+              <option value="Saline soil">Saline / Alkaline Soil (लवणीय मिट्टी)</option>
+              <option value="Peaty soil">Peaty Soil (दलदली मिट्टी)</option>
+              <option value="Terai alluvial soil">Terai Soil (तराई मिट्टी)</option>
+              <option value="Coastal sandy soil">Coastal Sandy Soil (तटीय बालू)</option>
+              <option value="Gravelly soil">Gravelly Soil (कंकरीली मिट्टी)</option>
+            </select>
           </div>
 
           <div style="grid-column: 1/-1;">
@@ -528,55 +555,104 @@
       </div>
     </section>
 
-    <!-- FERTILIZER & SEED CALCULATOR VIEW -->
+    <!-- FERTILIZER & SEED CALCULATOR VIEW (PAN-INDIA UNITS & EXPANDED CROPS) -->
     <section class="view" id="calculator-view">
       <div class="section-head">
         <div class="eyebrow">Smart Agri Tools</div>
-        <h2>🧮 Fertilizer & Seed Calculator / खाद और बीज कैलकुलेटर</h2>
-        <p>Calculate the exact amount of Seeds, Urea, DAP, and Potash needed for your field size.</p>
+        <h2>🧮 Fertilizer &amp; Seed Calculator / खाद और बीज कैलकुलेटर</h2>
+        <p>Calculate the exact amount of Seeds, Urea, DAP, Potash, and SSP needed for your field size across all Indian land units.</p>
       </div>
 
-      <div style="max-width: 900px; margin: 20px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      <div style="max-width: 950px; margin: 20px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <form id="agriCalcForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; align-items: end;">
+          <!-- 1. CROP SELECTION -->
           <div>
             <label style="font-weight: 700; font-size: 0.9rem; color: #173a30;">Select Crop / फसल चुनिए:*</label>
             <select id="calcCrop" required style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e2ebe6; margin-top: 6px; font-size: 0.95rem; outline: none; background: #f6faf8;">
-              <option value="wheat">🌾 Wheat (गेहूं)</option>
-              <option value="rice">🌾 Rice / Paddy (धान)</option>
-              <option value="maize">🌽 Maize (मक्का)</option>
-              <option value="cotton">🧶 Cotton (कपास)</option>
-              <option value="mustard">🌼 Mustard (सरसों)</option>
-              <option value="potato">🥔 Potato (आलू)</option>
+              <optgroup label="Cereals &amp; Grains (अनाज)">
+                <option value="wheat">🌾 Wheat (गेहूं)</option>
+                <option value="rice">🌾 Rice / Paddy (धान)</option>
+                <option value="maize">🌽 Maize (मक्का)</option>
+                <option value="bajra">🌾 Pearl Millet / Bajra (बाजरा)</option>
+                <option value="jowar">🌾 Sorghum / Jowar (ज्वार)</option>
+                <option value="barley">🌾 Barley (जौ)</option>
+                <option value="ragi">🌾 Finger Millet / Ragi (रागी)</option>
+              </optgroup>
+              <optgroup label="Cash &amp; Commercial Crops (व्यावसायिक फसलें)">
+                <option value="sugarcane">🎋 Sugarcane (गन्ना)</option>
+                <option value="cotton">🧶 Cotton (कपास)</option>
+                <option value="jute">🌿 Jute (जूट)</option>
+                <option value="potato">🥔 Potato (आलू)</option>
+                <option value="onion">🧅 Onion (प्याज)</option>
+              </optgroup>
+              <optgroup label="Oilseeds (तिलहन)">
+                <option value="mustard">🌼 Mustard (सरसों / तोरिया)</option>
+                <option value="soybean">🌱 Soybean (सोयाबीन)</option>
+                <option value="groundnut">🥜 Groundnut (मूंगफली)</option>
+                <option value="sunflower">🌻 Sunflower (सूरजमुखी)</option>
+                <option value="sesame">⚪ Sesame (तिल)</option>
+              </optgroup>
+              <optgroup label="Pulses (दलहन)">
+                <option value="chickpea">🧆 Chickpea / Gram (चना)</option>
+                <option value="pigeonpea">🍲 Pigeon Pea / Arhar (अरहर)</option>
+                <option value="moong">🟢 Green Gram / Moong (मूंग)</option>
+                <option value="urad">⚫ Black Gram / Urad (उड़द)</option>
+                <option value="lentil">🥣 Lentil / Masoor (मसूर)</option>
+                <option value="pea">🟢 Field Pea (मटर)</option>
+              </optgroup>
+              <optgroup label="Spices &amp; Vegetables (मसाले व सब्जियां)">
+                <option value="chilli">🌶️ Chilli (मिर्च)</option>
+                <option value="tomato">🍅 Tomato (टमाटर)</option>
+                <option value="garlic">🧄 Garlic (लहसुन)</option>
+                <option value="turmeric">🟡 Turmeric (हल्दी)</option>
+                <option value="ginger">🫚 Ginger (अदरक)</option>
+              </optgroup>
             </select>
           </div>
 
+          <!-- 2. LAND SIZE INPUT -->
           <div>
             <label style="font-weight: 700; font-size: 0.9rem; color: #173a30;">Land Size / खेत का आकार:*</label>
-            <input type="number" id="calcLandValue" step="0.1" min="0.1" placeholder="e.g. 2.5" required style="width: 100%; padding: 11px; border-radius: 10px; border: 2px solid #e2ebe6; margin-top: 6px; font-size: 0.95rem; outline: none; background: #f6faf8;">
+            <input type="number" id="calcLandValue" step="0.01" min="0.01" placeholder="e.g. 2.5" required style="width: 100%; padding: 11px; border-radius: 10px; border: 2px solid #e2ebe6; margin-top: 6px; font-size: 0.95rem; outline: none; background: #f6faf8;">
           </div>
 
+          <!-- 3. INDIAN LOCAL MEASUREMENT UNITS -->
           <div>
-            <label style="font-weight: 700; font-size: 0.9rem; color: #173a30;">Land Unit / इकाई:*</label>
+            <label style="font-weight: 700; font-size: 0.9rem; color: #173a30;">Land Unit / भूमि पैमाइश इकाई:*</label>
             <select id="calcLandUnit" required style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e2ebe6; margin-top: 6px; font-size: 0.95rem; outline: none; background: #f6faf8;">
-              <option value="acre">Acre (एकड़)</option>
-              <option value="bigha">Bigha (बीघा - 1 Acre = 4.8 Bigha)</option>
-              <option value="hectare">Hectare (हेक्टेयर)</option>
+              <option value="acre">Acre (एकड़ - National Standard)</option>
+              <option value="hectare">Hectare (हेक्टेयर - 1 Hectare = 2.471 Acre)</option>
+              <option value="bigha_std">Bigha (Standard / UP / Bihar / MP - 1 Acre = 1.6 Bigha)</option>
+              <option value="bigha_wb">Bigha (Bengal / Assam - 1 Acre = 3.025 Bigha)</option>
+              <option value="katha">Katha / Cottha (Bihar / UP / Bengal - 1 Acre = 32 Katha)</option>
+              <option value="biswa">Biswa (North India / Haryana / Rajasthan - 1 Acre = 32 Biswa)</option>
+              <option value="guntha">Guntha (Maharashtra / Gujarat / Karnataka - 1 Acre = 40 Guntha)</option>
+              <option value="cent">Cent / Dismil (Tamil Nadu / Kerala / Bihar - 1 Acre = 100 Cent)</option>
+              <option value="ground">Ground (South India / Tamil Nadu - 1 Acre = 18.15 Ground)</option>
+              <option value="kanal">Kanal (Punjab / Haryana / J&amp;K - 1 Acre = 8 Kanal)</option>
+              <option value="marla">Marla (Punjab / Haryana - 1 Acre = 160 Marla)</option>
+              <option value="sq_yard">Gaj / Sq. Yard (वर्ग गज - 1 Acre = 4840 Gaj)</option>
+              <option value="sq_meter">Square Meter (वर्ग मीटर - 1 Acre = 4046.86 Sq.m)</option>
             </select>
           </div>
 
           <div style="grid-column: 1/-1;">
             <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem;">
-              🧮 Calculate Requirement / आवश्यकता निकालें
+              🧮 Calculate Requirement / खाद व बीज आवश्यकता निकालें
             </button>
           </div>
         </form>
 
+        <!-- OUTPUT RESULTS -->
         <div id="calcResults" style="margin-top: 30px; display: none;">
-          <h3 style="color: #173a30; font-size: 1.2rem; margin-bottom: 15px; border-left: 4px solid #2e8b57; padding-left: 10px;">
-            📋 Required Material for your field (आवश्यक सामग्री):
-          </h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 15px; border-left: 4px solid #2e8b57; padding-left: 10px;">
+            <h3 style="color: #173a30; font-size: 1.2rem; margin: 0;">
+              📋 Required Material for your field (आवश्यक सामग्री):
+            </h3>
+            <span id="calculatedAcreText" style="font-size: 0.88rem; color: #2e8b57; font-weight: 700; background: #eaf4ee; padding: 4px 10px; border-radius: 999px;"></span>
+          </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px;">
             <div style="background: #f0f7f4; padding: 16px; border-radius: 12px; border: 1px solid #d4e8e1;">
               <div style="font-size: 1.8rem; margin-bottom: 4px;">🌱</div>
               <div style="font-size: 0.85rem; color: #5d716a; font-weight: 600;">Seed Quantity (बीज)</div>
@@ -602,8 +678,8 @@
             </div>
           </div>
           
-          <p style="font-size: 0.82rem; color: #777; margin-top: 15px; font-style: italic;">
-            *Note: Rates are based on standard recommended ICAR dosages per acre. Adjust based on local soil testing reports.
+          <p style="font-size: 0.82rem; color: #666; margin-top: 15px; font-style: italic; line-height: 1.5;">
+            *नोट: यह गणना ICAR एवं कृषि विज्ञान केंद्र (KVK) के मानक प्रति एकड़ पैकेज ऑफ प्रैक्टिसेज पर आधारित है। अपनी स्थानीय मिट्टी की जांच रिपोर्ट (Soil Health Card) के अनुसार आवश्यकतानुसार मात्रा में फेरबदल करें।
           </p>
         </div>
       </div>
@@ -617,11 +693,10 @@
     <section class="view" id="india-map-view">
       <div class="section-head">
         <div class="eyebrow">Interactive Crop Exploration</div>
-        <h2>🌾 India Crop Map by Region & State</h2>
+        <h2>🌾 India Crop Map by Region &amp; State</h2>
         <p>Select any crop icon below to see all the states and regions where it is cultivated in India.</p>
       </div>
 
-      <!-- Crop Selector Filter Bar -->
       <div class="map-crop-bar" id="map-crop-bar"></div>
 
       <div class="map-layout">
@@ -771,10 +846,9 @@
 
         <!-- CROP EQUIPMENT & STEP-BY-STEP PLANTATION GUIDE -->
         <div class="detail-card guide-card" style="margin-top: 25px;">
-          <!-- 1. Equipment Needed -->
           <div style="margin-bottom: 28px;">
             <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-              🚜 जरूरी उपकरण एवं कृषि यंत्र (Required Tools & Equipment)
+              🚜 जरूरी उपकरण एवं कृषि यंत्र (Required Tools &amp; Equipment)
             </h3>
             <p style="color: #5d716a; font-size: 0.9rem; margin-bottom: 14px;">
               इस फसल की बुवाई, रोपाई और देखभाल के लिए आवश्यक प्रमुख औजार:
@@ -784,7 +858,6 @@
 
           <hr style="border: 0; border-top: 1px solid #eef3f0; margin: 20px 0;" />
 
-          <!-- 2. Step by Step Guide -->
           <div>
             <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
               🌱 फसल उगाने व रोपने की चरणबद्ध विधि (Step-by-Step Cultivation Guide)
@@ -797,7 +870,7 @@
         </div>
 
         <div class="detail-card reviews-card" style="margin-top: 25px; padding: 24px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
-          <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 6px;">💬 Farmer Discussion & Tips / फसल चर्चा</h3>
+          <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 6px;">💬 Farmer Discussion &amp; Tips / फसल चर्चा</h3>
           <p style="color: #5d716a; font-size: 0.9rem; margin-bottom: 20px;">Share your farming experience, tips, or questions about this crop.</p>
 
           <form id="cropReviewForm" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
@@ -828,7 +901,7 @@
 
   </div>
 
- <!-- GOOGLE TRANSLATE ENGINE -->
+  <!-- GOOGLE TRANSLATE ENGINE -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
