@@ -455,11 +455,11 @@
       <div class="section-head">
         <div class="eyebrow">Control Center</div>
         <h2>⚙️ Admin Dashboard / फसल प्रबंधन</h2>
-        <p>Add new crops or delete existing custom entries from the system.</p>
+        <p>Add new crops or update/delete existing custom entries from the system.</p>
       </div>
 
       <div style="max-width: 1000px; margin: 20px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-        <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 18px;">➕ Add New Crop (नयी फसल जोड़ें)</h3>
+        <h3 id="adminFormHeading" style="color: #173a30; font-size: 1.3rem; margin-bottom: 18px;">➕ Add New Crop (नयी फसल जोड़ें)</h3>
         
         <form id="addCropForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
           <div>
@@ -525,9 +525,12 @@
             <textarea id="adminCropDesc" rows="3" placeholder="Brief description about the crop..." required style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; resize: vertical;"></textarea>
           </div>
 
-          <div style="grid-column: 1/-1;">
-            <button type="submit" style="padding: 12px 28px; background: #16382c; color: #ffd36b; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
+          <div style="grid-column: 1/-1; display: flex; gap: 12px; align-items: center;">
+            <button type="submit" id="adminSubmitBtn" style="padding: 12px 28px; background: #16382c; color: #ffd36b; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
               🚀 Add Crop to System
+            </button>
+            <button type="button" id="adminCancelEditBtn" style="display: none; padding: 12px 20px; background: #6c757d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+              ✕ Cancel Edit
             </button>
           </div>
         </form>

@@ -362,14 +362,12 @@ function initKisanHelpSection() {
 
     const stateData = STATE_AGRICULTURE_DATA[stateKey];
 
-    // Dynamically update state card
     if (stateCardTitle) stateCardTitle.textContent = `${stateData.name} Agriculture Helpline`;
     if (stateCardBadge) stateCardBadge.textContent = `🏛️ ${stateData.name} State`;
     if (stateCardDesc) stateCardDesc.textContent = stateData.desc;
     if (stateCardNumber) stateCardNumber.textContent = stateData.deptHelpline;
     if (stateCardTelLink) stateCardTelLink.href = `tel:${stateData.deptHelpline.split('/')[0].trim()}`;
 
-    // Populate district select
     const districts = stateData.districts;
     Object.keys(districts).forEach((distKey) => {
       const opt = document.createElement("option");
@@ -402,7 +400,6 @@ function initKisanHelpSection() {
     `;
   });
 
-  // Default initialize with Bihar
   populateDistricts("bihar");
 }
 
@@ -486,7 +483,9 @@ function renderFavorites() {
   });
 }
 
-/* ---------- ADMIN DASHBOARD SYSTEM ---------- */
+/* ---------- ADMIN DASHBOARD SYSTEM (WITH EDIT SUPPORT) ---------- */
+let editingCropIndex = null;
+
 function getCustomCrops() {
   const custom = localStorage.getItem('customCrops');
   return custom ? JSON.parse(custom) : [];
@@ -508,15 +507,58 @@ function renderAdminCustomCrops() {
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #eef3f0';
     tr.innerHTML = `
-      <td style="padding: 10px 14px; font-weight: 600; color: #173a30;">${escapeHtml(crop.name)} (${crop.hindi || ''})</td>
+      <td style="padding: 10px 14px; font-weight: 600; color: #173a30;">${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || '')})</td>
       <td style="padding: 10px 14px; text-transform: capitalize;">${crop.season}</td>
       <td style="padding: 10px 14px; color: #555;">${escapeHtml(crop.soil || 'Loamy')}</td>
-      <td style="padding: 10px 14px; text-align: right;">
+      <td style="padding: 10px 14px; text-align: right; white-space: nowrap;">
+        <button onclick="startEditCrop(${index})" style="padding: 6px 12px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 6px;">✏️ Edit</button>
         <button onclick="deleteCustomCrop(${index})" style="padding: 6px 12px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
+}
+
+function startEditCrop(index) {
+  const custom = getCustomCrops();
+  const crop = custom[index];
+  if (!crop) return;
+
+  editingCropIndex = index;
+
+  document.getElementById('adminCropName').value = crop.name || '';
+  document.getElementById('adminCropHindi').value = crop.hindi || '';
+  document.getElementById('adminCropWiki').value = crop.wiki || '';
+  document.getElementById('adminCropSeason').value = crop.season || 'summer';
+  document.getElementById('adminCropRain').value = crop.rain || '';
+  document.getElementById('adminCropSoil').value = crop.soil || 'Alluvial soil';
+  document.getElementById('adminCropImg').value = crop.img || '';
+  document.getElementById('adminCropRegion').value = crop.region || '';
+  document.getElementById('adminCropDesc').value = crop.desc || '';
+
+  const heading = document.getElementById('adminFormHeading');
+  const submitBtn = document.getElementById('adminSubmitBtn');
+  const cancelBtn = document.getElementById('adminCancelEditBtn');
+
+  if (heading) heading.textContent = `✏️ Edit Crop: ${crop.name}`;
+  if (submitBtn) submitBtn.textContent = '💾 Update Crop Details';
+  if (cancelBtn) cancelBtn.style.display = 'inline-block';
+
+  document.getElementById('addCropForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAdminForm() {
+  editingCropIndex = null;
+  const form = document.getElementById('addCropForm');
+  if (form) form.reset();
+
+  const heading = document.getElementById('adminFormHeading');
+  const submitBtn = document.getElementById('adminSubmitBtn');
+  const cancelBtn = document.getElementById('adminCancelEditBtn');
+
+  if (heading) heading.textContent = '➕ Add New Crop (नयी फसल जोड़ें)';
+  if (submitBtn) submitBtn.textContent = '🚀 Add Crop to System';
+  if (cancelBtn) cancelBtn.style.display = 'none';
 }
 
 function deleteCustomCrop(index) {
@@ -530,12 +572,21 @@ function deleteCustomCrop(index) {
     CROPS[deleted.season] = CROPS[deleted.season].filter(c => c.name !== deleted.name);
   }
 
+  if (editingCropIndex === index) {
+    resetAdminForm();
+  }
+
   renderAdminCustomCrops();
 }
 
 function initAdminPanel() {
   const form = document.getElementById('addCropForm');
+  const cancelBtn = document.getElementById('adminCancelEditBtn');
   if (!form) return;
+
+  if (cancelBtn) {
+    cancelBtn.onclick = () => resetAdminForm();
+  }
 
   form.onsubmit = (e) => {
     e.preventDefault();
@@ -550,18 +601,38 @@ function initAdminPanel() {
     const region = document.getElementById('adminCropRegion').value.trim() || 'Across India';
     const desc = document.getElementById('adminCropDesc').value.trim();
 
-    const newCrop = { name, hindi, wiki, season, rain, soil, img, region, desc };
-
+    const newOrUpdatedCrop = { name, hindi, wiki, season, rain, soil, img, region, desc };
     let custom = getCustomCrops();
-    custom.unshift(newCrop);
-    localStorage.setItem('customCrops', JSON.stringify(custom));
 
-    if (CROPS[season]) {
-      CROPS[season].unshift(newCrop);
+    if (editingCropIndex !== null) {
+      const oldCrop = custom[editingCropIndex];
+
+      // Remove old version from runtime memory
+      if (oldCrop && CROPS[oldCrop.season]) {
+        CROPS[oldCrop.season] = CROPS[oldCrop.season].filter(c => c.name !== oldCrop.name);
+      }
+
+      custom[editingCropIndex] = newOrUpdatedCrop;
+      localStorage.setItem('customCrops', JSON.stringify(custom));
+
+      // Add updated to runtime memory
+      if (CROPS[season]) {
+        CROPS[season].unshift(newOrUpdatedCrop);
+      }
+
+      alert(`✅ Crop "${name}" updated successfully!`);
+    } else {
+      custom.unshift(newOrUpdatedCrop);
+      localStorage.setItem('customCrops', JSON.stringify(custom));
+
+      if (CROPS[season]) {
+        CROPS[season].unshift(newOrUpdatedCrop);
+      }
+
+      alert(`🎉 Successfully added "${name}" to ${season.toUpperCase()} crops!`);
     }
 
-    alert(`🎉 Successfully added "${name}" to ${season.toUpperCase()} crops!`);
-    form.reset();
+    resetAdminForm();
     renderAdminCustomCrops();
   };
 }
