@@ -1,9 +1,9 @@
 /* ============================================================
    KISHAN TECH — Season-based Indian Crop Information
-   Stylesheet (Fully Responsive for All Screen Sizes)
+   Stylesheet (Sabhi screen sizes ke liye responsive banaya gaya hai)
    ============================================================ */
 
-/* ---------- Reset & Base ---------- */
+/* ---------- Reset aur Base Settings ---------- */
 *,
 *::before,
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,7 +21,7 @@
 html, body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden; /* अनचाहा साइड स्क्रोल रोकने के लिए */
+  overflow-x: hidden; /* Faltu horizontal scroll rokne ke liye */
   scroll-behavior: smooth;
 }
 
@@ -38,7 +38,7 @@ img { display: block; max-width: 100%; height: auto; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 a { color: inherit; text-decoration: none; }
 
-/* ---------- App container ---------- */
+/* ---------- Main App Container ---------- */
 #app { 
   min-height: 100vh; 
   position: relative;
@@ -123,7 +123,7 @@ a { color: inherit; text-decoration: none; }
   flex-shrink: 0;
 }
 
-/* ---------- Language Selector & Google Translate Fix ---------- */
+/* ---------- Language Selector aur Google Translate Fix ---------- */
 .lang-selector-wrapper {
   display: inline-flex;
   align-items: center;
@@ -165,7 +165,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* User Profile Header Dropdown */
+/* ---------- User Profile Header Dropdown ---------- */
 .user-profile-wrapper { position: relative; display: inline-block; }
 .user-profile-btn {
   display: flex; align-items: center; gap: 6px;
@@ -198,6 +198,14 @@ a { color: inherit; text-decoration: none; }
   color: #e9897b; font-weight: 600; font-size: 0.82rem; border-radius: 6px; cursor: pointer;
 }
 
+/* Tablet aur Medium screens layout */
+@media (max-width: 950px) {
+  .brand-bar { flex-wrap: wrap; padding: 8px 14px; }
+  .top-nav { order: 3; width: 100%; justify-content: flex-start; margin-top: 4px; }
+  .view, #welcome-view { padding-top: 135px !important; }
+  .welcome-part-1 { min-height: calc(100vh - 135px) !important; }
+}
+
 /* ---------- Views Defaults ---------- */
 .view {
   position: relative;
@@ -206,6 +214,7 @@ a { color: inherit; text-decoration: none; }
   display: none;
   width: 100%;
   animation: fadeIn .5s ease both;
+  box-sizing: border-box;
 }
 .view.active { display: block; }
 
@@ -289,7 +298,7 @@ a { color: inherit; text-decoration: none; }
   opacity: .8;
 }
 
-/* Weather & Mandi Mobile Responsive Cards */
+/* Weather aur Mandi cards responsive containment */
 .weather-widget-card,
 .mandi-price-card {
   width: calc(100% - 32px) !important;
@@ -459,28 +468,123 @@ a { color: inherit; text-decoration: none; }
 .crop-card .more { margin-top: 10px; font-size: .8rem; font-weight: 700; color: #2e8b57; }
 
 /* ============================================================
-   MAP VIEW & CONTROLS
+   AGRICULTURE & FESTIVALS VIEW
+   ============================================================ */
+.agri-hero {
+  background: linear-gradient(135deg, #1a4a3a, #2e8b57);
+  padding: 60px 24px 50px; text-align: center; color: #fff;
+  position: relative; overflow: hidden;
+}
+.agri-hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
+.agri-hero .eyebrow {
+  display: inline-block; background: rgba(255,255,255,.18);
+  padding: 6px 16px; border-radius: 999px; font-size: .8rem;
+  font-weight: 600; letter-spacing: 1px; margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.agri-hero h2 { font-family: var(--font-head); font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; }
+.agri-hero p { font-size: 1.05rem; line-height: 1.6; opacity: .95; }
+.agri-content { max-width: 920px; margin: 0 auto; padding: 36px 24px 20px; }
+.agri-card {
+  background: #fff; border-radius: 16px; padding: 28px;
+  margin-bottom: 22px; box-shadow: 0 4px 20px rgba(0,0,0,.06);
+  border-top: 4px solid #2e8b57; position: relative;
+}
+.agri-card-icon { font-size: 2rem; margin-bottom: 10px; }
+.agri-card h3 {
+  font-family: var(--font-head); font-size: 1.3rem; font-weight: 700;
+  color: #173a30; margin-bottom: 12px;
+}
+.agri-card p { font-size: .98rem; line-height: 1.75; color: #3a4f47; }
+.agri-festivals-head { text-align: center; margin: 40px 0 24px; }
+.agri-festivals-head .eyebrow {
+  display: inline-block; background: #eaf4ee; color: #2e8b57;
+  padding: 6px 16px; border-radius: 999px; font-size: .8rem;
+  font-weight: 600; letter-spacing: 1px; margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.agri-festivals-head h3 {
+  font-family: var(--font-head); font-size: 1.7rem; font-weight: 800;
+  color: #173a30; margin-bottom: 10px;
+}
+.agri-festivals-head p { font-size: .98rem; color: #4a5f57; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+.festival-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px; margin-top: 10px;
+}
+.festival-card {
+  background: #fff; border-radius: 14px; padding: 22px;
+  box-shadow: 0 3px 14px rgba(0,0,0,.06);
+  border-left: 4px solid #ccc;
+}
+.festival-card.season-summer { border-left-color: #f0a020; }
+.festival-card.season-winter { border-left-color: #5b9bd5; }
+.festival-card.season-rain   { border-left-color: #2e8b57; }
+
+/* ============================================================
+   INDIA MAP VIEW (MOBILE OPTIMIZED CHIPS & STAGE)
    ============================================================ */
 .map-crop-bar {
-  display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px;
-  max-width: 1100px; margin: 0 16px 14px; background: #fff; border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 12px 14px;
+  max-width: 100%;
+  margin: 12px auto 18px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  -webkit-overflow-scrolling: touch;
+  align-items: center;
 }
+.map-crop-bar::-webkit-scrollbar { height: 4px; }
+
 .map-crop-btn {
-  display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
-  border: 1.5px solid #dcdcdc; background: #f6faf8; font-size: 0.82rem; font-weight: 600; white-space: nowrap;
+  display: inline-flex !important;
+  flex-direction: row !important; /* Pills ko vertical khinchne se rokne ke liye */
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  border: 1.5px solid #dcdcdc;
+  background: #f6faf8;
+  color: #173a30;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap !important; /* Text ek hi line me rahega */
+  flex-shrink: 0 !important;      /* Button compress nahi hoga */
+  height: 42px !important;
 }
+
+.map-crop-btn img {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  flex-shrink: 0;
+}
+
+.map-crop-btn.active {
+  background: #173a30 !important;
+  color: #ffd36b !important;
+  border-color: #173a30 !important;
+}
+
 .map-layout {
   display: flex; gap: 20px; max-width: 1100px; margin: 0 auto;
-  padding: 10px 16px; flex-direction: column;
+  padding: 10px 16px;
 }
-.map-stage { width: 100%; position: relative; background: #f4f7f5; border-radius: 14px; padding: 10px; }
+.map-stage { flex: 0 0 52%; position: relative; background: #f4f7f5; border-radius: 14px; padding: 10px; overflow: hidden; }
 .india-map-img { width: 100%; display: block; border-radius: 8px; }
 .state-pin { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; z-index: 10; }
 .state-pin-marker { font-size: 1.4rem; }
 .state-pin-label { background: rgba(14, 38, 32, 0.95); color: #ffd36b; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.map-controls { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 .map-info-box { background: #fff; border-radius: 12px; padding: 16px; border-left: 4px solid #2e8b57; }
 
-/* Detail hero */
+/* Detail Hero Section */
 .detail-hero { min-height: 340px; position: relative; display: flex; align-items: flex-end; color: #fff; }
 .detail-hero .bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .detail-hero .bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.85)); }
@@ -513,10 +617,10 @@ a { color: inherit; text-decoration: none; }
 .music-btn { background: #173a30; color: #fff; border-radius: 999px; padding: 8px 12px; font-size: 0.9rem; }
 
 /* ============================================================
-   MOBILE SPECIFIC FIXES (FOR ALL PHONE SCREENS)
+   MOBILE KE SPECIFIC FIXES (SABHI PHONE SCREENS KE LIYE)
    ============================================================ */
 @media (max-width: 768px) {
-  /* 1. Navbar layout in mobile */
+  /* 1. Mobile me Navbar ka layout */
   .brand-bar {
     flex-wrap: wrap;
     padding: 6px 12px;
@@ -533,7 +637,7 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.88rem;
   }
 
-  /* Right section (Language + Profile) */
+  /* Right section (Language + Profile icon) */
   .header-right {
     gap: 6px;
   }
@@ -546,10 +650,10 @@ a { color: inherit; text-decoration: none; }
     padding: 2px 6px 2px 2px;
   }
   .user-name {
-    display: none; /* जगह बचाने के लिए फोन में नाम छुपाएं, सिर्फ अवतार दिखे */
+    display: none; /* Mobile me space bachane ke liye naam hide kiya hai */
   }
 
-  /* Tabs slider below logo/profile */
+  /* Tabs slider jo logo aur profile ke niche aayega */
   .top-nav {
     order: 3;
     width: 100%;
@@ -563,16 +667,60 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.74rem;
   }
 
-  /* 2. स्क्रीन कटने का मुख्य फिक्स (Navbar Height Compensation) */
-  .view, #welcome-view {
-    padding-top: 110px !important;
+  /* 2. Sabhi views ko navbar ke pichhe katne se rokne ke liye safe top padding */
+  .view, 
+  #welcome-view, 
+  #agri-view, 
+  #india-map-view, 
+  #kisan-help-view, 
+  #season-view,
+  #recommend-view,
+  #favorites-view,
+  #admin-view,
+  #calculator-view {
+    padding-top: 145px !important;
   }
+  
   .welcome-part-1 {
-    min-height: calc(100vh - 110px) !important;
+    min-height: calc(100vh - 145px) !important;
     padding-top: 15px;
   }
 
-  /* 3. दाईं तरफ का एक्स्ट्रा स्पेस हटाने का फिक्स */
+  /* 3. Agri hero section text sizing */
+  .agri-hero {
+    padding: 24px 16px !important;
+  }
+  .agri-hero h2 {
+    font-size: 1.6rem !important;
+  }
+
+  /* 4. Map Layout mobile screen size me fit karne ke liye */
+  .map-layout {
+    flex-direction: column !important;
+    padding: 0 12px 20px !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .map-stage {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .india-map-img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .map-crop-bar {
+    margin: 0 12px 14px !important;
+    width: calc(100% - 24px) !important;
+  }
+
+  /* 5. Weather aur Mandi cards mobile fix */
   .weather-widget-card,
   .mandi-price-card {
     width: calc(100% - 24px) !important;
@@ -581,13 +729,13 @@ a { color: inherit; text-decoration: none; }
     overflow: hidden;
   }
 
-  /* मंडी रेट्स टेबल के लिए हॉरिजॉन्टल स्क्रॉल */
+  /* Mandi table horizontal scrolling */
   .mandi-price-card > div[style*="overflow-x"] {
     width: 100% !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
   }
   .mandi-price-card table {
-    min-width: 500px; /* टेबल अपने अंदर स्क्रॉल होगी, पूरा पेज नहीं हिलेगा */
+    min-width: 500px;
   }
 }
