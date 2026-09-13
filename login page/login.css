@@ -17,14 +17,15 @@
 /* ---------- stage / backdrop ---------- */
 .login-stage{
   position:relative;
-  min-height:calc(100vh - 160px);
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:3rem 1.5rem;
-  overflow:hidden;
+  padding:100px 1.5rem 3rem 1.5rem;
+  overflow-y:auto;
   font-family:'Inter', sans-serif;
   color:var(--auth-cream);
+  box-sizing:border-box;
 }
 
 .login-atmosphere{
@@ -260,7 +261,18 @@
   outline-offset:2px;
 }
 
-@media (max-width:480px){
-  .auth-card{ padding:2.1rem 1.5rem; border-radius:18px; }
-  .auth-title{ font-size:1.45rem; }
+@media (max-width:768px){
+  .login-stage{
+    padding-top:130px;
+    padding-bottom:2rem;
+    align-items:flex-start;
+  }
+  .auth-card{
+    padding:1.8rem 1.25rem;
+    border-radius:18px;
+    width:100%;
+  }
+  .auth-title{
+    font-size:1.4rem;
+  }
 }
