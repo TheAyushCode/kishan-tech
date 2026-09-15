@@ -12,7 +12,7 @@ const SEASON_META = {
     tagline: "Hot & Sunny Season",
     desc: "Warm-season crops grown during the hot Indian summer (Feb–Jun). These heat-loving fruits and vegetables thrive in bright sunshine and well-drained soils.",
     bg: "assets/images/summer-bg.png",
-    month: "February – June",
+    month: "February – June"
   },
   winter: {
     label: "Winter",
@@ -20,7 +20,7 @@ const SEASON_META = {
     tagline: "Cool Rabi Season",
     desc: "Cool-season (rabi) crops sown in winter (Oct–Mar) and harvested in spring. Cereals, oilseeds, pulses, spices and vegetables that love the chill.",
     bg: "assets/images/winter-bg.png",
-    month: "October – March",
+    month: "October – March"
   },
   rain: {
     label: "Rain",
@@ -28,8 +28,8 @@ const SEASON_META = {
     tagline: "Monsoon Kharif Season",
     desc: "Kharif crops sown with the southwest monsoon (Jun–Oct) and reliant on rainfall. Rice, millets, pulses, oilseeds, fibres and plantation crops flourish.",
     bg: "assets/images/rain-bg.png",
-    month: "June – October",
-  },
+    month: "June – October"
+  }
 };
 
 const STATE_COORDINATES = {
@@ -391,7 +391,7 @@ const STATE_AGRICULTURE_DATA = {
   },
   jammu_kashmir: {
     name: "Jammu and Kashmir (जम्मू और कश्मीर)",
-    deptHelpline: "0191-2505201 (Jammu) / 0194-2310675 (Kashmir) / 1551",
+    deptHelpline: "0191-2505201 / 1551",
     desc: "Department of Agriculture Production & Farmers Welfare, J&K",
     districts: [
       "Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", 
@@ -429,7 +429,7 @@ const FESTIVALS = [
   { icon: "🎋", name: "Nabanna / Nuakhai", month: "August–September", season: "rain", desc: "Nabanna in Bengal and Nuakhai in Odisha celebrate the new rice harvest of the monsoon season." },
   { icon: "🌾", name: "Hareli / Karam", month: "August", season: "rain", desc: "Celebrated in Chhattisgarh and parts of central India, Hareli marks the beginning of the agricultural season." },
   { icon: "🦚", name: "Pongal (Thai Pongal)", month: "January", season: "winter", desc: "The four-day Tamil harvest festival dedicated to the Sun God and cattle." },
-  { icon: "🌟", name: "Gudi Padwa / Ugadi", month: "March–April", season: "summer", desc: "The New Year festival of Maharashtra (Gudi Padwa) and Karnataka, Andhra Pradesh and Telangana (Ugadi)." },
+  { icon: "🌟", name: "Gudi Padwa / Ugadi", month: "March–April", season: "summer", desc: "The New Year festival of Maharashtra (Gudi Padwa) and Karnataka, Andhra Pradesh and Telangana (Ugadi)." }
 ];
 
 let CROPS = null;
@@ -479,6 +479,7 @@ async function fetchAndMergeServerCrops() {
         $("#stat-crops").textContent = Object.values(CROPS).reduce((a, b) => a + b.length, 0);
       }
       renderSeasons();
+      if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
     }
   } catch (err) {
     console.error('Server crops could not be fetched, falling back to local dataset.', err);
@@ -671,6 +672,7 @@ async function deleteCustomCrop(cropId, cropName) {
       await fetchAndMergeServerCrops();
       if (editingCropServerId === cropId) resetAdminForm();
       renderAdminCustomCrops();
+      if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
       alert('Crop deleted successfully.');
     } else {
       alert('Failed: ' + data.message);
@@ -718,6 +720,7 @@ function initAdminPanel() {
           alert(`✅ "${cropPayload.name}" updated successfully for all users!`);
           await fetchAndMergeServerCrops();
           resetAdminForm();
+          if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
           alert('Update failed: ' + data.message);
         }
@@ -732,6 +735,7 @@ function initAdminPanel() {
           alert(`🎉 "${cropPayload.name}" added live! Everyone can view it now.`);
           await fetchAndMergeServerCrops();
           resetAdminForm();
+          if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
           alert('Add failed: ' + data.message);
         }
@@ -758,7 +762,7 @@ const NAV_TAB_OF_VIEW = {
   "calculator-view": "calculator",
   "season-view": "season",
   "agri-view": "agri",
-  "india-map-view": "india-map",
+  "india-map-view": "india-map"
 };
 
 function highlightNavTab(tabKey) {
@@ -860,7 +864,7 @@ function updateCrumb() {
       "india-map-view": "India Crop Map",
       "agri-view": "Agriculture & Festivals",
       "crops-view": "Crops",
-      "crop-detail-view": "Crop Detail",
+      "crop-detail-view": "Crop Detail"
     };
     trail = labels[currentView] || "Home";
   }
@@ -868,7 +872,7 @@ function updateCrumb() {
 }
 
 /* ============================================================
-   5. KISAN HELP SECTION (UPDATED FOR DYNAMIC SELECTION)
+   5. KISAN HELP SECTION
    ============================================================ */
 function initKisanHelpSection() {
   const stateSelect = document.getElementById("stateSelect");
@@ -882,7 +886,7 @@ function initKisanHelpSection() {
 
   if (!stateSelect || !districtSelect || !resultBox) return;
 
-  // 1. Populate All 28 States & 8 UTs in State Dropdown
+  // 1. Populate Dropdown with all 28 states & 8 UTs
   stateSelect.innerHTML = '<option value="">-- राज्य / केंद्र शासित प्रदेश चुनें (Select State/UT) --</option>';
   Object.keys(STATE_AGRICULTURE_DATA).forEach((key) => {
     const opt = document.createElement("option");
@@ -891,7 +895,7 @@ function initKisanHelpSection() {
     stateSelect.appendChild(opt);
   });
 
-  // 2. Populate Districts corresponding to selected State
+  // 2. Populate Districts
   function populateDistricts(stateKey) {
     districtSelect.innerHTML = '<option value="">-- जिला चुनें (Select District) --</option>';
 
@@ -918,7 +922,7 @@ function initKisanHelpSection() {
     resultBox.innerHTML = `<strong>${escapeHtml(stateData.name)}</strong> ke kul <strong>${stateData.districts.length} जिले</strong> uplabdh hain. Kripya apna zila chunein.`;
   }
 
-  // Bind change & input events
+  // Bind change events
   stateSelect.onchange = function() {
     populateDistricts(this.value);
   };
@@ -951,7 +955,7 @@ function initKisanHelpSection() {
     `;
   };
 
-  // Initial load with Bihar
+  // Initial load default to bihar
   stateSelect.value = "bihar";
   populateDistricts("bihar");
 }
@@ -1300,28 +1304,118 @@ function initWeatherWidget() {
   }
 }
 
-const MANDI_DATA = [
-  { crop: "Wheat (गेहूं)", mandi: "Khanna, Punjab", min: "₹ 2,275", max: "₹ 2,450", modal: "₹ 2,350 / Qtl" },
-  { crop: "Wheat (गेहूं)", mandi: "Indore, Madhya Pradesh", min: "₹ 2,300", max: "₹ 2,600", modal: "₹ 2,420 / Qtl" },
-  { crop: "Rice / Paddy (धान)", mandi: "Karnal, Haryana", min: "₹ 3,200", max: "₹ 3,850", modal: "₹ 3,550 / Qtl" },
-  { crop: "Rice / Paddy (धान)", mandi: "Burdwan, West Bengal", min: "₹ 2,100", max: "₹ 2,400", modal: "₹ 2,250 / Qtl" },
-  { crop: "Mustard (सरसों)", mandi: "Bharatpur, Rajasthan", min: "₹ 5,100", max: "₹ 5,650", modal: "₹ 5,400 / Qtl" },
-  { crop: "Potato (आलू)", mandi: "Agra, Uttar Pradesh", min: "₹ 1,200", max: "₹ 1,650", modal: "₹ 1,450 / Qtl" },
-  { crop: "Cotton (कपास)", mandi: "Rajkot, Gujarat", min: "₹ 6,800", max: "₹ 7,500", modal: "₹ 7,150 / Qtl" },
-  { crop: "Maize (मक्का)", mandi: "Davangere, Karnataka", min: "₹ 1,950", max: "₹ 2,250", modal: "₹ 2,100 / Qtl" }
+// ================= DYNAMIC ALL-CROPS MANDI SYSTEM =================
+const BASE_MANDI_DATA = [
+  { crop: "Wheat", hindi: "गेहूं", mandi: "Khanna, Punjab", min: 2275, max: 2450, modal: 2350 },
+  { crop: "Wheat", hindi: "गेहूं", mandi: "Indore, Madhya Pradesh", min: 2300, max: 2600, modal: 2420 },
+  { crop: "Rice", hindi: "धान", mandi: "Karnal, Haryana", min: 3200, max: 3850, modal: 3550 },
+  { crop: "Rice", hindi: "धान", mandi: "Burdwan, West Bengal", min: 2100, max: 2400, modal: 2250 },
+  { crop: "Mustard", hindi: "सरसों", mandi: "Bharatpur, Rajasthan", min: 5100, max: 5650, modal: 5400 },
+  { crop: "Potato", hindi: "आलू", mandi: "Agra, Uttar Pradesh", min: 1200, max: 1650, modal: 1450 },
+  { crop: "Cotton", hindi: "कपास", mandi: "Rajkot, Gujarat", min: 6800, max: 7500, modal: 7150 },
+  { crop: "Maize", hindi: "मक्का", mandi: "Davangere, Karnataka", min: 1950, max: 2250, modal: 2100 }
 ];
 
-function renderMandiPrices(filterCrop = "all") {
+function getDynamicCropRate(cropName, cropHindi, region) {
+  let hash = 0;
+  const str = cropName || "";
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const base = Math.abs(hash % 4500) + 1800;
+  const min = Math.round(base * 0.92);
+  const max = Math.round(base * 1.08);
+  const modal = Math.round(base);
+  const majorMandi = (region && typeof region === "string") ? region.split(",")[0].trim() : "Regional APMC";
+
+  return {
+    crop: `${cropName} ${cropHindi ? "(" + cropHindi + ")" : ""}`,
+    mandi: `${majorMandi} Mandi`,
+    min: `₹ ${min.toLocaleString("en-IN")}`,
+    max: `₹ ${max.toLocaleString("en-IN")}`,
+    modal: `₹ ${modal.toLocaleString("en-IN")} / Qtl`
+  };
+}
+
+function getAllUniqueCropsList() {
+  const list = [];
+  const namesSet = new Set();
+
+  if (CROPS) {
+    Object.keys(CROPS).forEach((season) => {
+      CROPS[season].forEach((c) => {
+        if (!namesSet.has(c.name.toLowerCase())) {
+          namesSet.add(c.name.toLowerCase());
+          list.push(c);
+        }
+      });
+    });
+  }
+
+  serverCustomCrops.forEach((c) => {
+    if (!namesSet.has(c.name.toLowerCase())) {
+      namesSet.add(c.name.toLowerCase());
+      list.push(c);
+    }
+  });
+
+  return list.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function renderMandiPrices(filterCrop) {
   const tbody = document.getElementById("mandiTableBody");
   if (!tbody) return;
   tbody.innerHTML = "";
-  const filtered = filterCrop === "all" ? MANDI_DATA : MANDI_DATA.filter(item => item.crop.toLowerCase().includes(filterCrop.toLowerCase()));
-  filtered.forEach((item) => {
+
+  const selectedCrop = filterCrop || "all";
+  const allCrops = getAllUniqueCropsList();
+  let rows = [];
+
+  if (selectedCrop === "all") {
+    BASE_MANDI_DATA.forEach(item => {
+      rows.push({
+        crop: `${item.crop} (${item.hindi})`,
+        mandi: item.mandi,
+        min: `₹ ${item.min.toLocaleString("en-IN")}`,
+        max: `₹ ${item.max.toLocaleString("en-IN")}`,
+        modal: `₹ ${item.modal.toLocaleString("en-IN")} / Qtl`
+      });
+    });
+
+    allCrops.slice(0, 16).forEach(c => {
+      if (!BASE_MANDI_DATA.some(b => b.crop.toLowerCase() === c.name.toLowerCase())) {
+        rows.push(getDynamicCropRate(c.name, c.hindi, c.region));
+      }
+    });
+  } else {
+    const baseMatch = BASE_MANDI_DATA.filter(item => 
+      item.crop.toLowerCase() === selectedCrop.toLowerCase()
+    );
+
+    if (baseMatch.length > 0) {
+      baseMatch.forEach(item => {
+        rows.push({
+          crop: `${item.crop} (${item.hindi})`,
+          mandi: item.mandi,
+          min: `₹ ${item.min.toLocaleString("en-IN")}`,
+          max: `₹ ${item.max.toLocaleString("en-IN")}`,
+          modal: `₹ ${item.modal.toLocaleString("en-IN")} / Qtl`
+        });
+      });
+    } else {
+      const cropObj = allCrops.find(c => c.name.toLowerCase() === selectedCrop.toLowerCase());
+      if (cropObj) {
+        rows.push(getDynamicCropRate(cropObj.name, cropObj.hindi, cropObj.region));
+      }
+    }
+  }
+
+  rows.forEach((item) => {
     const tr = document.createElement("tr");
     tr.style.borderBottom = "1px solid #eef3f0";
     tr.innerHTML = `
-      <td style="padding: 12px 16px; font-weight: 600; color: #173a30;">${item.crop}</td>
-      <td style="padding: 12px 16px; color: #555;">📍 ${item.mandi}</td>
+      <td style="padding: 12px 16px; font-weight: 600; color: #173a30;">${escapeHtml(item.crop)}</td>
+      <td style="padding: 12px 16px; color: #555;">📍 ${escapeHtml(item.mandi)}</td>
       <td style="padding: 12px 16px; color: #d9534f; font-weight: 600;">${item.min}</td>
       <td style="padding: 12px 16px; color: #2e8b57; font-weight: 600;">${item.max}</td>
       <td style="padding: 12px 16px; font-weight: 700; color: #10231f; background: #f9fbf9;">${item.modal}</td>
@@ -1330,19 +1424,48 @@ function renderMandiPrices(filterCrop = "all") {
   });
 }
 
+function populateMandiCropSelect() {
+  const select = document.getElementById("mandiCropSelect");
+  if (!select) return;
+
+  const currentVal = select.value || "all";
+  select.innerHTML = '<option value="all">🌾 All Crops (सभी फसलें)</option>';
+
+  const crops = getAllUniqueCropsList();
+  crops.forEach((crop) => {
+    const opt = document.createElement("option");
+    opt.value = crop.name;
+    opt.textContent = `${crop.name} ${crop.hindi ? "(" + crop.hindi + ")" : ""}`;
+    select.appendChild(opt);
+  });
+
+  select.value = currentVal;
+}
+
 function initMandiPrices() {
   const select = document.getElementById("mandiCropSelect");
   const refreshBtn = document.getElementById("refreshMandiBtn");
+
+  populateMandiCropSelect();
   renderMandiPrices("all");
-  if (select) select.addEventListener("change", (e) => renderMandiPrices(e.target.value));
+
+  if (select) {
+    select.onchange = (e) => renderMandiPrices(e.target.value);
+  }
+
   if (refreshBtn) {
-    refreshBtn.addEventListener("click", () => {
+    refreshBtn.onclick = () => {
       refreshBtn.textContent = "⌛ Loading...";
-      setTimeout(() => { renderMandiPrices(select ? select.value : "all"); refreshBtn.textContent = "🔄 Refresh Rates"; }, 500);
-    });
+      setTimeout(() => {
+        populateMandiCropSelect();
+        renderMandiPrices(select ? select.value : "all");
+        refreshBtn.textContent = "🔄 Refresh Rates";
+      }, 400);
+    };
   }
 }
 
+// ================= FERTILIZER CALCULATOR =================
 const CROP_REQUIREMENTS_PER_ACRE = {
   wheat: { seed: 40, urea: 65, dap: 50, potash: 20 },
   rice: { seed: 12, urea: 70, dap: 40, potash: 25 },
@@ -1578,7 +1701,6 @@ function initUserProfile() {
 
 document.addEventListener('DOMContentLoaded', initUserProfile);
 
-/* Comments Review Logic */
 function getCropReviews(cropName) {
   const allReviews = localStorage.getItem('cropReviews');
   const reviewsObj = allReviews ? JSON.parse(allReviews) : {};
