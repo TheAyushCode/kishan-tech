@@ -191,7 +191,7 @@
           <button class="welcome-option" id="opt-help">
             <span class="opt-emoji">🤝</span>
             <span class="opt-title">Kisan Help &amp; Schemes</span>
-            <span class="opt-desc">Get Bihar, National &amp; District helplines, subsidies and monetary benefits.</span>
+            <span class="opt-desc">Get State, National &amp; District helplines, subsidies and monetary benefits.</span>
             <span class="opt-go">Open Help Center →</span>
           </button>
           <button class="welcome-option" id="opt-recommend">
@@ -222,7 +222,7 @@
       </div>
     </section>
 
-    <!-- KISAN HELP & SCHEMES VIEW (DYNAMIC STATE & DISTRICT DRIVEN) -->
+    <!-- KISAN HELP & SCHEMES VIEW (DYNAMIC ALL 28 STATES & 8 UTs DRIVEN) -->
     <section class="view" id="kisan-help-view">
       <div class="section-head">
         <div class="eyebrow">Government Benefits &amp; Assistance</div>
@@ -267,20 +267,12 @@
             <p>अपने राज्य और जिले का चयन करें ताकि नजदीकी कृषि विज्ञान केंद्र (KVK) से संपर्क किया जा सके:</p>
             
             <div class="district-search-bar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
-              <!-- 1. State Selector -->
+              <!-- 1. Dynamic State & UT Selector (Populated from app.js) -->
               <select id="stateSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
-                <option value="">-- राज्य चुनें (State) --</option>
-                <option value="bihar" selected>Bihar (बिहार)</option>
-                <option value="up">Uttar Pradesh (उत्तर प्रदेश)</option>
-                <option value="punjab">Punjab (पंजाब)</option>
-                <option value="haryana">Haryana (हरियाणा)</option>
-                <option value="mp">Madhya Pradesh (मध्य प्रदेश)</option>
-                <option value="rajasthan">Rajasthan (राजस्थान)</option>
-                <option value="maharashtra">Maharashtra (महाराष्ट्र)</option>
-                <option value="wb">West Bengal (पश्चिम बंगाल)</option>
+                <option value="">-- राज्य / केंद्र शासित प्रदेश चुनें (Select State/UT) --</option>
               </select>
 
-              <!-- 2. District Selector -->
+              <!-- 2. Dynamic District Selector (Populated from app.js) -->
               <select id="districtKvkSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
                 <option value="">-- जिला चुनें (District) --</option>
               </select>

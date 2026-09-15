@@ -54,111 +54,368 @@ const STATE_COORDINATES = {
   "assam": { top: "36%", left: "84%", name: "Assam" }
 };
 
+// ================= ALL 28 STATES & 8 UNION TERRITORIES =================
 const STATE_AGRICULTURE_DATA = {
+  andhra_pradesh: {
+    name: "Andhra Pradesh (आंध्र प्रदेश)",
+    deptHelpline: "1800-425-3030 / 1551",
+    desc: "Department of Agriculture, Govt. of Andhra Pradesh (Rythu Bharosa Kendra)",
+    districts: [
+      "Alluri Sitharama Raju", "Anakapalli", "Ananthapuramu", "Annamayya", "Bapatla", 
+      "Chittoor", "Dr. B.R. Ambedkar Konaseema", "East Godavari", "Eluru", "Guntur", 
+      "Kakinada", "Krishna", "Kurnool", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam", 
+      "Prakasam", "Srikakulam", "Sri Potti Sriramulu Nellore", "Sri Sathya Sai", "Tirupati", 
+      "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"
+    ]
+  },
+  arunachal_pradesh: {
+    name: "Arunachal Pradesh (अरुणाचल प्रदेश)",
+    deptHelpline: "0360-2244252 / 1551",
+    desc: "Department of Agriculture, Govt. of Arunachal Pradesh",
+    districts: [
+      "Anjaw", "Changlang", "Dibang Valley", "East Kameng", "East Siang", "Kamle", 
+      "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", 
+      "Lower Siang", "Lower Subansiri", "Namsai", "Pakke Kessang", "Papum Pare", "Shi Yomi", 
+      "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang", "Bichom"
+    ]
+  },
+  assam: {
+    name: "Assam (असम)",
+    deptHelpline: "1800-345-3522 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Assam",
+    districts: [
+      "Baksa", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", 
+      "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", 
+      "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", 
+      "Karimganj", "Kokrajhar", "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", 
+      "Sivasagar", "Sonitpur", "South Salmara-Mankachar", "Tinsukia", "Udalguri", 
+      "West Karbi Anglong", "Bajali", "Tamulpur"
+    ]
+  },
   bihar: {
     name: "Bihar (बिहार)",
-    deptHelpline: "1800-345-6455",
-    desc: "कृषि विभाग, बिहार सरकार (डीजल अनुदान, बीज वितरण व सरकारी सलाह हेतु)",
-    districts: {
-      patna: { name: "Patna (पटना)", office: "KVK Barh & DAO Patna", phone: "06132-243250 / 9431821001", email: "kvkpatna@icar.gov.in" },
-      gaya: { name: "Gaya (गया)", office: "KVK Manpur, Gaya", phone: "0631-2228390 / 9431479500", email: "kvkgaya@gmail.com" },
-      muzaffarpur: { name: "Muzaffarpur (मुजफ्फरपुर)", office: "KVK Saraiya, Muzaffarpur", phone: "0621-2814321 / 9431821004", email: "kvkmuzaffarpur@rediffmail.com" },
-      bhagalpur: { name: "Bhagalpur (भागलपुर)", office: "BAU Sabour & KVK Sabour", phone: "0641-2451035 / 9431821010", email: "kvksabour@gmail.com" },
-      rohtas: { name: "Rohtas (रोहतास)", office: "KVK Bikramganj, Rohtas", phone: "06185-222120 / 9431479522", email: "rohtaskvk@gmail.com" },
-      samastipur: { name: "Samastipur (समस्तीपुर)", office: "RPCAU Pusa & KVK Birauli", phone: "06274-240226 / 9431821015", email: "kvksamastipur@rpcau.ac.in" },
-      darbhanga: { name: "Darbhanga (दरभंगा)", office: "KVK Jale, Darbhanga", phone: "06272-284333 / 9431821008", email: "kvkdarbhanga@gmail.com" },
-      purnia: { name: "Purnia (पूर्णिया)", office: "KVK Jalalgarh, Purnia", phone: "06543-228120 / 9431821018", email: "kvkpurnea@yahoo.co.in" },
-      nalanda: { name: "Nalanda (नालंदा)", office: "KVK Harnaut, Nalanda", phone: "06112-258010 / 9431479511", email: "kvknalanda@gmail.com" },
-      vaishali: { name: "Vaishali (वैशाली)", office: "KVK Hariharpur, Vaishali", phone: "06224-273100 / 9431821020", email: "kvkvaishali@gmail.com" },
-      bhojpur: { name: "Bhojpur (भोजपुर)", office: "KVK Ara, Bhojpur", phone: "06182-248101 / 9431479505", email: "kvkbhojpur@gmail.com" },
-      saran: { name: "Saran / Chhapra (सारण)", office: "KVK Manjhi, Saran", phone: "06152-232145 / 9431821006", email: "kvksaran@gmail.com" }
-    }
+    deptHelpline: "1800-345-6455 / 1551",
+    desc: "कृषि विभाग, बिहार सरकार (डीजल व बीज अनुदान, DBT पोर्टल)",
+    districts: [
+      "Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur (Ara)", 
+      "Buxar", "Darbhanga", "East Champaran (Motihari)", "Gaya", "Gopalganj", "Jamui", 
+      "Jehanabad", "Kaimur (Bhabua)", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", 
+      "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda (Bihar Sharif)", "Nawada", 
+      "Patna", "Purnia", "Rohtas (Sasaram)", "Saharsa", "Samastipur", "Saran (Chhapra)", 
+      "Sheikhpura", "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali (Hajipur)", "West Champaran (Bettiah)"
+    ]
   },
-  up: {
-    name: "Uttar Pradesh (उत्तर प्रदेश)",
-    deptHelpline: "1800-180-1551 / 0522-2204555",
-    desc: "कृषि विभाग, उत्तर प्रदेश सरकार (पारदर्शी किसान सेवा पोर्टल एवं अनुदान)",
-    districts: {
-      lucknow: { name: "Lucknow (लखनऊ)", office: "KVK ICAR-IISR Lucknow", phone: "0522-2480726", email: "kvklucknow@gmail.com" },
-      kanpur: { name: "Kanpur (कानपुर)", office: "CSAUAT & KVK Kanpur", phone: "0512-2534156", email: "kvkkanpur@csauk.ac.in" },
-      varanasi: { name: "Varanasi (वाराणसी)", office: "ICAR-IIVR KVK Varanasi", phone: "0542-2635231", email: "kvkvaranasi@iivr.org.in" },
-      prayagraj: { name: "Prayagraj (प्रयागराज)", office: "SHUATS KVK Prayagraj", phone: "0532-2684281", email: "kvkallahabad@rediffmail.com" },
-      meerut: { name: "Meerut (मेरठ)", office: "SVPUAT KVK Hastinapur", phone: "0121-2888514", email: "kvkmeerut@gmail.com" },
-      gorakhpur: { name: "Gorakhpur (गोरखपुर)", office: "KVK Belipar Gorakhpur", phone: "0551-2402241", email: "kvkgorakhpur@gmail.com" },
-      agra: { name: "Agra (आगरा)", office: "KVK Bichpuri, Agra", phone: "0562-2760205", email: "kvkagra@gmail.com" }
-    }
+  chhattisgarh: {
+    name: "Chhattisgarh (छत्तीसगढ़)",
+    deptHelpline: "0771-2443831 / 1551",
+    desc: "कृषि विकास एवं किसान कल्याण विभाग, छत्तीसगढ़ शासन",
+    districts: [
+      "Balod", "Baloda Bazar-Bhatapara", "Balrampur-Ramanujganj", "Bastar", "Bemetara", 
+      "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", 
+      "Janjgir-Champa", "Jashpur", "Kabirdham (Kawardha)", "Kanker", "Kondagaon", "Korba", 
+      "Koriya", "Mahasamund", "Manendragarh-Chirmiri-Bharatpur", "Mohla-Manpur-Ambagarh Chowki", 
+      "Mungeli", "Narayanpur", "Raigarh", "Raipur", "Rajnandgaon", "Sakti", "Sarangarh-Bilaigarh", 
+      "Sukma", "Surajpur", "Surguja", "Khairagarh-Chhuikhadan-Gandai"
+    ]
   },
-  punjab: {
-    name: "Punjab (पंजाब)",
-    deptHelpline: "1800-180-1551 / 0161-2401960",
-    desc: "Department of Agriculture & Farmers Welfare, Punjab (PAU Ludhiana)",
-    districts: {
-      ludhiana: { name: "Ludhiana (ਲੁਧਿਆਣਾ)", office: "PAU Directorate of Extension & KVK", phone: "0161-2401960", email: "kvkludhiana@pau.edu" },
-      amritsar: { name: "Amritsar (ਅੰਮ੍ਰਿਤਸਰ)", office: "KVK Nag Kalan, Amritsar", phone: "0183-2783850", email: "kvkamritsar@pau.edu" },
-      jalandhar: { name: "Jalandhar (ਜਲੰਧਰ)", office: "KVK Nurmahal, Jalandhar", phone: "01826-244243", email: "kvkjalandhar@pau.edu" },
-      patiala: { name: "Patiala (ਪਟਿਆਲਾ)", office: "KVK Rauni, Patiala", phone: "0175-2212055", email: "kvkpatiala@pau.edu" },
-      bathinda: { name: "Bathinda (ਬਠਿੰਡਾ)", office: "KVK Dabwali Road, Bathinda", phone: "0164-2212159", email: "kvkbathinda@pau.edu" }
-    }
+  goa: {
+    name: "Goa (गोवा)",
+    deptHelpline: "0832-2224461 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Goa",
+    districts: ["North Goa", "South Goa"]
+  },
+  gujarat: {
+    name: "Gujarat (गुजरात)",
+    deptHelpline: "1800-233-0264 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Gujarat (i-Khedut Portal)",
+    districts: [
+      "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", 
+      "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", 
+      "Gir Somnath", "Jamnagar", "Junagadh", "Kutch", "Kheda", "Mahisagar", "Mehsana", 
+      "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", 
+      "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"
+    ]
   },
   haryana: {
     name: "Haryana (हरियाणा)",
-    deptHelpline: "1800-180-2117 / 0172-2571553",
-    desc: "कृषि तथा किसान कल्याण विभाग, हरियाणा (CCSHAU Hisar एवं मेरी फसल मेरा ब्योरा)",
-    districts: {
-      hisar: { name: "Hisar (हिसार)", office: "CCSHAU Extension Directorate & KVK", phone: "01662-284301", email: "kvkhisar@hau.ac.in" },
-      karnal: { name: "Karnal (करनाल)", office: "NDRI & KVK Uchani, Karnal", phone: "0184-2267590", email: "kvkkarnal@gmail.com" },
-      rohtak: { name: "Rohtak (रोहतक)", office: "KVK Rohtak", phone: "01262-274205", email: "kvkrohtak@gmail.com" },
-      ambala: { name: "Ambala (अम्बाला)", office: "KVK Tepla, Ambala", phone: "0171-2830230", email: "kvkambala@gmail.com" },
-      sirsa: { name: "Sirsa (सिरसा)", office: "KVK Sirsa", phone: "01666-220025", email: "kvksirsa@gmail.com" }
-    }
+    deptHelpline: "1800-180-2117 / 1551",
+    desc: "कृषि तथा किसान कल्याण विभाग, हरियाणा (मेरी फसल मेरा ब्योरा)",
+    districts: [
+      "Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", 
+      "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", 
+      "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
+    ]
   },
-  mp: {
+  himachal_pradesh: {
+    name: "Himachal Pradesh (हिमाचल प्रदेश)",
+    deptHelpline: "0177-2830174 / 1551",
+    desc: "Department of Agriculture, Govt. of Himachal Pradesh",
+    districts: [
+      "Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", 
+      "Lahaul and Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"
+    ]
+  },
+  jharkhand: {
+    name: "Jharkhand (झारखंड)",
+    deptHelpline: "0651-2490578 / 1551",
+    desc: "कृषि, पशुपालन एवं सहकारिता विभाग, झारखंड सरकार",
+    districts: [
+      "Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum (Jamshedpur)", 
+      "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", 
+      "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahibganj", 
+      "Seraikela Kharsawan", "Simdega", "West Singhbhum"
+    ]
+  },
+  karnataka: {
+    name: "Karnataka (कर्नाटक)",
+    deptHelpline: "1800-425-3553 / 1551",
+    desc: "Department of Agriculture, Govt. of Karnataka (Raitha Siri)",
+    districts: [
+      "Bagalkote", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", 
+      "Chamarajanagara", "Chikkaballapura", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", 
+      "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", 
+      "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", 
+      "Tumakuru", "Udupi", "Uttara Kannada", "Vijayanagara", "Vijayapura", "Yadgir"
+    ]
+  },
+  kerala: {
+    name: "Kerala (केरल)",
+    deptHelpline: "1800-425-1661 / 1551",
+    desc: "Department of Agriculture Development and Farmers' Welfare, Kerala",
+    districts: [
+      "Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", 
+      "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"
+    ]
+  },
+  madhya_pradesh: {
     name: "Madhya Pradesh (मध्य प्रदेश)",
-    deptHelpline: "0755-2558823 / 1800-180-1551",
+    deptHelpline: "0755-2558823 / 1551",
     desc: "किसान कल्याण एवं कृषि विकास विभाग, मध्य प्रदेश शासन",
-    districts: {
-      bhopal: { name: "Bhopal (भोपाल)", office: "CIAE & KVK Nabi Bagh, Bhopal", phone: "0755-2737191", email: "kvkbhopal@icar.gov.in" },
-      indore: { name: "Indore (इंदौर)", office: "KVK Kasturbagram, Indore", phone: "0731-2856230", email: "kvkindore@gmail.com" },
-      jabalpur: { name: "Jabalpur (जबलपुर)", office: "JNKVV KVK Jabalpur", phone: "0761-2681021", email: "kvkjabalpur@jnkvv.org" },
-      gwalior: { name: "Gwalior (ग्वालियर)", office: "RVSKVV KVK Gwalior", phone: "0751-2467650", email: "kvkgwalior@rediffmail.com" },
-      ujjain: { name: "Ujjain (उज्जैन)", office: "KVK Ujjain", phone: "0734-2512140", email: "kvkujjain@gmail.com" }
-    }
+    districts: [
+      "Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", 
+      "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", 
+      "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Hoshangabad (Narmadapuram)", "Indore", 
+      "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Maihar", "Mandla", "Mandsaur", 
+      "Mauganj", "Morena", "Narsinghpur", "Neemuch", "Niwari", "Panna", "Pandhurna", "Raisen", 
+      "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", 
+      "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"
+    ]
+  },
+  maharashtra: {
+    name: "Maharashtra (महाराष्ट्र)",
+    deptHelpline: "1800-233-4000 / 1551",
+    desc: "कृषी विभाग, महाराष्ट्र शासन (महाडीबीटी शेतकरी योजना)",
+    districts: [
+      "Ahmednagar", "Akola", "Amravati", "Chhatrapati Sambhajinagar (Aurangabad)", "Beed", 
+      "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", 
+      "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", 
+      "Nanded", "Nandurbar", "Nashik", "Dharashiv (Osmanabad)", "Palghar", "Parbhani", "Pune", 
+      "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"
+    ]
+  },
+  manipur: {
+    name: "Manipur (मणिपुर)",
+    deptHelpline: "0385-2414436 / 1551",
+    desc: "Department of Agriculture, Govt. of Manipur",
+    districts: [
+      "Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", 
+      "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"
+    ]
+  },
+  meghalaya: {
+    name: "Meghalaya (मेघालय)",
+    deptHelpline: "0364-2223847 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Meghalaya",
+    districts: [
+      "Eastern West Khasi Hills", "East Garo Hills", "East Jaintia Hills", "East Khasi Hills", 
+      "North Garo Hills", "Ri-Bhoi", "South Garo Hills", "South West Garo Hills", 
+      "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"
+    ]
+  },
+  mizoram: {
+    name: "Mizoram (मिजोरम)",
+    deptHelpline: "0389-2322437 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Mizoram",
+    districts: [
+      "Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", 
+      "Lunglei", "Mamit", "Saitual", "Serchhip", "Siaha"
+    ]
+  },
+  nagaland: {
+    name: "Nagaland (नागालैंड)",
+    deptHelpline: "0370-2270081 / 1551",
+    desc: "Directorate of Agriculture, Govt. of Nagaland",
+    districts: [
+      "Chümoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Mokokchung", 
+      "Mon", "Niuland", "Noklak", "Peren", "Phek", "Shamator", "Tseminyü", "Tuensang", "Wokha", "Zünheboto"
+    ]
+  },
+  odisha: {
+    name: "Odisha (ओडिशा)",
+    deptHelpline: "1800-180-1551 / 0674-2395532",
+    desc: "Department of Agriculture & Farmers' Empowerment, Odisha (KALIA Scheme)",
+    districts: [
+      "Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", 
+      "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", 
+      "Kandhamal", "Kendrapara", "Kendujhar (Keonjhar)", "Khordha", "Koraput", "Malkangiri", 
+      "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur (Sonepur)", "Sundargarh"
+    ]
+  },
+  punjab: {
+    name: "Punjab (पंजाब)",
+    deptHelpline: "0161-2401960 / 1551",
+    desc: "Department of Agriculture & Farmers Welfare, Punjab (PAU Ludhiana)",
+    districts: [
+      "Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", 
+      "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", 
+      "Malerkotla", "Mansa", "Moga", "Muktsar", "Pathankot", "Patiala", "Rupnagar", 
+      "Sahibzada Ajit Singh Nagar (Mohali)", "Shaheed Bhagat Singh Nagar (Nawanshahr)", "Sangrur", "Tarn Taran"
+    ]
   },
   rajasthan: {
     name: "Rajasthan (राजस्थान)",
     deptHelpline: "1800-180-1551 / 0141-2227365",
     desc: "कृषि विभाग, राजस्थान सरकार (राज किसान साथी पोर्टल)",
-    districts: {
-      jaipur: { name: "Jaipur (जयपुर)", office: "KVK Chomu, Jaipur", phone: "01423-221235", email: "kvkjaipur@gmail.com" },
-      jodhpur: { name: "Jodhpur (जोधपुर)", office: "CAZRI & KVK Jodhpur", phone: "0291-2786534", email: "kvkjodhpur@cazri.res.in" },
-      kota: { name: "Kota (कोटा)", office: "Agriculture University & KVK Kota", phone: "0744-2321205", email: "kvkkota@aukota.org" },
-      udaipur: { name: "Udaipur (उदयपुर)", office: "MPUAT KVK Badgaon, Udaipur", phone: "0294-2441223", email: "kvkudaipur@mpuat.ac.in" },
-      bikaner: { name: "Bikaner (बीकानेर)", office: "SKRAU & KVK Bikaner", phone: "0151-2250025", email: "kvkbikaner@raubikaner.org" }
-    }
+    districts: [
+      "Ajmer", "Alwar", "Anupgarh", "Balotra", "Banswara", "Baran", "Barmer", "Bharatpur", 
+      "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Deeg", "Didwana-Kuchaman", 
+      "Dholpur", "Dudu", "Dungarpur", "Ganganagar", "Gangapur City", "Hanumangarh", "Jaipur Urban", 
+      "Jaipur Rural", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur Urban", "Jodhpur Rural", 
+      "Karauli", "Kekri", "Khairthal-Tijara", "Kota", "Kotputli-Behror", "Nagaur", "Neem Ka Thana", 
+      "Pali", "Phalodi", "Pratapgarh", "Rajsamand", "Salumbar", "Sanchore", "Sawai Madhopur", 
+      "Shahpura", "Sikar", "Sirohi", "Tonk", "Udaipur", "Beawar"
+    ]
   },
-  maharashtra: {
-    name: "Maharashtra (महाराष्ट्र)",
-    deptHelpline: "1800-233-4000 / 020-25537550",
-    desc: "कृषी विभाग, महाराष्ट्र शासन (महाडीबीटी शेतकरी योजना)",
-    districts: {
-      pune: { name: "Pune (पुणे)", office: "KVK Baramati, Pune", phone: "02112-255207", email: "kvkbaramati@yahoo.com" },
-      nashik: { name: "Nashik (नाशिक)", office: "YCMOU KVK Yashwantrao Chavan Nashik", phone: "0253-2230717", email: "kvknashik@rediffmail.com" },
-      nagpur: { name: "Nagpur (नागपूर)", office: "CICR & KVK Nagpur", phone: "07103-275536", email: "kvknagpur@gmail.com" },
-      aurangabad: { name: "Chhatrapati Sambhajinagar (औरंगाबाद)", office: "VNMKV KVK Aurangabad", phone: "0240-2376558", email: "kvkaurangabad@rediffmail.com" },
-      solapur: { name: "Solapur (सोलापूर)", office: "KVK Kegaon, Solapur", phone: "0217-2500420", email: "kvksolapur@rediffmail.com" }
-    }
+  sikkim: {
+    name: "Sikkim (सिक्किम)",
+    deptHelpline: "03592-281140 / 1551",
+    desc: "Agriculture Department, Govt. of Sikkim (100% Organic State Mission)",
+    districts: ["Gangtok", "Gyalshing", "Pakyong", "Namchi", "Mangan", "Soreng"]
   },
-  wb: {
-    name: "West Bengal (পশ্চিমবঙ্গ)",
-    deptHelpline: "1800-103-6000 / 033-22145555",
-    desc: "Department of Agriculture, Govt. of West Bengal (Krishak Bandhu Scheme)",
-    districts: {
-      burdwan: { name: "Burdwan (বর্ধমান)", office: "BCKV KVK Burdwan", phone: "0342-2656244", email: "kvkburdwan@gmail.com" },
-      north24pgs: { name: "North 24 Parganas (উত্তর ২৪ পরগনা)", office: "WBUAFS KVK Ashokenagar", phone: "03216-231120", email: "kvknorth24pgs@gmail.com" },
-      south24pgs: { name: "South 24 Parganas (দক্ষিণ ২৪ পরগনা)", office: "KVK Nimpith, South 24 Pgs", phone: "03218-226002", email: "nimpithkvk1979@gmail.com" },
-      murshidabad: { name: "Murshidabad (মুর্শিদাবাদ)", office: "KVK Murshidabad", phone: "03482-251120", email: "kvkmurshidabad@gmail.com" },
-      hooghly: { name: "Hooghly (হুগলি)", office: "BCKV KVK Chinsurah, Hooghly", phone: "033-26861240", email: "kvkhooghly@gmail.com" }
-    }
+  tamil_nadu: {
+    name: "Tamil Nadu (तमिलनाडु)",
+    deptHelpline: "1800-425-4444 / 1551",
+    desc: "Agriculture Department, Govt. of Tamil Nadu (Uzhavan App)",
+    districts: [
+      "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", 
+      "Dindigul", "Erode", "Kallakurichi", "Kanchipuram", "Kanyakumari", "Karur", 
+      "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Namakkal", "Nilgiris", 
+      "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", 
+      "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", 
+      "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"
+    ]
+  },
+  telangana: {
+    name: "Telangana (तेलंगाना)",
+    deptHelpline: "1800-599-4455 / 1551",
+    desc: "Department of Agriculture, Govt. of Telangana (Rythu Bandhu Portal)",
+    districts: [
+      "Adilabad", "Bhadradri Kothagudem", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally", 
+      "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam", "Kumuram Bheem Asifabad", 
+      "Mahabubabad", "Mahabubnagar", "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu", 
+      "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli", 
+      "Rajanna Sircilla", "Ranga Reddy", "Sangareddy", "Siddipet", "Suryapet", "Vikarabad", 
+      "Wanaparthy", "Warangal", "Hanamkonda", "Yadadri Bhuvanagiri"
+    ]
+  },
+  tripura: {
+    name: "Tripura (त्रिपुरा)",
+    deptHelpline: "0381-2323723 / 1551",
+    desc: "Department of Agriculture & Farmers Welfare, Tripura",
+    districts: ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"]
+  },
+  uttar_pradesh: {
+    name: "Uttar Pradesh (उत्तर प्रदेश)",
+    deptHelpline: "1800-180-1551 / 0522-2204555",
+    desc: "कृषि विभाग, उत्तर प्रदेश सरकार (पारदर्शी किसान सेवा पोर्टल)",
+    districts: [
+      "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", 
+      "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", 
+      "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", 
+      "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", 
+      "Gautam Buddha Nagar (Noida)", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", 
+      "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", 
+      "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kheri (Lakhimpur)", "Kushinagar", 
+      "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", 
+      "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", 
+      "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", 
+      "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"
+    ]
+  },
+  uttarakhand: {
+    name: "Uttarakhand (उत्तराखंड)",
+    deptHelpline: "0135-2712240 / 1551",
+    desc: "Agriculture Department, Govt. of Uttarakhand",
+    districts: [
+      "Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", 
+      "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"
+    ]
+  },
+  west_bengal: {
+    name: "West Bengal (पश्चिम बंगाल)",
+    deptHelpline: "1800-103-6000 / 1551",
+    desc: "Department of Agriculture, Govt. of West Bengal (Krishak Bandhu)",
+    districts: [
+      "Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", 
+      "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Maldah", 
+      "Murshidabad", "Nadia", "North 24 Parganas", "Paschim Bardhaman", "Paschim Medinipur", 
+      "Purba Bardhaman", "Purba Medinipur", "Purulia", "South 24 Parganas", "Uttar Dinajpur"
+    ]
+  },
+  andaman_nicobar: {
+    name: "Andaman and Nicobar Islands (अंडमान और निकोबार द्वीप समूह)",
+    deptHelpline: "03192-232144 / 1551",
+    desc: "Directorate of Agriculture, Andaman & Nicobar Administration",
+    districts: ["Nicobar", "North and Middle Andaman", "South Andaman"]
+  },
+  chandigarh: {
+    name: "Chandigarh (चंडीगढ़)",
+    deptHelpline: "0172-2740045 / 1551",
+    desc: "Department of Agriculture, Chandigarh Administration",
+    districts: ["Chandigarh"]
+  },
+  dadra_nagar_haveli_daman_diu: {
+    name: "Dadra & Nagar Haveli and Daman & Diu (दादरा व नगर हवेली और दमन व दीव)",
+    deptHelpline: "0260-2230856 / 1551",
+    desc: "Department of Agriculture, UT Administration of DNH & DD",
+    districts: ["Dadra and Nagar Haveli", "Daman", "Diu"]
+  },
+  delhi: {
+    name: "Delhi / NCT (दिल्ली)",
+    deptHelpline: "011-23860525 / 1551",
+    desc: "Development Department, Agriculture Branch, Govt. of NCT of Delhi",
+    districts: [
+      "Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", 
+      "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"
+    ]
+  },
+  jammu_kashmir: {
+    name: "Jammu and Kashmir (जम्मू और कश्मीर)",
+    deptHelpline: "0191-2505201 (Jammu) / 0194-2310675 (Kashmir) / 1551",
+    desc: "Department of Agriculture Production & Farmers Welfare, J&K",
+    districts: [
+      "Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", 
+      "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri", 
+      "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"
+    ]
+  },
+  ladakh: {
+    name: "Ladakh (लद्दाख)",
+    deptHelpline: "01982-252012 / 1551",
+    desc: "Agriculture Department, UT Administration of Ladakh",
+    districts: ["Leh", "Kargil"]
+  },
+  lakshadweep: {
+    name: "Lakshadweep (लक्षद्वीप)",
+    deptHelpline: "04896-262276 / 1551",
+    desc: "Department of Agriculture, UT of Lakshadweep",
+    districts: ["Lakshadweep"]
+  },
+  puducherry: {
+    name: "Puducherry (पुदुचेरी)",
+    deptHelpline: "0413-2222240 / 1551",
+    desc: "Department of Agriculture and Farmers Welfare, Govt. of Puducherry",
+    districts: ["Karaikal", "Mahe", "Puducherry", "Yanam"]
   }
 };
 
@@ -201,7 +458,7 @@ function getCurrentUserEmail() {
 }
 
 /* ============================================================
-   1. LIVE SERVER CROPS INTEGRATION (PUBLIC FOR EVERYONE)
+   1. LIVE SERVER CROPS INTEGRATION
    ============================================================ */
 async function fetchAndMergeServerCrops() {
   try {
@@ -210,7 +467,6 @@ async function fetchAndMergeServerCrops() {
     if (data.success && Array.isArray(data.crops)) {
       serverCustomCrops = data.crops;
 
-      // Reset runtime crops with original embedded data
       CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
       serverCustomCrops.forEach(crop => {
@@ -230,7 +486,7 @@ async function fetchAndMergeServerCrops() {
 }
 
 /* ============================================================
-   2. PERMANENT DATABASE FAVORITES (USER SYNC)
+   2. FAVORITES MANAGEMENT
    ============================================================ */
 async function fetchUserFavorites() {
   const email = getCurrentUserEmail();
@@ -244,7 +500,6 @@ async function fetchUserFavorites() {
       localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
     }
   } catch (err) {
-    console.error('Failed to load favorites from database, using cached.', err);
     const cached = localStorage.getItem('userFavorites');
     userFavoritesList = cached ? JSON.parse(cached) : [];
   }
@@ -263,7 +518,6 @@ async function toggleFavorite(cropName, seasonKey, event) {
     return;
   }
 
-  // Optimistic UI update
   const existsIndex = userFavoritesList.findIndex(f => f.name === cropName);
   if (existsIndex > -1) {
     userFavoritesList.splice(existsIndex, 1);
@@ -272,7 +526,6 @@ async function toggleFavorite(cropName, seasonKey, event) {
   }
   localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
 
-  // Refresh Views
   if (currentView === 'favorites-view') renderFavorites();
   else if (currentView === 'crops-view' && currentSeason) renderCropCards(currentSeason, $("#crop-search") ? $("#crop-search").value.trim().toLowerCase() : "");
   else if (currentView === 'recommend-view') {
@@ -280,7 +533,6 @@ async function toggleFavorite(cropName, seasonKey, event) {
     if (form) form.dispatchEvent(new Event('submit'));
   }
 
-  // Send to server
   try {
     await fetch(`${API_BASE_URL}/favorites/toggle`, {
       method: 'POST',
@@ -339,7 +591,7 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (LIVE CRUD & EDIT)
+   3. ADMIN DASHBOARD SYSTEM
    ============================================================ */
 function renderAdminCustomCrops() {
   const tbody = document.getElementById('adminCustomCropsTable');
@@ -456,7 +708,6 @@ function initAdminPanel() {
 
     try {
       if (editingCropServerId !== null) {
-        // PUT (Update)
         const res = await fetch(`${API_BASE_URL}/crops/${editingCropServerId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -471,7 +722,6 @@ function initAdminPanel() {
           alert('Update failed: ' + data.message);
         }
       } else {
-        // POST (Create)
         const res = await fetch(`${API_BASE_URL}/crops`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -618,7 +868,7 @@ function updateCrumb() {
 }
 
 /* ============================================================
-   5. UTILS & UI CONTROLLERS
+   5. KISAN HELP SECTION (UPDATED FOR DYNAMIC SELECTION)
    ============================================================ */
 function initKisanHelpSection() {
   const stateSelect = document.getElementById("stateSelect");
@@ -632,43 +882,77 @@ function initKisanHelpSection() {
 
   if (!stateSelect || !districtSelect || !resultBox) return;
 
+  // 1. Populate All 28 States & 8 UTs in State Dropdown
+  stateSelect.innerHTML = '<option value="">-- राज्य / केंद्र शासित प्रदेश चुनें (Select State/UT) --</option>';
+  Object.keys(STATE_AGRICULTURE_DATA).forEach((key) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = STATE_AGRICULTURE_DATA[key].name;
+    stateSelect.appendChild(opt);
+  });
+
+  // 2. Populate Districts corresponding to selected State
   function populateDistricts(stateKey) {
     districtSelect.innerHTML = '<option value="">-- जिला चुनें (Select District) --</option>';
+
     if (!stateKey || !STATE_AGRICULTURE_DATA[stateKey]) {
       resultBox.innerHTML = "राज्य व जिले का चयन करने पर संपर्क विवरण यहाँ प्रदर्शित होगा।";
       return;
     }
+
     const stateData = STATE_AGRICULTURE_DATA[stateKey];
-    if (stateCardTitle) stateCardTitle.textContent = `${stateData.name} Agriculture Helpline`;
-    if (stateCardBadge) stateCardBadge.textContent = `🏛️ ${stateData.name} State`;
+
+    if (stateCardTitle) stateCardTitle.textContent = `${stateData.name} Helpline`;
+    if (stateCardBadge) stateCardBadge.textContent = `🏛️ ${stateData.name}`;
     if (stateCardDesc) stateCardDesc.textContent = stateData.desc;
     if (stateCardNumber) stateCardNumber.textContent = stateData.deptHelpline;
     if (stateCardTelLink) stateCardTelLink.href = `tel:${stateData.deptHelpline.split('/')[0].trim()}`;
 
-    Object.keys(stateData.districts).forEach((distKey) => {
+    stateData.districts.forEach((distName) => {
       const opt = document.createElement("option");
-      opt.value = distKey;
-      opt.textContent = stateData.districts[distKey].name;
+      opt.value = distName;
+      opt.textContent = distName;
       districtSelect.appendChild(opt);
     });
-    resultBox.innerHTML = `कृपया <strong>${escapeHtml(stateData.name)}</strong> का जिला चुनें।`;
+
+    resultBox.innerHTML = `<strong>${escapeHtml(stateData.name)}</strong> ke kul <strong>${stateData.districts.length} जिले</strong> uplabdh hain. Kripya apna zila chunein.`;
   }
 
-  stateSelect.addEventListener("change", (e) => populateDistricts(e.target.value));
-  districtSelect.addEventListener("change", (e) => {
+  // Bind change & input events
+  stateSelect.onchange = function() {
+    populateDistricts(this.value);
+  };
+
+  districtSelect.onchange = function() {
     const stateKey = stateSelect.value;
-    const distKey = e.target.value;
-    if (!stateKey || !distKey || !STATE_AGRICULTURE_DATA[stateKey]?.districts[distKey]) {
-      resultBox.innerHTML = "चयनित जिले का संपर्क विवरण यहाँ प्रदर्शित होगा।";
+    const distName = this.value;
+
+    if (!stateKey || !distName || !STATE_AGRICULTURE_DATA[stateKey]) {
+      resultBox.innerHTML = "चयनित जिले का विवरण यहाँ प्रदर्शित होगा।";
       return;
     }
-    const d = STATE_AGRICULTURE_DATA[stateKey].districts[distKey];
+
+    const stateData = STATE_AGRICULTURE_DATA[stateKey];
     resultBox.innerHTML = `
-      <div style="font-weight: 700; color: #173a30; font-size: 0.95rem; margin-bottom: 4px;">🏢 ${escapeHtml(d.office)}</div>
-      <div style="margin-bottom: 3px;"><strong>📞 Phone / Helpline:</strong> <a href="tel:${d.phone.split('/')[0].trim()}" style="color: #2e8b57; font-weight: 700; text-decoration: underline;">${escapeHtml(d.phone)}</a></div>
-      <div><strong>✉️ Email:</strong> <a href="mailto:${escapeHtml(d.email)}" style="color: #1d6fa5;">${escapeHtml(d.email)}</a></div>
+      <div style="font-weight: 700; color: #173a30; font-size: 1rem; margin-bottom: 5px;">
+        📍 Selected: ${escapeHtml(distName)} (${escapeHtml(stateData.name)})
+      </div>
+      <div style="margin-bottom: 4px; color: #2e8b57; font-weight: 600;">
+        🏢 <strong>KVK / District Agriculture Office:</strong> Krishi Vigyan Kendra (KVK), ${escapeHtml(distName)}
+      </div>
+      <div style="margin-bottom: 4px;">
+        📞 <strong>Helpline / Phone:</strong> 
+        <a href="tel:1551" style="color: #2e8b57; font-weight: 700; text-decoration: underline;">1551</a> / 
+        <a href="tel:${stateData.deptHelpline.split('/')[0].trim()}" style="color: #2e8b57; font-weight: 700; text-decoration: underline;">${escapeHtml(stateData.deptHelpline)}</a>
+      </div>
+      <div style="font-size: 0.85rem; color: #555;">
+        ℹ️ <em>${escapeHtml(stateData.desc)}</em>
+      </div>
     `;
-  });
+  };
+
+  // Initial load with Bihar
+  stateSelect.value = "bihar";
   populateDistricts("bihar");
 }
 
@@ -1181,7 +1465,6 @@ async function init() {
   }
   CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
-  // Load custom crops and favorites from server
   await fetchAndMergeServerCrops();
   await fetchUserFavorites();
 

@@ -390,6 +390,27 @@ a { color: inherit; text-decoration: none; }
 }
 .scheme-item { border-top: 4px solid #2e8b57; }
 
+/* Kisan Financial Benefits Schemes Link Style (Blue Hyperlink) */
+.scheme-item .sc-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1a73e8 !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: underline !important;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  cursor: pointer;
+}
+
+.scheme-item .sc-link:hover {
+  color: #0b57d0 !important;
+  text-decoration: none !important;
+}
+
+.scheme-item .sc-link:visited {
+  color: #1a73e8 !important;
+}
+
 /* ============================================================
    SEASONS VIEW
    ============================================================ */
@@ -542,7 +563,7 @@ a { color: inherit; text-decoration: none; }
 
 .map-crop-btn {
   display: inline-flex !important;
-  flex-direction: row !important; /* Pills ko vertical khinchne se rokne ke liye */
+  flex-direction: row !important;
   align-items: center !important;
   gap: 8px !important;
   padding: 8px 16px !important;
@@ -553,8 +574,8 @@ a { color: inherit; text-decoration: none; }
   font-size: 0.86rem;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap !important; /* Text ek hi line me rahega */
-  flex-shrink: 0 !important;      /* Button compress nahi hoga */
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   height: 42px !important;
 }
 
