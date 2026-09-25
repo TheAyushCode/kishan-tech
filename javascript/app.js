@@ -592,45 +592,97 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM
+   3. UNIFIED CROPS MANAGEMENT (DEFAULT + CUSTOM MERGE)
    ============================================================ */
-function renderAdminCustomCrops() {
+
+// Sabhi crops ko fetch karke ek list me taiyar karna aur table render karna
+function renderAdminAllCrops() {
   const tbody = document.getElementById('adminCustomCropsTable');
   if (!tbody) return;
 
   tbody.innerHTML = '';
 
-  if (serverCustomCrops.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:#888;">No custom crops added by admin yet.</td></tr>`;
+  let allCrops = [];
+
+  // Local storage se deleted default crops ki list nikalna
+  const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
+
+  // Base 150 System Crops ko add karna
+  if (typeof CROPS !== 'undefined' && CROPS) {
+    Object.keys(CROPS).forEach((seasonKey) => {
+      if (Array.isArray(CROPS[seasonKey])) {
+        CROPS[seasonKey].forEach((crop, index) => {
+          // Check karein ki ye crop locally delete toh nahi hua hai
+          if (!deletedDefaultCrops.includes(crop.name)) {
+            allCrops.push({
+              ...crop,
+              id: crop.id || `default_${seasonKey}_${index}`,
+              season: crop.season || seasonKey,
+              isDefault: !crop.id // agar server ID nahi hai toh ye default system crop hai
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // Agar koi crop na mile
+  if (allCrops.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:#888;">Koi bhi crop uplabdh nahi hai.</td></tr>`;
     return;
   }
 
-  serverCustomCrops.forEach((crop) => {
+  // Table me har crop render karna with System/Custom badge
+  allCrops.forEach((crop) => {
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #eef3f0';
     tr.innerHTML = `
-      <td style="padding: 10px 14px; font-weight: 600; color: #173a30;">${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || '')})</td>
+      <td style="padding: 10px 14px; font-weight: 600; color: #173a30;">
+        ${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || '')})
+        <span style="font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; margin-left: 6px; font-weight: 700; ${
+          crop.isDefault 
+            ? 'background: #eef3f0; color: #5d716a;' 
+            : 'background: #eaf4ee; color: #2e8b57;'
+        }">
+          ${crop.isDefault ? '🏛️ System' : '✨ Custom'}
+        </span>
+      </td>
       <td style="padding: 10px 14px; text-transform: capitalize;">${escapeHtml(crop.season)}</td>
-      <td style="padding: 10px 14px; color: #555;">${escapeHtml(crop.soil || 'Loamy')}</td>
+      <td style="padding: 10px 14px; color: #555;">${escapeHtml(crop.soil || 'Loamy soil')}</td>
       <td style="padding: 10px 14px; text-align: right; white-space: nowrap;">
-        <button onclick="startEditCrop(${crop.id})" style="padding: 6px 12px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 6px;">✏️ Edit</button>
-        <button onclick="deleteCustomCrop(${crop.id}, '${escapeHtml(crop.name)}')" style="padding: 6px 12px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ Delete</button>
+        <button onclick="startEditAnyCrop('${crop.id}', ${crop.isDefault}, '${escapeHtml(crop.name)}', '${crop.season}')" 
+                style="padding: 6px 12px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 6px;">
+          ✏️ Edit
+        </button>
+        <button onclick="deleteAnyCrop('${crop.id}', ${crop.isDefault}, '${escapeHtml(crop.name)}', '${crop.season}')" 
+                style="padding: 6px 12px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+          🗑️ Delete
+        </button>
       </td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-function startEditCrop(cropId) {
-  const crop = serverCustomCrops.find(c => c.id === cropId);
+function startEditAnyCrop(cropId, isDefault, cropName, season) {
+  let crop = null;
+
+  if (isDefault) {
+    if (CROPS && CROPS[season]) {
+      crop = CROPS[season].find(c => c.name === cropName);
+    }
+  } else {
+    crop = serverCustomCrops.find(c => String(c.id) === String(cropId));
+  }
+
   if (!crop) return;
 
-  editingCropServerId = cropId;
+  editingCropServerId = isDefault ? null : crop.id;
 
   document.getElementById('adminCropName').value = crop.name || '';
   document.getElementById('adminCropHindi').value = crop.hindi || '';
   document.getElementById('adminCropWiki').value = crop.wiki || '';
-  document.getElementById('adminCropSeason').value = crop.season || 'summer';
+  document.getElementById('adminCropSeason').value = crop.season || season || 'summer';
   document.getElementById('adminCropRain').value = crop.rain || '';
   document.getElementById('adminCropSoil').value = crop.soil || 'Alluvial soil';
   document.getElementById('adminCropImg').value = crop.img || '';
@@ -641,11 +693,48 @@ function startEditCrop(cropId) {
   const submitBtn = document.getElementById('adminSubmitBtn');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
 
-  if (heading) heading.textContent = `✏️ Edit Crop: ${crop.name}`;
-  if (submitBtn) submitBtn.textContent = '💾 Update Crop (Save for Public)';
+  if (heading) heading.textContent = `✏️ Edit Crop: ${crop.name} ${isDefault ? '(System Crop)' : ''}`;
+  if (submitBtn) submitBtn.textContent = isDefault ? '💾 Clone & Update as Custom Crop' : '💾 Update Crop (Save for Public)';
   if (cancelBtn) cancelBtn.style.display = 'inline-block';
 
   document.getElementById('addCropForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function deleteAnyCrop(cropId, isDefault, cropName, season) {
+  if (!confirm(`Are you sure you want to delete "${cropName}"?`)) return;
+
+  if (isDefault) {
+    const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
+    if (!deletedDefaultCrops.includes(cropName)) {
+      deletedDefaultCrops.push(cropName);
+      localStorage.setItem('deletedDefaultCrops', JSON.stringify(deletedDefaultCrops));
+    }
+
+    if (CROPS && CROPS[season]) {
+      CROPS[season] = CROPS[season].filter(c => c.name !== cropName);
+    }
+
+    renderAdminAllCrops();
+    renderSeasons();
+    if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+    alert(`"${cropName}" has been removed locally.`);
+  } else {
+    try {
+      const res = await fetch(`${API_BASE_URL}/crops/${cropId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        await fetchAndMergeServerCrops();
+        if (editingCropServerId === cropId) resetAdminForm();
+        renderAdminAllCrops();
+        if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+        alert('Crop deleted successfully.');
+      } else {
+        alert('Failed: ' + data.message);
+      }
+    } catch (err) {
+      alert('Server communication error.');
+    }
+  }
 }
 
 function resetAdminForm() {
@@ -660,26 +749,6 @@ function resetAdminForm() {
   if (heading) heading.textContent = '➕ Add New Crop (नयी फसल जोड़ें)';
   if (submitBtn) submitBtn.textContent = '🚀 Add Crop to System';
   if (cancelBtn) cancelBtn.style.display = 'none';
-}
-
-async function deleteCustomCrop(cropId, cropName) {
-  if (!confirm(`Are you sure you want to delete "${cropName}" for everyone?`)) return;
-
-  try {
-    const res = await fetch(`${API_BASE_URL}/crops/${cropId}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) {
-      await fetchAndMergeServerCrops();
-      if (editingCropServerId === cropId) resetAdminForm();
-      renderAdminCustomCrops();
-      if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
-      alert('Crop deleted successfully.');
-    } else {
-      alert('Failed: ' + data.message);
-    }
-  } catch (err) {
-    alert('Server communication error.');
-  }
 }
 
 function initAdminPanel() {
@@ -744,7 +813,7 @@ function initAdminPanel() {
       alert('Network error connecting to backend.');
     } finally {
       submitBtn.disabled = false;
-      renderAdminCustomCrops();
+      renderAdminAllCrops();
     }
   };
 }
@@ -819,10 +888,11 @@ function goWelcome() { navigate("welcome-view"); currentSeason = null; currentCr
 function goKisanHelp() { navigate("kisan-help-view"); currentSeason = null; currentCrop = null; }
 function goRecommend() { navigate("recommend-view"); currentSeason = null; currentCrop = null; }
 function goFavorites() { renderFavorites(); navigate("favorites-view"); currentSeason = null; currentCrop = null; }
+
 function goAdmin() {
   const pass = prompt("Enter Admin Password (Default: admin123):");
   if (pass === "admin123") {
-    renderAdminCustomCrops();
+    renderAdminAllCrops(); // <--- Unified crops table yahan load hoti hai
     navigate("admin-view");
     currentSeason = null;
     currentCrop = null;
@@ -830,6 +900,7 @@ function goAdmin() {
     alert("❌ Incorrect Password!");
   }
 }
+
 function goCalculator() { navigate("calculator-view"); currentSeason = null; currentCrop = null; }
 function goSeasons() { navigate("season-view"); currentSeason = null; currentCrop = null; }
 function goIndiaMap() { initInteractiveMap(); navigate("india-map-view"); currentSeason = null; currentCrop = null; }
@@ -886,7 +957,6 @@ function initKisanHelpSection() {
 
   if (!stateSelect || !districtSelect || !resultBox) return;
 
-  // 1. Populate Dropdown with all 28 states & 8 UTs
   stateSelect.innerHTML = '<option value="">-- राज्य / केंद्र शासित प्रदेश चुनें (Select State/UT) --</option>';
   Object.keys(STATE_AGRICULTURE_DATA).forEach((key) => {
     const opt = document.createElement("option");
@@ -895,7 +965,6 @@ function initKisanHelpSection() {
     stateSelect.appendChild(opt);
   });
 
-  // 2. Populate Districts
   function populateDistricts(stateKey) {
     districtSelect.innerHTML = '<option value="">-- जिला चुनें (Select District) --</option>';
 
@@ -922,7 +991,6 @@ function initKisanHelpSection() {
     resultBox.innerHTML = `<strong>${escapeHtml(stateData.name)}</strong> ke kul <strong>${stateData.districts.length} जिले</strong> uplabdh hain. Kripya apna zila chunein.`;
   }
 
-  // Bind change events
   stateSelect.onchange = function() {
     populateDistricts(this.value);
   };
@@ -955,7 +1023,6 @@ function initKisanHelpSection() {
     `;
   };
 
-  // Initial load default to bihar
   stateSelect.value = "bihar";
   populateDistricts("bihar");
 }
@@ -1587,6 +1654,14 @@ async function init() {
     return;
   }
   CROPS = JSON.parse(JSON.stringify(CROP_DATA));
+
+  // Agar user ne default crops delete kiye the toh unhe CROPS object se remove karna
+  const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
+  if (deletedDefaultCrops.length > 0) {
+    Object.keys(CROPS).forEach(seasonKey => {
+      CROPS[seasonKey] = CROPS[seasonKey].filter(crop => !deletedDefaultCrops.includes(crop.name));
+    });
+  }
 
   await fetchAndMergeServerCrops();
   await fetchUserFavorites();
