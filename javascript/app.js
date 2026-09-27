@@ -469,6 +469,14 @@ async function fetchAndMergeServerCrops() {
 
       CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
+      // Deleted system crops ko initial load me hi filter out karein
+      const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
+      if (deletedDefaultCrops.length > 0) {
+        Object.keys(CROPS).forEach((season) => {
+          CROPS[season] = CROPS[season].filter(crop => !deletedDefaultCrops.includes(crop.name));
+        });
+      }
+
       serverCustomCrops.forEach(crop => {
         if (CROPS[crop.season] && !CROPS[crop.season].some(c => c.name === crop.name)) {
           CROPS[crop.season].unshift(crop);
@@ -592,10 +600,8 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. UNIFIED CROPS MANAGEMENT (DEFAULT + CUSTOM MERGE)
+   3. ADMIN DASHBOARD SYSTEM (DAY 2: UNIFIED EDIT & DELETE)
    ============================================================ */
-
-// Sabhi crops ko fetch karke ek list me taiyar karna aur table render karna
 function renderAdminAllCrops() {
   const tbody = document.getElementById('adminCustomCropsTable');
   if (!tbody) return;
@@ -603,22 +609,18 @@ function renderAdminAllCrops() {
   tbody.innerHTML = '';
 
   let allCrops = [];
-
-  // Local storage se deleted default crops ki list nikalna
   const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
 
-  // Base 150 System Crops ko add karna
   if (typeof CROPS !== 'undefined' && CROPS) {
     Object.keys(CROPS).forEach((seasonKey) => {
       if (Array.isArray(CROPS[seasonKey])) {
         CROPS[seasonKey].forEach((crop, index) => {
-          // Check karein ki ye crop locally delete toh nahi hua hai
           if (!deletedDefaultCrops.includes(crop.name)) {
             allCrops.push({
               ...crop,
               id: crop.id || `default_${seasonKey}_${index}`,
               season: crop.season || seasonKey,
-              isDefault: !crop.id // agar server ID nahi hai toh ye default system crop hai
+              isDefault: !crop.id
             });
           }
         });
@@ -626,13 +628,11 @@ function renderAdminAllCrops() {
     });
   }
 
-  // Agar koi crop na mile
   if (allCrops.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:#888;">Koi bhi crop uplabdh nahi hai.</td></tr>`;
     return;
   }
 
-  // Table me har crop render karna with System/Custom badge
   allCrops.forEach((crop) => {
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #eef3f0';
@@ -650,39 +650,24 @@ function renderAdminAllCrops() {
       <td style="padding: 10px 14px; text-transform: capitalize;">${escapeHtml(crop.season)}</td>
       <td style="padding: 10px 14px; color: #555;">${escapeHtml(crop.soil || 'Loamy soil')}</td>
       <td style="padding: 10px 14px; text-align: right; white-space: nowrap;">
-        <button onclick="startEditAnyCrop('${crop.id}', ${crop.isDefault}, '${escapeHtml(crop.name)}', '${crop.season}')" 
-                style="padding: 6px 12px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 6px;">
-          ✏️ Edit
-        </button>
-        <button onclick="deleteAnyCrop('${crop.id}', ${crop.isDefault}, '${escapeHtml(crop.name)}', '${crop.season}')" 
-                style="padding: 6px 12px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
-          🗑️ Delete
-        </button>
+        <button onclick="startEditCrop('${crop.id}')" style="padding: 6px 12px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 6px;">✏️ Edit</button>
+        <button onclick="deleteAnyCrop('${crop.id}', ${crop.isDefault}, '${escapeHtml(crop.name)}', '${crop.season}')" style="padding: 6px 12px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-function startEditAnyCrop(cropId, isDefault, cropName, season) {
-  let crop = null;
-
-  if (isDefault) {
-    if (CROPS && CROPS[season]) {
-      crop = CROPS[season].find(c => c.name === cropName);
-    }
-  } else {
-    crop = serverCustomCrops.find(c => String(c.id) === String(cropId));
-  }
-
+function startEditCrop(cropId) {
+  const crop = serverCustomCrops.find(c => String(c.id) === String(cropId));
   if (!crop) return;
 
-  editingCropServerId = isDefault ? null : crop.id;
+  editingCropServerId = cropId;
 
   document.getElementById('adminCropName').value = crop.name || '';
   document.getElementById('adminCropHindi').value = crop.hindi || '';
   document.getElementById('adminCropWiki').value = crop.wiki || '';
-  document.getElementById('adminCropSeason').value = crop.season || season || 'summer';
+  document.getElementById('adminCropSeason').value = crop.season || 'summer';
   document.getElementById('adminCropRain').value = crop.rain || '';
   document.getElementById('adminCropSoil').value = crop.soil || 'Alluvial soil';
   document.getElementById('adminCropImg').value = crop.img || '';
@@ -693,48 +678,11 @@ function startEditAnyCrop(cropId, isDefault, cropName, season) {
   const submitBtn = document.getElementById('adminSubmitBtn');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
 
-  if (heading) heading.textContent = `✏️ Edit Crop: ${crop.name} ${isDefault ? '(System Crop)' : ''}`;
-  if (submitBtn) submitBtn.textContent = isDefault ? '💾 Clone & Update as Custom Crop' : '💾 Update Crop (Save for Public)';
+  if (heading) heading.textContent = `✏️ Edit Crop: ${crop.name}`;
+  if (submitBtn) submitBtn.textContent = '💾 Update Crop (Save for Public)';
   if (cancelBtn) cancelBtn.style.display = 'inline-block';
 
   document.getElementById('addCropForm').scrollIntoView({ behavior: 'smooth' });
-}
-
-async function deleteAnyCrop(cropId, isDefault, cropName, season) {
-  if (!confirm(`Are you sure you want to delete "${cropName}"?`)) return;
-
-  if (isDefault) {
-    const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
-    if (!deletedDefaultCrops.includes(cropName)) {
-      deletedDefaultCrops.push(cropName);
-      localStorage.setItem('deletedDefaultCrops', JSON.stringify(deletedDefaultCrops));
-    }
-
-    if (CROPS && CROPS[season]) {
-      CROPS[season] = CROPS[season].filter(c => c.name !== cropName);
-    }
-
-    renderAdminAllCrops();
-    renderSeasons();
-    if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
-    alert(`"${cropName}" has been removed locally.`);
-  } else {
-    try {
-      const res = await fetch(`${API_BASE_URL}/crops/${cropId}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (data.success) {
-        await fetchAndMergeServerCrops();
-        if (editingCropServerId === cropId) resetAdminForm();
-        renderAdminAllCrops();
-        if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
-        alert('Crop deleted successfully.');
-      } else {
-        alert('Failed: ' + data.message);
-      }
-    } catch (err) {
-      alert('Server communication error.');
-    }
-  }
 }
 
 function resetAdminForm() {
@@ -749,6 +697,66 @@ function resetAdminForm() {
   if (heading) heading.textContent = '➕ Add New Crop (नयी फसल जोड़ें)';
   if (submitBtn) submitBtn.textContent = '🚀 Add Crop to System';
   if (cancelBtn) cancelBtn.style.display = 'none';
+}
+
+// ================= DAY 2: UNIFIED DELETE FUNCTION =================
+async function deleteAnyCrop(cropId, isDefault, cropName, season) {
+  const confirmMsg = isDefault 
+    ? `Kya aap system crop "${cropName}" ko delete karna chahte hain? (Yeh sabhi views se remove ho jayegi)`
+    : `Kya aap custom crop "${cropName}" ko permanently delete karna chahte hain?`;
+
+  if (!confirm(confirmMsg)) return;
+
+  if (isDefault) {
+    // --- SYSTEM CROP SOFT DELETE (LOCAL STORAGE) ---
+    try {
+      const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
+      
+      if (!deletedDefaultCrops.includes(cropName)) {
+        deletedDefaultCrops.push(cropName);
+        localStorage.setItem('deletedDefaultCrops', JSON.stringify(deletedDefaultCrops));
+      }
+
+      // Memory se bhi crop hatayein taaki instant update dikhe bina reload ke
+      if (CROPS && CROPS[season]) {
+        CROPS[season] = CROPS[season].filter(c => c.name.toLowerCase() !== cropName.toLowerCase());
+      }
+
+      if ($("#stat-crops")) {
+        $("#stat-crops").textContent = Object.values(CROPS).reduce((a, b) => a + b.length, 0);
+      }
+      
+      renderAdminAllCrops();
+      renderSeasons();
+      if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+      if (typeof renderMandiPrices === "function") renderMandiPrices("all");
+
+      alert(`✅ System crop "${cropName}" successfully delete ho gayi.`);
+    } catch (err) {
+      console.error("Error deleting default crop:", err);
+      alert("Crop delete karne me error aaya.");
+    }
+
+  } else {
+    // --- CUSTOM CROP DELETE (SERVER API) ---
+    try {
+      const res = await fetch(`${API_BASE_URL}/crops/${cropId}`, { method: 'DELETE' });
+      const data = await res.json();
+      
+      if (data.success) {
+        await fetchAndMergeServerCrops();
+        if (editingCropServerId === cropId) resetAdminForm();
+        renderAdminAllCrops();
+        if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+        alert(`✅ Custom crop "${cropName}" successfully delete ho gayi.`);
+      } else {
+        alert('Delete failed: ' + data.message);
+      }
+    } catch (err) {
+      console.error("Server communication error:", err);
+      alert('Backend server se connect karne me dikkat aayi.');
+    }
+  }
 }
 
 function initAdminPanel() {
@@ -892,7 +900,7 @@ function goFavorites() { renderFavorites(); navigate("favorites-view"); currentS
 function goAdmin() {
   const pass = prompt("Enter Admin Password (Default: admin123):");
   if (pass === "admin123") {
-    renderAdminAllCrops(); // <--- Unified crops table yahan load hoti hai
+    renderAdminAllCrops();
     navigate("admin-view");
     currentSeason = null;
     currentCrop = null;
@@ -1655,11 +1663,11 @@ async function init() {
   }
   CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
-  // Agar user ne default crops delete kiye the toh unhe CROPS object se remove karna
+  // Deleted default crops initial filter check
   const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
   if (deletedDefaultCrops.length > 0) {
-    Object.keys(CROPS).forEach(seasonKey => {
-      CROPS[seasonKey] = CROPS[seasonKey].filter(crop => !deletedDefaultCrops.includes(crop.name));
+    Object.keys(CROPS).forEach((season) => {
+      CROPS[season] = CROPS[season].filter(crop => !deletedDefaultCrops.includes(crop.name));
     });
   }
 
