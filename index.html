@@ -522,9 +522,17 @@
         </form>
       </div>
 
-      <!-- UPDATED TABLE SECTION (SHOWS BOTH SYSTEM & CUSTOM CROPS) -->
+      <!-- DAY 4 UPDATED: TABLE WITH REAL-TIME SEARCH BAR -->
       <div style="max-width: 1000px; margin: 30px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-        <h3 style="color: #173a30; font-size: 1.3rem; margin-bottom: 16px;">📜 Manage All Crops (System &amp; Custom)</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <h3 style="color: #173a30; font-size: 1.3rem; margin: 0;">📜 Manage All Crops (System &amp; Custom)</h3>
+          
+          <div style="position: relative; min-width: 260px;">
+            <input type="text" id="adminCropSearch" placeholder="🔍 Search crops by name, soil..." 
+                   style="width: 100%; padding: 8px 14px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.9rem; background: #f6faf8;">
+          </div>
+        </div>
+
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
             <thead>
