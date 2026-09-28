@@ -458,7 +458,7 @@ function getCurrentUserEmail() {
 }
 
 /* ============================================================
-   1. LIVE SERVER CROPS INTEGRATION & DAY 3 OVERRIDES
+   1. LIVE SERVER CROPS INTEGRATION & LOCAL OVERRIDES
    ============================================================ */
 async function fetchAndMergeServerCrops() {
   try {
@@ -469,7 +469,7 @@ async function fetchAndMergeServerCrops() {
 
       CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
-      // 1. Deleted system crops ko filter out karein
+      // 1. Deleted system crops filter karein
       const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
       if (deletedDefaultCrops.length > 0) {
         Object.keys(CROPS).forEach((season) => {
@@ -477,7 +477,7 @@ async function fetchAndMergeServerCrops() {
         });
       }
 
-      // 2. DAY 3: Edited system crops ke local overrides apply karein
+      // 2. Edited system crops ke local overrides apply karein
       const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
       Object.keys(defaultCropEdits).forEach((origName) => {
         const editedCrop = defaultCropEdits[origName];
@@ -489,7 +489,7 @@ async function fetchAndMergeServerCrops() {
         }
       });
 
-      // 3. Server custom crops ko merge karein
+      // 3. Server custom crops merge karein
       serverCustomCrops.forEach(crop => {
         if (CROPS[crop.season] && !CROPS[crop.season].some(c => c.name === crop.name)) {
           CROPS[crop.season].unshift(crop);
@@ -613,9 +613,9 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (DAY 3: EDIT FOR SYSTEM & CUSTOM)
+   3. ADMIN DASHBOARD SYSTEM (DAY 4: REAL-TIME SEARCH SUPPORT)
    ============================================================ */
-function renderAdminAllCrops() {
+function renderAdminAllCrops(query = "") {
   const tbody = document.getElementById('adminCustomCropsTable');
   if (!tbody) return;
 
@@ -641,8 +641,22 @@ function renderAdminAllCrops() {
     });
   }
 
+  // DAY 4: Search filter application
+  const q = query.trim().toLowerCase();
+  if (q) {
+    allCrops = allCrops.filter(c => 
+      (c.name && c.name.toLowerCase().includes(q)) ||
+      (c.hindi && c.hindi.toLowerCase().includes(q)) ||
+      (c.wiki && c.wiki.toLowerCase().includes(q)) ||
+      (c.soil && c.soil.toLowerCase().includes(q)) ||
+      (c.season && c.season.toLowerCase().includes(q))
+    );
+  }
+
   if (allCrops.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:#888;">Koi bhi crop uplabdh nahi hai.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 22px; color:#888;">
+      ${q ? `😣 Koi bhi crop "${escapeHtml(q)}" se match nahi hui.` : 'Koi bhi crop uplabdh nahi hai.'}
+    </td></tr>`;
     return;
   }
 
@@ -677,7 +691,6 @@ function renderAdminAllCrops() {
   });
 }
 
-// DAY 3: Edit Handler jo System aur Custom dono crops ko form me fill karta hai
 function startEditAnyCrop(cropId, isDefault, cropName, season) {
   let crop = null;
 
@@ -733,7 +746,6 @@ function resetAdminForm() {
   if (cancelBtn) cancelBtn.style.display = 'none';
 }
 
-// DAY 2: Unified Delete Handler
 async function deleteAnyCrop(cropId, isDefault, cropName, season) {
   const confirmMsg = isDefault 
     ? `Kya aap system crop "${cropName}" ko delete karna chahte hain? (Yeh sabhi views se remove ho jayegi)`
@@ -758,7 +770,8 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
         $("#stat-crops").textContent = Object.values(CROPS).reduce((a, b) => a + b.length, 0);
       }
       
-      renderAdminAllCrops();
+      const searchVal = document.getElementById('adminCropSearch')?.value || "";
+      renderAdminAllCrops(searchVal);
       renderSeasons();
       if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
       if (typeof renderMandiPrices === "function") renderMandiPrices("all");
@@ -777,7 +790,8 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
       if (data.success) {
         await fetchAndMergeServerCrops();
         if (editingCropServerId === cropId) resetAdminForm();
-        renderAdminAllCrops();
+        const searchVal = document.getElementById('adminCropSearch')?.value || "";
+        renderAdminAllCrops(searchVal);
         if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         alert(`✅ Custom crop "${cropName}" successfully delete ho gayi.`);
       } else {
@@ -790,11 +804,19 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
   }
 }
 
-// DAY 3: Form Submission handling both System overrides and Backend Custom crops
 function initAdminPanel() {
   const form = document.getElementById('addCropForm');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
+  const searchInput = document.getElementById('adminCropSearch');
+
   if (!form) return;
+
+  // DAY 4: Search input listener
+  if (searchInput) {
+    searchInput.oninput = (e) => {
+      renderAdminAllCrops(e.target.value);
+    };
+  }
 
   if (cancelBtn) cancelBtn.onclick = () => resetAdminForm();
 
@@ -820,7 +842,6 @@ function initAdminPanel() {
     try {
       if (editingCropServerId !== null) {
         if (window.editingCropIsDefault) {
-          // --- SYSTEM CROP EDIT (LOCAL STORAGE OVERRIDE) ---
           const origSeason = window.editingOriginalSeason;
           const origName = window.editingOriginalName;
 
@@ -837,11 +858,11 @@ function initAdminPanel() {
 
           alert(`✅ System crop "${cropPayload.name}" successfully update ho gayi!`);
           resetAdminForm();
-          renderAdminAllCrops();
+          const searchVal = document.getElementById('adminCropSearch')?.value || "";
+          renderAdminAllCrops(searchVal);
           renderSeasons();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
-          // --- CUSTOM CROP EDIT (BACKEND API) ---
           const res = await fetch(`${API_BASE_URL}/crops/${editingCropServerId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -852,14 +873,14 @@ function initAdminPanel() {
             alert(`✅ Custom crop "${cropPayload.name}" server par update ho gayi!`);
             await fetchAndMergeServerCrops();
             resetAdminForm();
-            renderAdminAllCrops();
+            const searchVal = document.getElementById('adminCropSearch')?.value || "";
+            renderAdminAllCrops(searchVal);
             if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
           } else {
             alert('Update failed: ' + data.message);
           }
         }
       } else {
-        // --- NEW CROP ADDITION (SERVER) ---
         const res = await fetch(`${API_BASE_URL}/crops`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -870,6 +891,8 @@ function initAdminPanel() {
           alert(`🎉 Nayi crop "${cropPayload.name}" safaltapoorvak jud gayi!`);
           await fetchAndMergeServerCrops();
           resetAdminForm();
+          const searchVal = document.getElementById('adminCropSearch')?.value || "";
+          renderAdminAllCrops(searchVal);
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
           alert('Add failed: ' + data.message);
@@ -879,7 +902,6 @@ function initAdminPanel() {
       alert('Network error connecting to backend.');
     } finally {
       submitBtn.disabled = false;
-      renderAdminAllCrops();
     }
   };
 }
@@ -958,7 +980,8 @@ function goFavorites() { renderFavorites(); navigate("favorites-view"); currentS
 function goAdmin() {
   const pass = prompt("Enter Admin Password (Default: admin123):");
   if (pass === "admin123") {
-    renderAdminAllCrops();
+    const searchVal = document.getElementById('adminCropSearch')?.value || "";
+    renderAdminAllCrops(searchVal);
     navigate("admin-view");
     currentSeason = null;
     currentCrop = null;
@@ -1729,7 +1752,7 @@ async function init() {
     });
   }
 
-  // 2. DAY 3: Edited system crops ke local overrides initial load par bhi apply karein
+  // 2. Edited system crops ke local overrides initial load par apply karein
   const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
   Object.keys(defaultCropEdits).forEach((origName) => {
     const editedCrop = defaultCropEdits[origName];
