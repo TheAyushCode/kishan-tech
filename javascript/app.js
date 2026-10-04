@@ -1,6 +1,7 @@
 /* ============================================================
    KISHAN - TECH — Application Logic
    Integrated with Live TiDB Backend (Public Crops & Permanent Favs)
+   DAY 9: DYNAMIC INDIA MAP PINNING & REGION SYNC
    ============================================================ */
 
 const API_BASE_URL = 'https://kishan-tech.onrender.com/api';
@@ -8,7 +9,7 @@ const API_BASE_URL = 'https://kishan-tech.onrender.com/api';
 const SEASON_META = {
   summer: {
     label: "Summer",
-    icon: "☀️",
+    icon: "☀️️",
     tagline: "Hot & Sunny Season",
     desc: "Warm-season crops grown during the hot Indian summer (Feb–Jun). These heat-loving fruits and vegetables thrive in bright sunshine and well-drained soils.",
     bg: "assets/images/summer-bg.png",
@@ -16,7 +17,7 @@ const SEASON_META = {
   },
   winter: {
     label: "Winter",
-    icon: "❄️",
+    icon: "❄️️",
     tagline: "Cool Rabi Season",
     desc: "Cool-season (rabi) crops sown in winter (Oct–Mar) and harvested in spring. Cereals, oilseeds, pulses, spices and vegetables that love the chill.",
     bg: "assets/images/winter-bg.png",
@@ -51,7 +52,12 @@ const STATE_COORDINATES = {
   "tamil nadu": { top: "82%", left: "42%", name: "Tamil Nadu" },
   "kerala": { top: "84%", left: "35%", name: "Kerala" },
   "odisha": { top: "52%", left: "62%", name: "Odisha" },
-  "assam": { top: "36%", left: "84%", name: "Assam" }
+  "assam": { top: "36%", left: "84%", name: "Assam" },
+  "telangana": { top: "63%", left: "44%", name: "Telangana" },
+  "jharkhand": { top: "42%", left: "60%", name: "Jharkhand" },
+  "chhattisgarh": { top: "50%", left: "52%", name: "Chhattisgarh" },
+  "himachal": { top: "20%", left: "35%", name: "Himachal Pradesh" },
+  "uttarakhand": { top: "26%", left: "42%", name: "Uttarakhand" }
 };
 
 // ================= ALL 28 STATES & 8 UNION TERRITORIES =================
@@ -501,6 +507,7 @@ async function fetchAndMergeServerCrops() {
       }
       renderSeasons();
       if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+      if (typeof initInteractiveMap === "function") initInteractiveMap();
     }
   } catch (err) {
     console.error('Server crops could not be fetched, falling back to local dataset.', err);
@@ -613,7 +620,7 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (DAY 7: RESET & CANCEL ENHANCED)
+   3. ADMIN DASHBOARD SYSTEM
    ============================================================ */
 function renderAdminAllCrops(query = "", seasonFilter = "all") {
   const tbody = document.getElementById('adminCustomCropsTable');
@@ -641,12 +648,10 @@ function renderAdminAllCrops(query = "", seasonFilter = "all") {
     });
   }
 
-  // Season Filter
   if (seasonFilter && seasonFilter !== 'all') {
     allCrops = allCrops.filter(c => (c.season || '').toLowerCase() === seasonFilter.toLowerCase());
   }
 
-  // Search Filter
   const q = query.trim().toLowerCase();
   if (q) {
     allCrops = allCrops.filter(c => 
@@ -730,12 +735,10 @@ function startEditAnyCrop(cropId, isDefault, cropName, season) {
   if (submitBtn) submitBtn.textContent = '💾 Update Crop Changes';
   if (cancelBtn) cancelBtn.style.display = 'inline-block';
 
-  // Smooth scroll to form[cite: 3]
   const formCard = document.getElementById('adminFormCard') || document.getElementById('addCropForm');
   if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// DAY 7: ENHANCED RESET & CANCEL EDIT WITH SMOOTH RETURN SCROLL
 function resetAdminForm(shouldScrollToTable = false) {
   editingCropServerId = null;
   window.editingCropIsDefault = false;
@@ -753,7 +756,6 @@ function resetAdminForm(shouldScrollToTable = false) {
   if (submitBtn) submitBtn.textContent = '🚀 Add Crop to System';
   if (cancelBtn) cancelBtn.style.display = 'none';
 
-  // Agar user ne cancel kiya ho toh smoothly wapas table section par scroll karein
   if (shouldScrollToTable) {
     const tableSection = document.getElementById('adminTableSection');
     if (tableSection) {
@@ -792,6 +794,7 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
       renderSeasons();
       if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
       if (typeof renderMandiPrices === "function") renderMandiPrices("all");
+      if (typeof initInteractiveMap === "function") initInteractiveMap();
 
       alert(`✅ System crop "${cropName}" successfully delete ho gayi.`);
     } catch (err) {
@@ -811,6 +814,7 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
         const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
         renderAdminAllCrops(searchVal, seasonVal);
         if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+        if (typeof initInteractiveMap === "function") initInteractiveMap();
         alert(`✅ Custom crop "${cropName}" successfully delete ho gayi.`);
       } else {
         alert('Delete failed: ' + data.message);
@@ -862,12 +866,10 @@ function initAdminPanel() {
     seasonFilter.onchange = () => triggerTableFilters();
   }
 
-  // DAY 7: Cancel Edit click par smoothly table par scroll karein
   if (cancelBtn) {
     cancelBtn.onclick = () => resetAdminForm(true);
   }
 
-  // DAY 7: Clear form button
   if (clearBtn) {
     clearBtn.onclick = () => {
       form.reset();
@@ -944,6 +946,7 @@ function initAdminPanel() {
           triggerTableFilters();
           renderSeasons();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+          if (typeof initInteractiveMap === "function") initInteractiveMap();
         } else {
           const res = await fetch(`${API_BASE_URL}/crops/${editingCropServerId}`, {
             method: 'PUT',
@@ -957,6 +960,7 @@ function initAdminPanel() {
             resetAdminForm(true);
             triggerTableFilters();
             if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+            if (typeof initInteractiveMap === "function") initInteractiveMap();
           } else {
             alert('Update failed: ' + data.message);
           }
@@ -974,6 +978,7 @@ function initAdminPanel() {
           resetAdminForm(true);
           triggerTableFilters();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
+          if (typeof initInteractiveMap === "function") initInteractiveMap();
         } else {
           alert('Add failed: ' + data.message);
         }
@@ -1197,21 +1202,21 @@ function initKisanHelpSection() {
   populateDistricts("bihar");
 }
 
+/* ============================================================
+   DAY 9: DYNAMIC INTERACTIVE INDIA MAP & PIN PARSER
+   ============================================================ */
 function initInteractiveMap() {
   const cropBar = document.getElementById("map-crop-bar");
-  if (!cropBar || !CROPS) return;
+  if (!cropBar) return;
   cropBar.innerHTML = "";
-  const allCrops = [];
-  Object.keys(CROPS).forEach(season => {
-    CROPS[season].forEach(crop => {
-      if (!allCrops.some(c => c.name === crop.name)) allCrops.push({ ...crop, seasonKey: season });
-    });
-  });
+
+  // Sabhi unique crops collect karein (Default + Custom)
+  const allCrops = getAllUniqueCropsList();
 
   allCrops.forEach((crop, idx) => {
     const btn = document.createElement("button");
     btn.className = `map-crop-btn ${idx === 0 ? "active" : ""}`;
-    btn.innerHTML = `<img src="${crop.img}" alt="${escapeHtml(crop.name)}" onerror="this.style.display='none'"><span>${escapeHtml(crop.name)}</span>`;
+    btn.innerHTML = `<img src="${crop.img}" alt="${escapeHtml(crop.name)}" onerror="this.src='assets/images/summer-bg.png'"><span>${escapeHtml(crop.name)}</span>`;
     btn.onclick = () => {
       document.querySelectorAll(".map-crop-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
@@ -1219,27 +1224,41 @@ function initInteractiveMap() {
     };
     cropBar.appendChild(btn);
   });
-  if (allCrops.length > 0) highlightCropOnMap(allCrops[0]);
+
+  if (allCrops.length > 0) {
+    highlightCropOnMap(allCrops[0]);
+  }
 }
 
 function highlightCropOnMap(crop) {
   const container = document.getElementById("state-pins-container");
   if (!container) return;
   container.innerHTML = "";
+
   const regionText = (crop.region || "").toLowerCase();
   let matchedStates = [];
 
+  // Regional keywords ko match karke coordinates nikalna
   Object.keys(STATE_COORDINATES).forEach(stateKey => {
     if (regionText.includes(stateKey)) {
       const stateData = STATE_COORDINATES[stateKey];
-      if (!matchedStates.some(s => s.name === stateData.name)) matchedStates.push(stateData);
+      if (!matchedStates.some(s => s.name === stateData.name)) {
+        matchedStates.push(stateData);
+      }
     }
   });
 
+  // Default fallback pinning agar koi state match na ho
   if (matchedStates.length === 0) {
-    matchedStates = [STATE_COORDINATES["punjab"], STATE_COORDINATES["uttar pradesh"], STATE_COORDINATES["madhya pradesh"]];
+    matchedStates = [
+      STATE_COORDINATES["punjab"], 
+      STATE_COORDINATES["uttar pradesh"], 
+      STATE_COORDINATES["madhya pradesh"],
+      STATE_COORDINATES["maharashtra"]
+    ];
   }
 
+  // Map pins create karna
   matchedStates.forEach(state => {
     const pin = document.createElement("div");
     pin.className = "state-pin";
@@ -1249,8 +1268,13 @@ function highlightCropOnMap(crop) {
     container.appendChild(pin);
   });
 
-  if (document.getElementById("map-info-title")) document.getElementById("map-info-title").innerHTML = `🌱 ${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || "")})`;
-  if (document.getElementById("map-info-text")) document.getElementById("map-info-text").textContent = crop.desc || "Information available.";
+  // Map info card update karna
+  if (document.getElementById("map-info-title")) {
+    document.getElementById("map-info-title").innerHTML = `🌱 ${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || "")})`;
+  }
+  if (document.getElementById("map-info-text")) {
+    document.getElementById("map-info-text").textContent = crop.desc || "Information available.";
+  }
   if (document.getElementById("map-info-crops")) {
     document.getElementById("map-info-crops").innerHTML = `
       <div style="margin-bottom: 6px;"><strong>📍 Major Growing States:</strong> ${escapeHtml(crop.region || "Across India")}</div>
@@ -1485,7 +1509,7 @@ function initCropRecommender() {
           <div class="name">${escapeHtml(crop.name)}</div>
           <div class="hindi-name">${escapeHtml(crop.hindi || "")}</div>
           <div class="sci">${escapeHtml(crop.wiki)}</div>
-          <div class="tags"><span class="tag rain">🌧️️ ${escapeHtml(crop.rain)}</span><span class="tag soil">🪴 ${shortSoil(crop.soil)}</span></div>
+          <div class="tags"><span class="tag rain">🌧️ ${escapeHtml(crop.rain)}</span><span class="tag soil">🪴 ${shortSoil(crop.soil)}</span></div>
           <div class="crop-desc">${escapeHtml(crop.desc)}</div>
           <div class="more">View details →</div>
         </div>`;
@@ -1517,8 +1541,8 @@ async function fetchWeather(cityName = 'Delhi') {
     const temp = Math.round(current.temperature);
     const weatherMap = {
       0: { text: 'Clear Sky', icon: '☀️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
-      3: { text: 'Overcast', icon: '☁️️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
-      61: { text: 'Rainy', icon: '🌧️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
+      3: { text: 'Overcast', icon: '☁️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
+      61: { text: 'Rainy', icon: '🌧️️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
     };
     const condition = weatherMap[current.weathercode] || { text: 'Moderate Weather', icon: '🌤️' };
     cityEl.textContent = `${name}, ${admin1 || 'India'}`;
@@ -1833,7 +1857,7 @@ async function init() {
     });
   }
 
-  // 2. Edited system crops ke local overrides initial load par apply karein
+  // 2. Edited system crops ke local overrides apply karein
   const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
   Object.keys(defaultCropEdits).forEach((origName) => {
     const editedCrop = defaultCropEdits[origName];
