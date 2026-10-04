@@ -15,7 +15,7 @@
   <!-- SEO & Font Links -->
   <meta name="description" content="Kishan - Tech — explore 150 crops grown across Summer, Winter and Rain (monsoon) seasons in India with images, descriptions, rainfall needs and growing regions." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>" />
@@ -468,7 +468,7 @@
             <select id="adminCropSeason" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; background: #fff;">
               <option value="summer">☀️ Summer (Zaid)</option>
               <option value="winter">❄️ Winter (Rabi)</option>
-              <option value="rain">🌧️ Rain (Kharif)</option>
+              <option value="rain">🌧️️ Rain (Kharif)</option>
             </select>
           </div>
 
@@ -522,14 +522,25 @@
         </form>
       </div>
 
-      <!-- DAY 4 UPDATED: TABLE WITH REAL-TIME SEARCH BAR -->
+      <!-- DAY 5 UPDATED: TABLE WITH SEARCH BAR + SEASON FILTER DROPDOWN -->
       <div style="max-width: 1000px; margin: 30px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
           <h3 style="color: #173a30; font-size: 1.3rem; margin: 0;">📜 Manage All Crops (System &amp; Custom)</h3>
           
-          <div style="position: relative; min-width: 260px;">
-            <input type="text" id="adminCropSearch" placeholder="🔍 Search crops by name, soil..." 
-                   style="width: 100%; padding: 8px 14px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.9rem; background: #f6faf8;">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <!-- DAY 5: Season Filter Dropdown -->
+            <select id="adminSeasonFilter" style="padding: 8px 12px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.88rem; background: #fff; cursor: pointer; font-weight: 600; color: #173a30;">
+              <option value="all">🌐 All Seasons (सभी मौसम)</option>
+              <option value="summer">☀️ Summer (Zaid)</option>
+              <option value="winter">❄️ Winter (Rabi)</option>
+              <option value="rain">🌧️ Rain (Kharif)</option>
+            </select>
+
+            <!-- Search Input -->
+            <div style="position: relative; min-width: 220px;">
+              <input type="text" id="adminCropSearch" placeholder="🔍 Search crops by name, soil..." 
+                     style="width: 100%; padding: 8px 14px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.9rem; background: #f6faf8;">
+            </div>
           </div>
         </div>
 
@@ -738,7 +749,7 @@
         </div>
 
         <div class="agri-card">
-          <div class="agri-card-icon">🏞️</div>
+          <div class="agri-card-icon">🏞️️</div>
           <h3>The Value of Agriculture in India</h3>
           <p>Agriculture is the <strong>foundation of rural India</strong>, providing employment and food security to crores of families. It supplies raw materials to industries like textiles, sugar and edible oils. India is the <strong>world's largest producer of pulses</strong>, the <strong>largest producer of milk</strong>, and the <strong>second-largest producer of rice and wheat</strong>. Farming preserves traditional knowledge, protects biodiversity through thousands of crop varieties, and keeps alive the deep bond between the Indian farmer and the land.</p>
         </div>
@@ -808,7 +819,7 @@
           <p class="lead" id="detail-lead">Description…</p>
           <div class="fact-grid">
             <div class="fact rain">
-              <div class="fact-icon">🌧️</div>
+              <div class="fact-icon">🌧️️</div>
               <div class="fact-body">
                 <div class="label">Rainfall Required</div>
                 <div class="value" id="detail-rain">—</div>

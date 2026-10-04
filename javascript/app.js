@@ -613,9 +613,9 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (DAY 4: REAL-TIME SEARCH SUPPORT)
+   3. ADMIN DASHBOARD SYSTEM (DAY 5: SEARCH + SEASON FILTER)
    ============================================================ */
-function renderAdminAllCrops(query = "") {
+function renderAdminAllCrops(query = "", seasonFilter = "all") {
   const tbody = document.getElementById('adminCustomCropsTable');
   if (!tbody) return;
 
@@ -641,7 +641,12 @@ function renderAdminAllCrops(query = "") {
     });
   }
 
-  // DAY 4: Search filter application
+  // DAY 5: Season Filter Apply Karein
+  if (seasonFilter && seasonFilter !== 'all') {
+    allCrops = allCrops.filter(c => (c.season || '').toLowerCase() === seasonFilter.toLowerCase());
+  }
+
+  // Search Filter Apply Karein
   const q = query.trim().toLowerCase();
   if (q) {
     allCrops = allCrops.filter(c => 
@@ -655,7 +660,7 @@ function renderAdminAllCrops(query = "") {
 
   if (allCrops.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 22px; color:#888;">
-      ${q ? `😣 Koi bhi crop "${escapeHtml(q)}" se match nahi hui.` : 'Koi bhi crop uplabdh nahi hai.'}
+      ${q || seasonFilter !== 'all' ? `😣 Diye gaye filter/search ke anusaar koi crop nahi mili.` : 'Koi bhi crop uplabdh nahi hai.'}
     </td></tr>`;
     return;
   }
@@ -771,7 +776,8 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
       }
       
       const searchVal = document.getElementById('adminCropSearch')?.value || "";
-      renderAdminAllCrops(searchVal);
+      const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
+      renderAdminAllCrops(searchVal, seasonVal);
       renderSeasons();
       if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
       if (typeof renderMandiPrices === "function") renderMandiPrices("all");
@@ -791,7 +797,8 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
         await fetchAndMergeServerCrops();
         if (editingCropServerId === cropId) resetAdminForm();
         const searchVal = document.getElementById('adminCropSearch')?.value || "";
-        renderAdminAllCrops(searchVal);
+        const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
+        renderAdminAllCrops(searchVal, seasonVal);
         if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         alert(`✅ Custom crop "${cropName}" successfully delete ho gayi.`);
       } else {
@@ -808,14 +815,23 @@ function initAdminPanel() {
   const form = document.getElementById('addCropForm');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
   const searchInput = document.getElementById('adminCropSearch');
+  const seasonFilter = document.getElementById('adminSeasonFilter');
 
   if (!form) return;
 
-  // DAY 4: Search input listener
+  // DAY 5: Search and Season filter event triggers
+  function triggerTableFilters() {
+    const q = searchInput ? searchInput.value : "";
+    const s = seasonFilter ? seasonFilter.value : "all";
+    renderAdminAllCrops(q, s);
+  }
+
   if (searchInput) {
-    searchInput.oninput = (e) => {
-      renderAdminAllCrops(e.target.value);
-    };
+    searchInput.oninput = () => triggerTableFilters();
+  }
+
+  if (seasonFilter) {
+    seasonFilter.onchange = () => triggerTableFilters();
   }
 
   if (cancelBtn) cancelBtn.onclick = () => resetAdminForm();
@@ -858,8 +874,7 @@ function initAdminPanel() {
 
           alert(`✅ System crop "${cropPayload.name}" successfully update ho gayi!`);
           resetAdminForm();
-          const searchVal = document.getElementById('adminCropSearch')?.value || "";
-          renderAdminAllCrops(searchVal);
+          triggerTableFilters();
           renderSeasons();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
@@ -873,8 +888,7 @@ function initAdminPanel() {
             alert(`✅ Custom crop "${cropPayload.name}" server par update ho gayi!`);
             await fetchAndMergeServerCrops();
             resetAdminForm();
-            const searchVal = document.getElementById('adminCropSearch')?.value || "";
-            renderAdminAllCrops(searchVal);
+            triggerTableFilters();
             if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
           } else {
             alert('Update failed: ' + data.message);
@@ -891,8 +905,7 @@ function initAdminPanel() {
           alert(`🎉 Nayi crop "${cropPayload.name}" safaltapoorvak jud gayi!`);
           await fetchAndMergeServerCrops();
           resetAdminForm();
-          const searchVal = document.getElementById('adminCropSearch')?.value || "";
-          renderAdminAllCrops(searchVal);
+          triggerTableFilters();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
           alert('Add failed: ' + data.message);
@@ -981,7 +994,8 @@ function goAdmin() {
   const pass = prompt("Enter Admin Password (Default: admin123):");
   if (pass === "admin123") {
     const searchVal = document.getElementById('adminCropSearch')?.value || "";
-    renderAdminAllCrops(searchVal);
+    const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
+    renderAdminAllCrops(searchVal, seasonVal);
     navigate("admin-view");
     currentSeason = null;
     currentCrop = null;
@@ -1262,7 +1276,7 @@ function renderCropCards(season, query) {
         <button onclick="toggleFavorite('${escapeHtml(crop.name)}', '${season}', event)" 
                 title="${favActive ? 'Remove from favorites' : 'Save to favorites'}"
                 style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.5); color:${favActive ? '#ff4757' : '#ffffff'}; border:none; border-radius:50%; width:36px; height:36px; font-size:1.1rem; cursor:pointer; display:grid; place-items:center;">
-          ${favActive ? '❤️' : '🤍'}
+          ${favActive ? '❤️️' : '🤍'}
         </button>
       </div>
       <div class="body">
@@ -1752,7 +1766,7 @@ async function init() {
     });
   }
 
-  // 2. Edited system crops ke local overrides initial load par apply karein
+  // 2. Edited system crops ke local overrides apply karein
   const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
   Object.keys(defaultCropEdits).forEach((origName) => {
     const editedCrop = defaultCropEdits[origName];
