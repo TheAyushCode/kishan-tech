@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kishan - Tech · Season-wise Indian Crop Guide</title>
 
-  <!-- USER LOGIN CHECK -->
+  <!-- USER LOGIN CHECK (sessionStorage based: Browser/Tab band hote hi session expire ho jayega) -->
   <script>
-    if (!localStorage.getItem('isLoggedIn')) {
+    if (!sessionStorage.getItem('isLoggedIn')) {
       window.location.href = 'login page/login.html';
     }
   </script>
@@ -536,7 +536,7 @@
               <option value="all">🌐 All Seasons (सभी मौसम)</option>
               <option value="summer">☀️ Summer (Zaid)</option>
               <option value="winter">❄️ Winter (Rabi)</option>
-              <option value="rain">🌧️ Rain (Kharif)</option>
+              <option value="rain">🌧️️ Rain (Kharif)</option>
             </select>
 
             <div style="position: relative; min-width: 220px;">

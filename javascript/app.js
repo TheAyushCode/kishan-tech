@@ -455,8 +455,9 @@ const el = (tag, cls, html) => {
   return n;
 };
 
+// USER EMAIL FROM SESSION STORAGE
 function getCurrentUserEmail() {
-  const profile = localStorage.getItem('userProfile');
+  const profile = sessionStorage.getItem('userProfile');
   if (profile) {
     try { return JSON.parse(profile).email || ''; } catch (e) { return ''; }
   }
@@ -526,10 +527,10 @@ async function fetchUserFavorites() {
     const data = await res.json();
     if (data.success && Array.isArray(data.favorites)) {
       userFavoritesList = data.favorites;
-      localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
+      sessionStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
     }
   } catch (err) {
-    const cached = localStorage.getItem('userFavorites');
+    const cached = sessionStorage.getItem('userFavorites');
     userFavoritesList = cached ? JSON.parse(cached) : [];
   }
 }
@@ -553,7 +554,7 @@ async function toggleFavorite(cropName, seasonKey, event) {
   } else {
     userFavoritesList.push({ name: cropName, season: seasonKey });
   }
-  localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
+  sessionStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
 
   if (currentView === 'favorites-view') renderFavorites();
   else if (currentView === 'crops-view' && currentSeason) renderCropCards(currentSeason, $("#crop-search") ? $("#crop-search").value.trim().toLowerCase() : "");
@@ -1063,7 +1064,8 @@ function goRecommend() { navigate("recommend-view"); currentSeason = null; curre
 function goFavorites() { renderFavorites(); navigate("favorites-view"); currentSeason = null; currentCrop = null; }
 
 function goAdmin() {
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  // SESSION STORAGE CHECK FOR ADMIN
+  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
   if (!isAdmin) {
     alert("⚠️ Keval authenticated Admin hi is section ko access kar sakte hain. Kripya Admin login karein!");
     window.location.href = 'login page/login.html';
@@ -1918,8 +1920,8 @@ async function init() {
   initFertilizerCalculator();
   initInteractiveMap();
 
-  // Admin access check & Navbar toggle
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  // Admin access check & Navbar toggle via sessionStorage
+  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
   const navAdminBtn = document.getElementById('navAdminBtn') || document.querySelector('[data-nav="admin"]');
   if (navAdminBtn) {
     navAdminBtn.style.display = isAdmin ? 'inline-block' : 'none';
@@ -1953,7 +1955,7 @@ function initUserProfile() {
   const dropdownName = document.getElementById('dropdownName');
   const dropdownEmail = document.getElementById('dropdownEmail');
 
-  const profileData = localStorage.getItem('userProfile');
+  const profileData = sessionStorage.getItem('userProfile');
   if (profileData) {
     try {
       const user = JSON.parse(profileData);
@@ -1982,12 +1984,13 @@ function initUserProfile() {
 
   document.addEventListener('click', () => dropdown.classList.remove('show'));
 
+  // LOGOUT EVENT: SESSION STORAGE CLEAR
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('userProfile');
-      localStorage.removeItem('userFavorites');
-      localStorage.removeItem('isAdmin'); // Admin status clear karein
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('userProfile');
+      sessionStorage.removeItem('userFavorites');
+      sessionStorage.removeItem('isAdmin');
       window.location.href = 'login page/login.html';
     });
   }

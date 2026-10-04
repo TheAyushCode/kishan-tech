@@ -134,9 +134,10 @@ if (form) {
         statusBox.style.color = '#B7E0BA';
         statusBox.textContent = 'Admin login successful! Opening dashboard…';
 
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('isAdmin', 'true');
-        localStorage.setItem('userProfile', JSON.stringify({ 
+        // Session storage me store kiya taaki browser/tab band hote hi logout ho jaye
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('isAdmin', 'true');
+        sessionStorage.setItem('userProfile', JSON.stringify({ 
           name: 'Admin (Kishan Tech)', 
           email: 'admin@kishantech.com', 
           avatar: '' 
@@ -193,9 +194,10 @@ if (form) {
         statusBox.style.color = '#B7E0BA';
         statusBox.textContent = 'Signed in successfully! Taking you to Home…';
 
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.removeItem('isAdmin'); // normal user
-        localStorage.setItem('userProfile', JSON.stringify({ 
+        // Session storage me store kiya taaki tab band hote hi session clear ho jaye
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.removeItem('isAdmin'); // normal user
+        sessionStorage.setItem('userProfile', JSON.stringify({ 
           name: data.user.name, 
           email: data.user.email, 
           avatar: '' 
