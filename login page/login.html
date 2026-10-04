@@ -8,18 +8,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
-  <!-- ../style.css : one level UP, back in the site root -->
   <link rel="stylesheet" href="../style.css" />
-  <!-- login.css : same folder as this file, no "login page/" prefix -->
-   <script src="https://accounts.google.com/gsi/client" async defer></script>
-   
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="login.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>" />
 </head>
 <body>
   <div id="app">
 
-    <!-- ============ BRAND / NAV BAR (same markup as index.html) ============ -->
+    <!-- BRAND / NAV BAR -->
     <header class="brand-bar">
       <a href="../index.html" class="brand" title="Go to home" style="text-decoration:none;">
         <span class="logo">🌾</span>
@@ -36,19 +33,31 @@
       </div>
     </header>
 
-    <!-- ============ LOGIN VIEW ============ -->
+    <!-- LOGIN VIEW -->
     <main class="login-stage">
       <div class="login-atmosphere" aria-hidden="true"></div>
 
       <section class="auth-card">
-        <span class="auth-eyebrow">🌾 Indian Agriculture · Member Sign In</span>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="auth-eyebrow" id="authEyebrow">🌾 Member Sign In</span>
+        </div>
 
-        <h1 class="auth-title">Welcome back to <span class="auth-accent">Kishan&nbsp;·&nbsp;Tech</span></h1>
-        <p class="auth-lede">Sign in to save your favourite crops, track seasons, and pick up your India Map right where you left it.</p>
+        <!-- Role Toggle Tabs -->
+        <div style="display: flex; gap: 8px; margin-top: 1.2rem; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+          <button type="button" id="tabUser" style="flex:1; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; color: #10231f; background: linear-gradient(120deg, #ffd36b, #7bd66f); transition: 0.2s;">
+            👤 User Login
+          </button>
+          <button type="button" id="tabAdmin" style="flex:1; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; color: #C9D6D2; background: transparent; transition: 0.2s;">
+            ⚙️ Admin Login
+          </button>
+        </div>
+
+        <h1 class="auth-title" id="authHeading">Welcome back to <span class="auth-accent">Kishan&nbsp;·&nbsp;Tech</span></h1>
+        <p class="auth-lede" id="authSub">Sign in to save your favourite crops, track seasons, and access your dashboard.</p>
 
         <form id="loginForm" novalidate>
           <div class="auth-field">
-            <label for="email">Email or phone</label>
+            <label for="email" id="idLabel">Email or phone</label>
             <div class="auth-input-shell" id="emailShell">
               <input type="text" id="email" name="email" placeholder="you@example.com" autocomplete="username" required>
             </div>
@@ -64,7 +73,7 @@
             <span class="auth-err" id="pwErr"></span>
           </div>
 
-          <div class="auth-row-between">
+          <div class="auth-row-between" id="userExtraRow">
             <label class="auth-remember">
               <input type="checkbox" id="remember" name="remember">
               Keep me signed in
@@ -79,18 +88,18 @@
           <div class="auth-status" id="statusBox">Signed in — taking you to the home page…</div>
         </form>
 
-        <div class="auth-divider">or continue with</div>
+        <div id="socialAuthSection">
+          <div class="auth-divider">or continue with</div>
+          <div class="auth-oauth">
+            <div id="googleBtnWrapper"></div>
+          </div>
+          <p class="auth-foot-note">New to Kishan · Tech? <a href="register.html">Create an account</a></p>
+        </div>
 
-        <div class="auth-oauth">
-  <div id="googleBtnWrapper"></div>
-</div>
-
-        <p class="auth-foot-note">New to Kishan · Tech? <a href="register.html">Create an account</a></p>
         <a href="../index.html" class="auth-back-link">← Back to Home</a>
       </section>
     </main>
 
-    <!-- ============ FOOTER (same as index.html) ============ -->
     <footer class="app-footer">
       <p><strong>🌾 Kishan - Tech</strong> — A season-wise guide to Indian crops</p>
     </footer>

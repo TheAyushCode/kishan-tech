@@ -9,7 +9,7 @@ const API_BASE_URL = 'https://kishan-tech.onrender.com/api';
 const SEASON_META = {
   summer: {
     label: "Summer",
-    icon: "☀️️",
+    icon: "☀",
     tagline: "Hot & Sunny Season",
     desc: "Warm-season crops grown during the hot Indian summer (Feb–Jun). These heat-loving fruits and vegetables thrive in bright sunshine and well-drained soils.",
     bg: "assets/images/summer-bg.png",
@@ -17,7 +17,7 @@ const SEASON_META = {
   },
   winter: {
     label: "Winter",
-    icon: "❄️️",
+    icon: "❄",
     tagline: "Cool Rabi Season",
     desc: "Cool-season (rabi) crops sown in winter (Oct–Mar) and harvested in spring. Cereals, oilseeds, pulses, spices and vegetables that love the chill.",
     bg: "assets/images/winter-bg.png",
@@ -1063,17 +1063,18 @@ function goRecommend() { navigate("recommend-view"); currentSeason = null; curre
 function goFavorites() { renderFavorites(); navigate("favorites-view"); currentSeason = null; currentCrop = null; }
 
 function goAdmin() {
-  const pass = prompt("Enter Admin Password (Default: admin123):");
-  if (pass === "admin123") {
-    const searchVal = document.getElementById('adminCropSearch')?.value || "";
-    const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
-    renderAdminAllCrops(searchVal, seasonVal);
-    navigate("admin-view");
-    currentSeason = null;
-    currentCrop = null;
-  } else if (pass !== null) {
-    alert("❌ Incorrect Password!");
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  if (!isAdmin) {
+    alert("⚠️ Keval authenticated Admin hi is section ko access kar sakte hain. Kripya Admin login karein!");
+    window.location.href = 'login page/login.html';
+    return;
   }
+  const searchVal = document.getElementById('adminCropSearch')?.value || "";
+  const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
+  renderAdminAllCrops(searchVal, seasonVal);
+  navigate("admin-view");
+  currentSeason = null;
+  currentCrop = null;
 }
 
 function goCalculator() { navigate("calculator-view"); currentSeason = null; currentCrop = null; }
@@ -1210,7 +1211,6 @@ function initInteractiveMap() {
   if (!cropBar) return;
   cropBar.innerHTML = "";
 
-  // Sabhi unique crops collect karein (Default + Custom)
   const allCrops = getAllUniqueCropsList();
 
   allCrops.forEach((crop, idx) => {
@@ -1238,7 +1238,6 @@ function highlightCropOnMap(crop) {
   const regionText = (crop.region || "").toLowerCase();
   let matchedStates = [];
 
-  // Regional keywords ko match karke coordinates nikalna
   Object.keys(STATE_COORDINATES).forEach(stateKey => {
     if (regionText.includes(stateKey)) {
       const stateData = STATE_COORDINATES[stateKey];
@@ -1248,7 +1247,6 @@ function highlightCropOnMap(crop) {
     }
   });
 
-  // Default fallback pinning agar koi state match na ho
   if (matchedStates.length === 0) {
     matchedStates = [
       STATE_COORDINATES["punjab"], 
@@ -1258,7 +1256,6 @@ function highlightCropOnMap(crop) {
     ];
   }
 
-  // Map pins create karna
   matchedStates.forEach(state => {
     const pin = document.createElement("div");
     pin.className = "state-pin";
@@ -1268,7 +1265,6 @@ function highlightCropOnMap(crop) {
     container.appendChild(pin);
   });
 
-  // Map info card update karna
   if (document.getElementById("map-info-title")) {
     document.getElementById("map-info-title").innerHTML = `🌱 ${escapeHtml(crop.name)} (${escapeHtml(crop.hindi || "")})`;
   }
@@ -1542,7 +1538,7 @@ async function fetchWeather(cityName = 'Delhi') {
     const weatherMap = {
       0: { text: 'Clear Sky', icon: '☀️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
       3: { text: 'Overcast', icon: '☁️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
-      61: { text: 'Rainy', icon: '🌧️️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
+      61: { text: 'Rainy', icon: '🌧' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
     };
     const condition = weatherMap[current.weathercode] || { text: 'Moderate Weather', icon: '🌤️' };
     cityEl.textContent = `${name}, ${admin1 || 'India'}`;
@@ -1922,9 +1918,25 @@ async function init() {
   initFertilizerCalculator();
   initInteractiveMap();
 
-  history.replaceState({ view: "welcome-view" }, "", location.pathname + location.search);
+  // Admin access check & Navbar toggle
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const navAdminBtn = document.getElementById('navAdminBtn') || document.querySelector('[data-nav="admin"]');
+  if (navAdminBtn) {
+    navAdminBtn.style.display = isAdmin ? 'inline-block' : 'none';
+  }
+
+  // Agar login page se Admin dashboard request hui ho (#admin hash)
+  if (isAdmin && window.location.hash === '#admin') {
+    const searchVal = document.getElementById('adminCropSearch')?.value || "";
+    const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
+    renderAdminAllCrops(searchVal, seasonVal);
+    showView("admin-view");
+  } else {
+    history.replaceState({ view: "welcome-view" }, "", location.pathname + location.search);
+    showView("welcome-view");
+  }
+
   if (document.querySelector(".loader")) document.querySelector(".loader").classList.add("hide");
-  showView("welcome-view");
 }
 
 document.addEventListener("DOMContentLoaded", init);
@@ -1975,6 +1987,7 @@ function initUserProfile() {
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('userProfile');
       localStorage.removeItem('userFavorites');
+      localStorage.removeItem('isAdmin'); // Admin status clear karein
       window.location.href = 'login page/login.html';
     });
   }
