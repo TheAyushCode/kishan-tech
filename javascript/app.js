@@ -613,7 +613,7 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (DAY 5: SEARCH + SEASON FILTER)
+   3. ADMIN DASHBOARD SYSTEM (DAY 5 & DAY 6 INTEGRATION)
    ============================================================ */
 function renderAdminAllCrops(query = "", seasonFilter = "all") {
   const tbody = document.getElementById('adminCustomCropsTable');
@@ -641,7 +641,7 @@ function renderAdminAllCrops(query = "", seasonFilter = "all") {
     });
   }
 
-  // DAY 5: Season Filter Apply Karein
+  // Season Filter Apply Karein
   if (seasonFilter && seasonFilter !== 'all') {
     allCrops = allCrops.filter(c => (c.season || '').toLowerCase() === seasonFilter.toLowerCase());
   }
@@ -811,6 +811,25 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
   }
 }
 
+// ================= DAY 6: VALIDATION & DUPLICATE ENTRY GUARDS =================
+function isDuplicateCropName(name, currentOriginalName = null) {
+  const checkName = name.trim().toLowerCase();
+  const original = currentOriginalName ? currentOriginalName.trim().toLowerCase() : null;
+
+  // Agar edit ke time wahi purana naam ho toh duplicate nahi manenge
+  if (original && checkName === original) return false;
+
+  let exists = false;
+  if (CROPS) {
+    Object.keys(CROPS).forEach((season) => {
+      if (CROPS[season].some(c => c.name.trim().toLowerCase() === checkName)) {
+        exists = true;
+      }
+    });
+  }
+  return exists;
+}
+
 function initAdminPanel() {
   const form = document.getElementById('addCropForm');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
@@ -819,7 +838,6 @@ function initAdminPanel() {
 
   if (!form) return;
 
-  // DAY 5: Search and Season filter event triggers
   function triggerTableFilters() {
     const q = searchInput ? searchInput.value : "";
     const s = seasonFilter ? seasonFilter.value : "all";
@@ -839,17 +857,48 @@ function initAdminPanel() {
   form.onsubmit = async (e) => {
     e.preventDefault();
 
-    const cropPayload = {
-      name: document.getElementById('adminCropName').value.trim(),
-      hindi: document.getElementById('adminCropHindi').value.trim(),
-      wiki: document.getElementById('adminCropWiki').value.trim() || document.getElementById('adminCropName').value.trim(),
-      season: document.getElementById('adminCropSeason').value,
-      rain: document.getElementById('adminCropRain').value.trim() || '50-100 cm',
-      soil: document.getElementById('adminCropSoil').value.trim() || 'Loamy soil',
-      img: document.getElementById('adminCropImg').value.trim() || 'assets/images/summer-bg.png',
-      region: document.getElementById('adminCropRegion').value.trim() || 'Across India',
-      desc: document.getElementById('adminCropDesc').value.trim()
-    };
+    const name = document.getElementById('adminCropName').value.trim();
+    const hindi = document.getElementById('adminCropHindi').value.trim();
+    const wiki = document.getElementById('adminCropWiki').value.trim() || name;
+    const season = document.getElementById('adminCropSeason').value;
+    const rain = document.getElementById('adminCropRain').value.trim() || '50-100 cm';
+    const soil = document.getElementById('adminCropSoil').value.trim() || 'Loamy soil';
+    let img = document.getElementById('adminCropImg').value.trim();
+    const region = document.getElementById('adminCropRegion').value.trim() || 'Across India';
+    const desc = document.getElementById('adminCropDesc').value.trim();
+
+    // 1. Mandatory Fields Validation
+    if (!name || name.length < 2) {
+      alert("⚠️ Kripya Crop ka sahi English naam bharein (kam se kam 2 akshar).");
+      document.getElementById('adminCropName').focus();
+      return;
+    }
+
+    if (!desc || desc.length < 10) {
+      alert("⚠️ Kripya Crop ka vivaran (description) thoda vistar se likhein (kam se kam 10 akshar).");
+      document.getElementById('adminCropDesc').focus();
+      return;
+    }
+
+    // 2. DAY 6: Duplicate Check
+    const isEditMode = (editingCropServerId !== null);
+    if (isDuplicateCropName(name, isEditMode ? window.editingOriginalName : null)) {
+      alert(`❌ Error: "${name}" naam ki crop pehle se hi system me maujood hai! Kripya koi dusra naam chunein.`);
+      document.getElementById('adminCropName').focus();
+      return;
+    }
+
+    // 3. Fallback Image Support
+    if (!img || (!img.startsWith("http://") && !img.startsWith("https://"))) {
+      const seasonalFallbacks = {
+        summer: "assets/images/summer-bg.png",
+        winter: "assets/images/winter-bg.png",
+        rain: "assets/images/rain-bg.png"
+      };
+      img = seasonalFallbacks[season] || "assets/images/summer-bg.png";
+    }
+
+    const cropPayload = { name, hindi, wiki, season, rain, soil, img, region, desc };
 
     const submitBtn = document.getElementById('adminSubmitBtn');
     submitBtn.disabled = true;
@@ -1276,7 +1325,7 @@ function renderCropCards(season, query) {
         <button onclick="toggleFavorite('${escapeHtml(crop.name)}', '${season}', event)" 
                 title="${favActive ? 'Remove from favorites' : 'Save to favorites'}"
                 style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.5); color:${favActive ? '#ff4757' : '#ffffff'}; border:none; border-radius:50%; width:36px; height:36px; font-size:1.1rem; cursor:pointer; display:grid; place-items:center;">
-          ${favActive ? '❤️️' : '🤍'}
+          ${favActive ? '❤️' : '🤍'}
         </button>
       </div>
       <div class="body">
@@ -1449,9 +1498,9 @@ async function fetchWeather(cityName = 'Delhi') {
     const current = weatherData.current_weather;
     const temp = Math.round(current.temperature);
     const weatherMap = {
-      0: { text: 'Clear Sky', icon: '☀️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
+      0: { text: 'Clear Sky', icon: '☀️️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
       3: { text: 'Overcast', icon: '☁️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
-      61: { text: 'Rainy', icon: '🌧️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
+      61: { text: 'Rainy', icon: '🌧️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️️' }
     };
     const condition = weatherMap[current.weathercode] || { text: 'Moderate Weather', icon: '🌤️' };
     cityEl.textContent = `${name}, ${admin1 || 'India'}`;
