@@ -613,7 +613,7 @@ function renderFavorites() {
 }
 
 /* ============================================================
-   3. ADMIN DASHBOARD SYSTEM (DAY 5 & DAY 6 INTEGRATION)
+   3. ADMIN DASHBOARD SYSTEM (DAY 7: RESET & CANCEL ENHANCED)
    ============================================================ */
 function renderAdminAllCrops(query = "", seasonFilter = "all") {
   const tbody = document.getElementById('adminCustomCropsTable');
@@ -641,12 +641,12 @@ function renderAdminAllCrops(query = "", seasonFilter = "all") {
     });
   }
 
-  // Season Filter Apply Karein
+  // Season Filter
   if (seasonFilter && seasonFilter !== 'all') {
     allCrops = allCrops.filter(c => (c.season || '').toLowerCase() === seasonFilter.toLowerCase());
   }
 
-  // Search Filter Apply Karein
+  // Search Filter
   const q = query.trim().toLowerCase();
   if (q) {
     allCrops = allCrops.filter(c => 
@@ -730,10 +730,13 @@ function startEditAnyCrop(cropId, isDefault, cropName, season) {
   if (submitBtn) submitBtn.textContent = '💾 Update Crop Changes';
   if (cancelBtn) cancelBtn.style.display = 'inline-block';
 
-  document.getElementById('addCropForm').scrollIntoView({ behavior: 'smooth' });
+  // Smooth scroll to form[cite: 3]
+  const formCard = document.getElementById('adminFormCard') || document.getElementById('addCropForm');
+  if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function resetAdminForm() {
+// DAY 7: ENHANCED RESET & CANCEL EDIT WITH SMOOTH RETURN SCROLL
+function resetAdminForm(shouldScrollToTable = false) {
   editingCropServerId = null;
   window.editingCropIsDefault = false;
   window.editingOriginalName = null;
@@ -749,6 +752,14 @@ function resetAdminForm() {
   if (heading) heading.textContent = '➕ Add New Crop (नयी फसल जोड़ें)';
   if (submitBtn) submitBtn.textContent = '🚀 Add Crop to System';
   if (cancelBtn) cancelBtn.style.display = 'none';
+
+  // Agar user ne cancel kiya ho toh smoothly wapas table section par scroll karein
+  if (shouldScrollToTable) {
+    const tableSection = document.getElementById('adminTableSection');
+    if (tableSection) {
+      tableSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }
 
 async function deleteAnyCrop(cropId, isDefault, cropName, season) {
@@ -795,7 +806,7 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
       
       if (data.success) {
         await fetchAndMergeServerCrops();
-        if (editingCropServerId === cropId) resetAdminForm();
+        if (editingCropServerId === cropId) resetAdminForm(false);
         const searchVal = document.getElementById('adminCropSearch')?.value || "";
         const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
         renderAdminAllCrops(searchVal, seasonVal);
@@ -811,12 +822,10 @@ async function deleteAnyCrop(cropId, isDefault, cropName, season) {
   }
 }
 
-// ================= DAY 6: VALIDATION & DUPLICATE ENTRY GUARDS =================
 function isDuplicateCropName(name, currentOriginalName = null) {
   const checkName = name.trim().toLowerCase();
   const original = currentOriginalName ? currentOriginalName.trim().toLowerCase() : null;
 
-  // Agar edit ke time wahi purana naam ho toh duplicate nahi manenge
   if (original && checkName === original) return false;
 
   let exists = false;
@@ -833,6 +842,7 @@ function isDuplicateCropName(name, currentOriginalName = null) {
 function initAdminPanel() {
   const form = document.getElementById('addCropForm');
   const cancelBtn = document.getElementById('adminCancelEditBtn');
+  const clearBtn = document.getElementById('adminClearFormBtn');
   const searchInput = document.getElementById('adminCropSearch');
   const seasonFilter = document.getElementById('adminSeasonFilter');
 
@@ -852,7 +862,18 @@ function initAdminPanel() {
     seasonFilter.onchange = () => triggerTableFilters();
   }
 
-  if (cancelBtn) cancelBtn.onclick = () => resetAdminForm();
+  // DAY 7: Cancel Edit click par smoothly table par scroll karein
+  if (cancelBtn) {
+    cancelBtn.onclick = () => resetAdminForm(true);
+  }
+
+  // DAY 7: Clear form button
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      form.reset();
+      document.getElementById('adminCropName').focus();
+    };
+  }
 
   form.onsubmit = async (e) => {
     e.preventDefault();
@@ -867,7 +888,6 @@ function initAdminPanel() {
     const region = document.getElementById('adminCropRegion').value.trim() || 'Across India';
     const desc = document.getElementById('adminCropDesc').value.trim();
 
-    // 1. Mandatory Fields Validation
     if (!name || name.length < 2) {
       alert("⚠️ Kripya Crop ka sahi English naam bharein (kam se kam 2 akshar).");
       document.getElementById('adminCropName').focus();
@@ -880,7 +900,6 @@ function initAdminPanel() {
       return;
     }
 
-    // 2. DAY 6: Duplicate Check
     const isEditMode = (editingCropServerId !== null);
     if (isDuplicateCropName(name, isEditMode ? window.editingOriginalName : null)) {
       alert(`❌ Error: "${name}" naam ki crop pehle se hi system me maujood hai! Kripya koi dusra naam chunein.`);
@@ -888,7 +907,6 @@ function initAdminPanel() {
       return;
     }
 
-    // 3. Fallback Image Support
     if (!img || (!img.startsWith("http://") && !img.startsWith("https://"))) {
       const seasonalFallbacks = {
         summer: "assets/images/summer-bg.png",
@@ -922,7 +940,7 @@ function initAdminPanel() {
           localStorage.setItem('defaultCropEdits', JSON.stringify(defaultEdits));
 
           alert(`✅ System crop "${cropPayload.name}" successfully update ho gayi!`);
-          resetAdminForm();
+          resetAdminForm(true);
           triggerTableFilters();
           renderSeasons();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
@@ -936,7 +954,7 @@ function initAdminPanel() {
           if (data.success) {
             alert(`✅ Custom crop "${cropPayload.name}" server par update ho gayi!`);
             await fetchAndMergeServerCrops();
-            resetAdminForm();
+            resetAdminForm(true);
             triggerTableFilters();
             if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
           } else {
@@ -953,7 +971,7 @@ function initAdminPanel() {
         if (data.success) {
           alert(`🎉 Nayi crop "${cropPayload.name}" safaltapoorvak jud gayi!`);
           await fetchAndMergeServerCrops();
-          resetAdminForm();
+          resetAdminForm(true);
           triggerTableFilters();
           if (typeof populateMandiCropSelect === "function") populateMandiCropSelect();
         } else {
@@ -1467,7 +1485,7 @@ function initCropRecommender() {
           <div class="name">${escapeHtml(crop.name)}</div>
           <div class="hindi-name">${escapeHtml(crop.hindi || "")}</div>
           <div class="sci">${escapeHtml(crop.wiki)}</div>
-          <div class="tags"><span class="tag rain">🌧️ ${escapeHtml(crop.rain)}</span><span class="tag soil">🪴 ${shortSoil(crop.soil)}</span></div>
+          <div class="tags"><span class="tag rain">🌧️️ ${escapeHtml(crop.rain)}</span><span class="tag soil">🪴 ${shortSoil(crop.soil)}</span></div>
           <div class="crop-desc">${escapeHtml(crop.desc)}</div>
           <div class="more">View details →</div>
         </div>`;
@@ -1498,9 +1516,9 @@ async function fetchWeather(cityName = 'Delhi') {
     const current = weatherData.current_weather;
     const temp = Math.round(current.temperature);
     const weatherMap = {
-      0: { text: 'Clear Sky', icon: '☀️️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
-      3: { text: 'Overcast', icon: '☁️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
-      61: { text: 'Rainy', icon: '🌧️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️️' }
+      0: { text: 'Clear Sky', icon: '☀️' }, 1: { text: 'Mainly Clear', icon: '🌤️' }, 2: { text: 'Partly Cloudy', icon: '⛅' },
+      3: { text: 'Overcast', icon: '☁️️' }, 45: { text: 'Foggy', icon: '🌫️' }, 51: { text: 'Drizzle', icon: '🌦️' },
+      61: { text: 'Rainy', icon: '🌧️' }, 71: { text: 'Snowy', icon: '❄️' }, 95: { text: 'Thunderstorm', icon: '🌩️' }
     };
     const condition = weatherMap[current.weathercode] || { text: 'Moderate Weather', icon: '🌤️' };
     cityEl.textContent = `${name}, ${admin1 || 'India'}`;
@@ -1815,7 +1833,7 @@ async function init() {
     });
   }
 
-  // 2. Edited system crops ke local overrides apply karein
+  // 2. Edited system crops ke local overrides initial load par apply karein
   const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
   Object.keys(defaultCropEdits).forEach((origName) => {
     const editedCrop = defaultCropEdits[origName];

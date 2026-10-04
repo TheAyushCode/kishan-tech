@@ -15,7 +15,7 @@
   <!-- SEO & Font Links -->
   <meta name="description" content="Kishan - Tech — explore 150 crops grown across Summer, Winter and Rain (monsoon) seasons in India with images, descriptions, rainfall needs and growing regions." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>" />
@@ -444,7 +444,7 @@
         <p>Add new crops or update/delete existing entries from the system.</p>
       </div>
 
-      <div style="max-width: 1000px; margin: 20px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      <div id="adminFormCard" style="max-width: 1000px; margin: 20px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <h3 id="adminFormHeading" style="color: #173a30; font-size: 1.3rem; margin-bottom: 18px;">➕ Add New Crop (नयी फसल जोड़ें)</h3>
         
         <form id="addCropForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
@@ -467,8 +467,8 @@
             <label style="font-weight: 600; font-size: 0.88rem; color: #173a30;">Season*</label>
             <select id="adminCropSeason" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; background: #fff;">
               <option value="summer">☀️ Summer (Zaid)</option>
-              <option value="winter">❄️ Winter (Rabi)</option>
-              <option value="rain">🌧️️ Rain (Kharif)</option>
+              <option value="winter">❄️️ Winter (Rabi)</option>
+              <option value="rain">🌧️ Rain (Kharif)</option>
             </select>
           </div>
 
@@ -511,24 +511,27 @@
             <textarea id="adminCropDesc" rows="3" placeholder="Brief description about the crop..." required style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; resize: vertical;"></textarea>
           </div>
 
-          <div style="grid-column: 1/-1; display: flex; gap: 12px; align-items: center;">
-            <button type="submit" id="adminSubmitBtn" style="padding: 12px 28px; background: #16382c; color: #ffd36b; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
+          <!-- DAY 7 UPDATED: BUTTONS GROUP WITH CANCEL & RESET -->
+          <div style="grid-column: 1/-1; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button type="submit" id="adminSubmitBtn" style="padding: 12px 28px; background: #16382c; color: #ffd36b; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: 0.2s;">
               🚀 Add Crop to System
             </button>
-            <button type="button" id="adminCancelEditBtn" style="display: none; padding: 12px 20px; background: #6c757d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
-              ✕ Cancel Edit
+            <button type="button" id="adminCancelEditBtn" style="display: none; padding: 12px 20px; background: #6c757d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: 0.2s;">
+              ✕ Cancel Edit &amp; Return to Table
+            </button>
+            <button type="button" id="adminClearFormBtn" style="padding: 12px 18px; background: #eef3f0; color: #173a30; border: 1.5px solid #c9dcd2; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.92rem; transition: 0.2s;">
+              🧹 Clear Form
             </button>
           </div>
         </form>
       </div>
 
-      <!-- DAY 5 UPDATED: TABLE WITH SEARCH BAR + SEASON FILTER DROPDOWN -->
-      <div style="max-width: 1000px; margin: 30px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      <!-- TABLE CONTAINER WITH ANCHOR ID FOR SMOOTH RETURN SCROLL -->
+      <div id="adminTableSection" style="max-width: 1000px; margin: 30px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
           <h3 style="color: #173a30; font-size: 1.3rem; margin: 0;">📜 Manage All Crops (System &amp; Custom)</h3>
           
           <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-            <!-- DAY 5: Season Filter Dropdown -->
             <select id="adminSeasonFilter" style="padding: 8px 12px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.88rem; background: #fff; cursor: pointer; font-weight: 600; color: #173a30;">
               <option value="all">🌐 All Seasons (सभी मौसम)</option>
               <option value="summer">☀️ Summer (Zaid)</option>
@@ -536,7 +539,6 @@
               <option value="rain">🌧️ Rain (Kharif)</option>
             </select>
 
-            <!-- Search Input -->
             <div style="position: relative; min-width: 220px;">
               <input type="text" id="adminCropSearch" placeholder="🔍 Search crops by name, soil..." 
                      style="width: 100%; padding: 8px 14px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; font-size: 0.9rem; background: #f6faf8;">
@@ -749,7 +751,7 @@
         </div>
 
         <div class="agri-card">
-          <div class="agri-card-icon">🏞️️</div>
+          <div class="agri-card-icon">🏞️</div>
           <h3>The Value of Agriculture in India</h3>
           <p>Agriculture is the <strong>foundation of rural India</strong>, providing employment and food security to crores of families. It supplies raw materials to industries like textiles, sugar and edible oils. India is the <strong>world's largest producer of pulses</strong>, the <strong>largest producer of milk</strong>, and the <strong>second-largest producer of rice and wheat</strong>. Farming preserves traditional knowledge, protects biodiversity through thousands of crop varieties, and keeps alive the deep bond between the Indian farmer and the land.</p>
         </div>
@@ -901,7 +903,7 @@
     <footer class="app-footer">
       <p><strong>🌾 Kishan - Tech</strong> — A season-wise guide to Indian crops</p>
       <p>&copy; 2026 Kishan - Tech. All rights reserved.</p>
-      <p>made with ❤️ by ayush and team</p>
+      <p>made with ❤️️ by ayush and team</p>
     </footer>
 
   </div>
