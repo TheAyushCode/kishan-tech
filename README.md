@@ -12,7 +12,8 @@
 
 * **Frontend (Vercel):** [https://your-vercel-app-url.vercel.app](https://your-vercel-app-url.vercel.app)
 * **Backend API (Render):** [https://kishan-tech.onrender.com](https://kishan-tech.onrender.com)
-* **Database:** TiDB Cloud (Serverless MySQL)
+* **Database:** TiDB Cloud (Serverless MySQL)..
+
 
 ---
 
