@@ -5,11 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kishan - Tech · Season-wise Indian Crop Guide</title>
 
-  <!-- USER LOGIN CHECK (sessionStorage based: Browser/Tab band hote hi session expire ho jayega) -->
+  <!-- USER LOGIN & 15-MINUTE AWAY AUTO-LOGOUT CHECK -->
   <script>
-    if (!sessionStorage.getItem('isLoggedIn')) {
-      window.location.href = 'login page/login.html';
-    }
+    (function() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const leftTime = localStorage.getItem('userLeftAt');
+
+      // Agar logged in nahi hai to seedhe login page bhejein
+      if (!isLoggedIn) {
+        window.location.href = 'login page/login.html';
+        return;
+      }
+
+      // Agar user pehle site/tab chhodkar gaya tha, to check karein kitna time hua
+      if (leftTime) {
+        const awayDuration = Date.now() - parseInt(leftTime, 10);
+        const FIFTEEN_MINUTES = 15 * 60 * 1000; // 15 Minute (900,000 ms)
+
+        if (awayDuration > FIFTEEN_MINUTES) {
+          // 15 minute se jyada ho gaye -> logout karein
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.href = 'login page/login.html';
+          return;
+        } else {
+          // 15 minute ke andar wapas aa gaya -> timer reset karein
+          localStorage.removeItem('userLeftAt');
+        }
+      }
+    })();
   </script>
 
   <!-- SEO & Font Links -->
@@ -61,6 +85,11 @@
         <button class="nav-link" data-nav="season">Seasons</button>
         <button class="nav-link" data-nav="agri">Festivals</button>
         <button class="nav-link" data-nav="india-map">India Map</button>
+
+        <!-- Kisan Saathi External Link -->
+        <a href="https://kisan-saathi-navy.vercel.app/"  rel="noopener noreferrer" class="nav-link nav-external-link">
+          🌾 Kisan Saathi ↗
+        </a>
       </nav>
 
       <!-- Right: Controls (Language + User Profile) -->
@@ -261,12 +290,10 @@
             <p>अपने राज्य और जिले का चयन करें ताकि नजदीकी कृषि विज्ञान केंद्र (KVK) से संपर्क किया जा सके:</p>
             
             <div class="district-search-bar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
-              <!-- 1. Dynamic State & UT Selector -->
               <select id="stateSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
                 <option value="">-- राज्य / केंद्र शासित प्रदेश चुनें (Select State/UT) --</option>
               </select>
 
-              <!-- 2. Dynamic District Selector -->
               <select id="districtKvkSelect" style="flex: 1; min-width: 140px; padding: 10px; border-radius: 10px; border: 1.5px solid #c9dcd2; outline: none; font-size: 0.9rem; background: #fff; cursor: pointer;">
                 <option value="">-- जिला चुनें (District) --</option>
               </select>
@@ -511,7 +538,6 @@
             <textarea id="adminCropDesc" rows="3" placeholder="Brief description about the crop..." required style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #dcdcdc; outline: none; margin-top: 4px; resize: vertical;"></textarea>
           </div>
 
-          <!-- BUTTONS GROUP WITH CANCEL & RESET -->
           <div style="grid-column: 1/-1; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
             <button type="submit" id="adminSubmitBtn" style="padding: 12px 28px; background: #16382c; color: #ffd36b; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: 0.2s;">
               🚀 Add Crop to System
@@ -526,7 +552,6 @@
         </form>
       </div>
 
-      <!-- TABLE CONTAINER WITH ANCHOR ID FOR SMOOTH RETURN SCROLL -->
       <div id="adminTableSection" style="max-width: 1000px; margin: 30px auto; padding: 26px; background: #ffffff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
           <h3 style="color: #173a30; font-size: 1.3rem; margin: 0;">📜 Manage All Crops (System &amp; Custom)</h3>
@@ -536,7 +561,7 @@
               <option value="all">🌐 All Seasons (सभी मौसम)</option>
               <option value="summer">☀️ Summer (Zaid)</option>
               <option value="winter">❄️ Winter (Rabi)</option>
-              <option value="rain">🌧️️ Rain (Kharif)</option>
+              <option value="rain">🌧 Rain (Kharif)</option>
             </select>
 
             <div style="position: relative; min-width: 220px;">

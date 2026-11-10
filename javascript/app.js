@@ -455,9 +455,9 @@ const el = (tag, cls, html) => {
   return n;
 };
 
-// USER EMAIL FROM SESSION STORAGE
+// USER EMAIL FROM STORAGE
 function getCurrentUserEmail() {
-  const profile = sessionStorage.getItem('userProfile');
+  const profile = localStorage.getItem('userProfile') || sessionStorage.getItem('userProfile');
   if (profile) {
     try { return JSON.parse(profile).email || ''; } catch (e) { return ''; }
   }
@@ -476,7 +476,6 @@ async function fetchAndMergeServerCrops() {
 
       CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
-      // 1. Deleted system crops filter karein
       const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
       if (deletedDefaultCrops.length > 0) {
         Object.keys(CROPS).forEach((season) => {
@@ -484,7 +483,6 @@ async function fetchAndMergeServerCrops() {
         });
       }
 
-      // 2. Edited system crops ke local overrides apply karein
       const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
       Object.keys(defaultCropEdits).forEach((origName) => {
         const editedCrop = defaultCropEdits[origName];
@@ -496,7 +494,6 @@ async function fetchAndMergeServerCrops() {
         }
       });
 
-      // 3. Server custom crops merge karein
       serverCustomCrops.forEach(crop => {
         if (CROPS[crop.season] && !CROPS[crop.season].some(c => c.name === crop.name)) {
           CROPS[crop.season].unshift(crop);
@@ -527,10 +524,10 @@ async function fetchUserFavorites() {
     const data = await res.json();
     if (data.success && Array.isArray(data.favorites)) {
       userFavoritesList = data.favorites;
-      sessionStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
+      localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
     }
   } catch (err) {
-    const cached = sessionStorage.getItem('userFavorites');
+    const cached = localStorage.getItem('userFavorites') || sessionStorage.getItem('userFavorites');
     userFavoritesList = cached ? JSON.parse(cached) : [];
   }
 }
@@ -554,7 +551,7 @@ async function toggleFavorite(cropName, seasonKey, event) {
   } else {
     userFavoritesList.push({ name: cropName, season: seasonKey });
   }
-  sessionStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
+  localStorage.setItem('userFavorites', JSON.stringify(userFavoritesList));
 
   if (currentView === 'favorites-view') renderFavorites();
   else if (currentView === 'crops-view' && currentSeason) renderCropCards(currentSeason, $("#crop-search") ? $("#crop-search").value.trim().toLowerCase() : "");
@@ -859,18 +856,9 @@ function initAdminPanel() {
     renderAdminAllCrops(q, s);
   }
 
-  if (searchInput) {
-    searchInput.oninput = () => triggerTableFilters();
-  }
-
-  if (seasonFilter) {
-    seasonFilter.onchange = () => triggerTableFilters();
-  }
-
-  if (cancelBtn) {
-    cancelBtn.onclick = () => resetAdminForm(true);
-  }
-
+  if (searchInput) searchInput.oninput = () => triggerTableFilters();
+  if (seasonFilter) seasonFilter.onchange = () => triggerTableFilters();
+  if (cancelBtn) cancelBtn.onclick = () => resetAdminForm(true);
   if (clearBtn) {
     clearBtn.onclick = () => {
       form.reset();
@@ -1064,8 +1052,7 @@ function goRecommend() { navigate("recommend-view"); currentSeason = null; curre
 function goFavorites() { renderFavorites(); navigate("favorites-view"); currentSeason = null; currentCrop = null; }
 
 function goAdmin() {
-  // SESSION STORAGE CHECK FOR ADMIN
-  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  const isAdmin = localStorage.getItem('isAdmin') === 'true' || sessionStorage.getItem('isAdmin') === 'true';
   if (!isAdmin) {
     alert("⚠️ Keval authenticated Admin hi is section ko access kar sakte hain. Kripya Admin login karein!");
     window.location.href = 'login page/login.html';
@@ -1847,7 +1834,6 @@ async function init() {
   }
   CROPS = JSON.parse(JSON.stringify(CROP_DATA));
 
-  // 1. Deleted system crops filter karein
   const deletedDefaultCrops = JSON.parse(localStorage.getItem('deletedDefaultCrops') || '[]');
   if (deletedDefaultCrops.length > 0) {
     Object.keys(CROPS).forEach((season) => {
@@ -1855,7 +1841,6 @@ async function init() {
     });
   }
 
-  // 2. Edited system crops ke local overrides apply karein
   const defaultCropEdits = JSON.parse(localStorage.getItem('defaultCropEdits') || '{}');
   Object.keys(defaultCropEdits).forEach((origName) => {
     const editedCrop = defaultCropEdits[origName];
@@ -1920,14 +1905,12 @@ async function init() {
   initFertilizerCalculator();
   initInteractiveMap();
 
-  // Admin access check & Navbar toggle via sessionStorage
-  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  const isAdmin = localStorage.getItem('isAdmin') === 'true' || sessionStorage.getItem('isAdmin') === 'true';
   const navAdminBtn = document.getElementById('navAdminBtn') || document.querySelector('[data-nav="admin"]');
   if (navAdminBtn) {
     navAdminBtn.style.display = isAdmin ? 'inline-block' : 'none';
   }
 
-  // Agar login page se Admin dashboard request hui ho (#admin hash)
   if (isAdmin && window.location.hash === '#admin') {
     const searchVal = document.getElementById('adminCropSearch')?.value || "";
     const seasonVal = document.getElementById('adminSeasonFilter')?.value || "all";
@@ -1955,7 +1938,7 @@ function initUserProfile() {
   const dropdownName = document.getElementById('dropdownName');
   const dropdownEmail = document.getElementById('dropdownEmail');
 
-  const profileData = sessionStorage.getItem('userProfile');
+  const profileData = localStorage.getItem('userProfile') || sessionStorage.getItem('userProfile');
   if (profileData) {
     try {
       const user = JSON.parse(profileData);
@@ -1984,13 +1967,11 @@ function initUserProfile() {
 
   document.addEventListener('click', () => dropdown.classList.remove('show'));
 
-  // LOGOUT EVENT: SESSION STORAGE CLEAR
+  // LOGOUT EVENT
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('isLoggedIn');
-      sessionStorage.removeItem('userProfile');
-      sessionStorage.removeItem('userFavorites');
-      sessionStorage.removeItem('isAdmin');
+      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = 'login page/login.html';
     });
   }
@@ -2059,3 +2040,39 @@ function initCropReviewSystem(cropName) {
     }
   };
 }
+
+/* ============================================================
+   15-MINUTE INACTIVITY / AWAY AUTO-LOGOUT SYSTEM
+   ============================================================ */
+(function setupFifteenMinuteAwayLogout() {
+  const FIFTEEN_MINUTES = 15 * 60 * 1000; // 15 Minute
+  let awayTimer = null;
+
+  function performLogout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = 'login page/login.html';
+  }
+
+  // Jab user doosre tab pe jaaye ya window minimize kare
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      localStorage.setItem('userLeftAt', Date.now().toString());
+
+      awayTimer = setTimeout(() => {
+        performLogout();
+      }, FIFTEEN_MINUTES);
+    } else {
+      if (awayTimer) {
+        clearTimeout(awayTimer);
+        awayTimer = null;
+      }
+      localStorage.removeItem('userLeftAt');
+    }
+  });
+
+  // Browser/Tab close hote waqt timestamp note karein
+  window.addEventListener('pagehide', () => {
+    localStorage.setItem('userLeftAt', Date.now().toString());
+  });
+})();

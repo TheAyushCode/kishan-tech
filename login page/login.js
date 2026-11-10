@@ -134,14 +134,18 @@ if (form) {
         statusBox.style.color = '#B7E0BA';
         statusBox.textContent = 'Admin login successful! Opening dashboard…';
 
-        // Session storage me store kiya taaki browser/tab band hote hi logout ho jaye
-        sessionStorage.setItem('isLoggedIn', 'true');
-        sessionStorage.setItem('isAdmin', 'true');
-        sessionStorage.setItem('userProfile', JSON.stringify({ 
+        // Local Storage aur Session Storage dono me store kiya
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('isAdmin', 'true');
+        localStorage.removeItem('userLeftAt');
+        localStorage.setItem('userProfile', JSON.stringify({ 
           name: 'Admin (Kishan Tech)', 
           email: 'admin@kishantech.com', 
           avatar: '' 
         }));
+
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('isAdmin', 'true');
 
         setTimeout(() => {
           window.location.href = '../index.html#admin';
@@ -194,14 +198,17 @@ if (form) {
         statusBox.style.color = '#B7E0BA';
         statusBox.textContent = 'Signed in successfully! Taking you to Home…';
 
-        // Session storage me store kiya taaki tab band hote hi session clear ho jaye
-        sessionStorage.setItem('isLoggedIn', 'true');
-        sessionStorage.removeItem('isAdmin'); // normal user
-        sessionStorage.setItem('userProfile', JSON.stringify({ 
+        // Local Storage me save taaki 15 min tak session barkarar rahe
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('userLeftAt');
+        localStorage.setItem('userProfile', JSON.stringify({ 
           name: data.user.name, 
           email: data.user.email, 
           avatar: '' 
         }));
+
+        sessionStorage.setItem('isLoggedIn', 'true');
 
         setTimeout(() => {
           window.location.href = '../index.html';
